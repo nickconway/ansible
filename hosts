@@ -1,6 +1,7 @@
-localhost
+localhost ansible_connection=local
 
 [servers]
+localhost
 pihole
 server
 

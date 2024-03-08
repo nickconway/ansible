@@ -2,4 +2,4 @@
   name: Test
   tasks:
     - name: Remove File
-      command: ls
+      command: rm test
