@@ -1,5 +1,5 @@
-- hosts: servers
-  name: Test
+- hosts: localhost,servers
+  name: Install Software
   tasks:
     - name: Install ZSH
       become: true
