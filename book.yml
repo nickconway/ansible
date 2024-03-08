@@ -1,0 +1,5 @@
+- hosts: servers
+  name: Test
+  tasks:
+    - name: Remove File
+      command: ls
