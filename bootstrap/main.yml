@@ -1,0 +1,40 @@
+---
+- name: Bootstrap
+  hosts: all
+  tasks:
+    - name: Import WSL Role
+      import_role:
+        name: nickconway.shared.wsl
+
+    - name: Import Security Role
+      import_role:
+        name: nickconway.shared.security
+
+    - name: Import Update Role
+      import_role:
+        name: nickconway.shared.update
+
+    - name: Import Cron Role
+      import_role:
+        name: nickconway.shared.cron
+
+    - name: Import Shared Programs Role
+      import_role:
+        name: nickconway.shared.programs
+
+    - name: Import Programs Role
+      import_role:
+        name: programs
+
+    - name: Import VPN Role
+      import_role:
+        name: nickconway.shared.vpn
+
+    - name: Import YADM Role
+      import_role:
+        name: nickconway.shared.yadm
+
+    - name: Clone Git Repositories
+      shell:
+        cmd: ~/.local/bin/clone-all
+      changed_when: false

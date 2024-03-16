@@ -1,0 +1,24 @@
+---
+# tasks file for dns
+
+- name: Create Resolve Symlink
+  become: true
+  file:
+    state: link
+    src: /run/systemd/resolve/resolv.conf
+    path: /etc/resolv.conf
+
+- name: Disable DNS Stub Listener
+  become: true
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: "#?DNSStubListener=yes"
+    line: DNSStubListener=no
+  register: resolvedconf
+
+- name: Restart Systemd-Resolved
+  become: true
+  service:
+    name: systemd-resolved
+    state: restarted
+  when: resolvedconf.changed

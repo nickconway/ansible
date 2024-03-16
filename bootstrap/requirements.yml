@@ -1,0 +1,3 @@
+collections:
+  - source: ../collections/nickconway
+    type: subdirs

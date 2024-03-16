@@ -1,0 +1,45 @@
+---
+# tasks file for security
+
+- name: Get Service Facts
+  service_facts:
+
+- name: Add NTFY-SSH to PAM
+  become: true
+  lineinfile:
+    path: "/etc/pam.d/sshd"
+    line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
+    state: present
+    mode: 0644
+  when: "'ssh' in services"
+
+- name: Copy NTFY-SSH Script
+  become: true
+  template:
+    src: files/ntfy-ssh
+    dest: /usr/bin/ntfy-ssh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Start SSH Service
+  service:
+    name: "sshd"
+    state: "started"
+  when: "'ssh' in services"
+
+- name: Secure SSH Configuration
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -T -f %s'
+    mode: 0644
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+  notify: Restart SSH
+  when: "'sshd' in services"

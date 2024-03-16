@@ -1,0 +1,23 @@
+---
+# tasks file for update
+
+- name: Upgrade System (Debian)
+  become: true
+  when: ansible_os_family == 'Debian'
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Upgrade System (RedHat)
+  become: true
+  when: ansible_os_family == 'RedHat'
+  yum:
+    update_cache: yes
+
+- name: Upgrade System (Arch)
+  become: true
+  when: ansible_os_family == 'Archlinux'
+  pacman:
+    update_cache: yes
+    upgrade: yes
+

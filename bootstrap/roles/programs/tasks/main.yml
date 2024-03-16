@@ -1,0 +1,177 @@
+---
+# tasks file for programs
+
+- name: Import GPG Keys
+  shell:
+    cmd: find ~/.config/gpg/* &> /dev/null && gpg --batch --yes --passphrase {{ gpg_passphrase }} --import ~/.config/gpg/*
+  changed_when: false
+
+- name: Get Current User
+  command: whoami
+  become: false
+  register: current_user
+  changed_when: false
+
+- name: Install Pass
+  git:
+    repo: https://git.zx2c4.com/password-store
+    dest: ~/.local/source/password-store
+  register: pass_store
+
+- name: Install Pass
+  shell:
+    cmd: make install PREFIX=$HOME/.local
+    chdir: ~/.local/source/password-store
+  when: pass_store.changed
+
+- name: Install Keyring-Pass
+  pip:
+    name: keyring-pass
+    extra_args: --user
+
+- name: Install Kitty
+  shell:
+    cmd: |
+      (curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n) \
+      && ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten ~/.local/bin/ \
+      && mkdir -p ~/.local/share/applications \
+      && cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/ \
+      && cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/ \
+      && sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop \
+      && sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+  changed_when: false
+
+- name: Create Font Directory
+  file:
+    path: ~/.local/share/fonts/hack-nerd-font
+    state: directory
+
+- name: Install Hack Nerd Font
+  unarchive:
+    remote_src: true
+    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
+    dest: ~/.local/share/fonts/hack-nerd-font
+
+- name: Install Bat
+  shell:
+    cmd: cargo install --locked bat
+  environment:
+    PATH: "/home/{{ current_user.stdout }}/.cargo/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Install FD
+  shell:
+    cmd: cargo install fd-find
+  environment:
+    PATH: "/home/{{ current_user.stdout }}/.cargo/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Install RBW
+  shell:
+    cmd: cargo install rbw
+  environment:
+    PATH: "/home/{{ current_user.stdout }}/.cargo/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Install TLDR
+  shell:
+    cmd: cargo install tealdeer
+  environment:
+    PATH: "/home/{{ current_user.stdout }}/.cargo/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Install Treesitter
+  shell:
+    cmd: cargo install tree-sitter-cli
+  environment:
+    PATH: "/home/{{ current_user.stdout }}/.cargo/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Install Tmux Dependencies
+  become: true
+  package:
+    pkg:
+      - make
+      - bison
+      - libevent-dev
+      - ncurses-dev
+      - build-essential
+      - automake
+      - pkg-config
+    state: present
+
+- name: Clone Tmux
+  git:
+    repo: https://github.com/tmux/tmux.git
+    dest: ~/.local/source/tmux
+  register: tmux
+
+- block:
+  - name: Autogen Tmux
+    command:
+      chdir: ~/.local/source/tmux
+      cmd: sh autogen.sh
+    changed_when: false
+
+  - name: Configure Tmux
+    shell:
+      chdir: ~/.local/source/tmux
+      cmd: ./configure --prefix=$HOME/.local
+    changed_when: false
+
+  - name: Build Tmux
+    shell:
+      chdir: ~/.local/source/tmux
+      cmd: make && make install
+    changed_when: false
+  when: tmux.changed
+
+- name: Download Go
+  unarchive:
+    remote_src: true
+    src: https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+    dest: ~/.local
+
+- name: Install Lazygit
+  command:
+    cmd: ~/.local/go/bin/go install github.com/jesseduffield/lazygit@latest
+  environment:
+    GOPATH: /home/{{ current_user.stdout }}/.local/go
+  changed_when: false
+
+- name: Install Lazydocker
+  shell:
+    cmd: curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+  environment:
+    GOPATH: /home/{{ current_user.stdout }}/.local/go
+  changed_when: false
+
+- name: Download GH-CLI
+  git:
+    repo: https://github.com/cli/cli.git
+    dest: ~/.local/source/gh-cli
+  register: gh
+
+- name: Install GH-CLI
+  shell:
+    cmd: make install prefix=$HOME/.local
+    chdir: ~/.local/source/gh-cli
+  environment:
+    PATH: /home/{{ current_user.stdout }}/.local/go/bin:{{ ansible_env.PATH }}
+    GOPATH: /home/{{ current_user.stdout }}/.local/go
+  when: gh.changed
+  changed_when: false
+
+- name: Download Tree
+  unarchive:
+    remote_src: true
+    src: https://gitlab.com/OldManProgrammer/unix-tree/-/archive/2.1.1/unix-tree-2.1.1.tar.bz2
+    dest: ~/.local/source
+  register: tree
+
+- name: Install Tree
+  shell:
+    cmd: make install PREFIX=$HOME/.local
+    chdir: ~/.local/source/unix-tree-2.1.1
+  when: tree.changed
+  changed_when: false

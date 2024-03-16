@@ -1,0 +1,40 @@
+---
+# tasks file for yadm
+
+- name: Check if YADM Exists
+  stat:
+    path: ~/.local/bin/yadm
+  register: yadm
+
+- block:
+  - name: Set YADM Remotes
+    shell:
+      cmd: |
+        ~/.local/bin/yadm remote set-url origin "git@github.com:nickconway/dotfiles.git"
+        ~/.local/bin/yadm remote add https "https://github.com/nickconway/dotfiles.git" || true
+    changed_when: false
+
+  - name: YADM Pull
+    command: ~/.local/bin/yadm pull https master
+    changed_when: false
+
+  - name: Get YADM Classes
+    command: ~/.local/bin/yadm config --get-all local.class
+    register: yadm_classes
+    changed_when: false
+
+  - name: Import Passwordless Role
+    import_role:
+      name: nickconway.shared.passwordless
+    when: yadm_classes.stdout.find('passwordless') != -1
+
+  - name: Check if YADM Archive Exists
+    stat:
+      path: ~/.local/share/yadm/archive
+    register: yadm_archive
+
+  - name: Decrypt YADM Archive
+    shell:
+      cmd: gpg --batch --passphrase {{ gpg_passphrase }} -d ~/.local/share/yadm/archive | tar vxf - -C ~
+    when: yadm_archive.stat.exists
+    changed_when: false

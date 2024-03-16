@@ -1,0 +1,53 @@
+---
+# tasks file for vpn
+
+- name: Check If WSL
+  stat:
+    path: /proc/sys/fs/binfmt_misc/WSLInterop
+  register: wsl
+
+- name: Check If Work Device
+  stat:
+    path: ~/.work
+  register: work
+
+- block:
+  - name: Install Tailscale
+    shell:
+      cmd: curl -fsSL https://tailscale.com/install.sh | sh
+    changed_when: false
+
+  - name: Connect to VPN (Server)
+    become: true
+    shell:
+      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server
+    when: "'servers' in group_names and 'dns' not in group_names"
+    changed_when: false
+
+  - name: Connect to VPN (DNS)
+    become: true
+    shell:
+      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server --accept-dns=false
+    when: "'dns' in group_names"
+    changed_when: false
+
+  - name: Connect to VPN (Work)
+    become: true
+    shell:
+      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:work
+    when: work.stat.exists
+    changed_when: false
+
+  - name: Connect to VPN (Client)
+    become: true
+    shell:
+      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:client
+    when: "'local' in group_names and not work.stat.exists"
+    changed_when: false
+
+  - name: Enable Auto-Updates
+    become: true
+    shell:
+      cmd: tailscale set --auto-update
+    changed_when: false
+  when: not wsl.stat.exists or work.stat.exists

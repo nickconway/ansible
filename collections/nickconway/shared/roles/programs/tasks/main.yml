@@ -1,0 +1,195 @@
+---
+# tasks file for programs
+
+- name: Get Current User
+  command: whoami
+  become: false
+  register: current_user
+  changed_when: false
+
+- name: Add GitHub Keys to Known Hosts
+  lineinfile:
+    path: /home/{{ current_user.stdout }}/.ssh/known_hosts
+    line: "{{ item }}"
+  loop:
+    - "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
+    - "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg="
+    - "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk="
+    - "git.conway.dev ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ308+nAV0FTUbT+JX4+57gNxqq0Z4H4Yt0xg/nlM+TABirY8URTq2Hj44JgjRbcF/Ar2w5uh4Xnp3PQjVF6XiA="
+
+- name: Install JQ
+  get_url:
+    url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+    dest: ~/.local/bin/jq
+    mode: '0700'
+
+- name: Install Borg
+  get_url:
+    url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux64
+    dest: ~/.local/bin/borg
+    mode: '755'
+
+- name: Install Cargo
+  shell:
+    cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+  changed_when: false
+
+- name: Install Ripgrep
+  shell:
+    cmd: cargo install ripgrep
+  environment:
+    PATH: "/home/{{ current_user.stdout }}/.cargo/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Clone FZF
+  git:
+    repo: https://github.com/junegunn/fzf.git
+    dest: ~/.fzf
+  register: fzf
+
+- name: Install FZF
+  command: ~/.fzf/install --all --no-update-rc
+  when: fzf.changed
+
+- name: Install Neovim Dependencies
+  become: true
+  apt:
+    state: present
+    pkg:
+    - ninja-build
+    - gettext
+    - cmake
+    - unzip
+    - curl
+
+- name: Clone Neovim
+  git:
+    repo: https://github.com/neovim/neovim
+    dest: ~/.local/source/neovim
+    force: true
+  register: neovim
+
+- block:
+  - name: Build Neovim
+    shell:
+      chdir: ~/.local/source/neovim
+      cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$HOME/.local
+
+  - name: Install Neovim
+    command:
+      chdir: ~/.local/source/neovim
+      cmd: make install
+  when: neovim.changed
+
+- name: Install Pip
+  become: true
+  package:
+    name: python3-pip
+    state: present
+
+- name: Install Starship
+  shell: curl -sS https://starship.rs/install.sh | sh -s -- --bin-dir $HOME/.local/bin -y
+  changed_when: false
+
+- name: Install Tmuxp
+  pip:
+    name: tmuxp
+    extra_args: --user
+
+- name: Install YQ
+  get_url:
+    url: https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+    dest: ~/.local/bin/yq
+    mode: '755'
+
+- name: Install Zellij
+  unarchive:
+    remote_src: true
+    src: https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz
+    dest: ~/.local/bin
+
+- name: Install Zoxide
+  shell:
+    cmd: curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+  changed_when: false
+
+- name: Install ZSH
+  become: true
+  package:
+    name: zsh
+    state: present
+
+- name: Clone ZSH-Autosuggestions
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: ~/.zsh/zsh-autosuggestions
+
+- name: Clone ZSH-Completions
+  git:
+    repo: https://github.com/zsh-users/zsh-completions
+    dest: ~/.zsh/zsh-completions
+
+- name: Clone ZSH-Syntax-Highlighting
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting
+    dest: ~/.zsh/zsh-syntax-highlighting
+
+- name: Ensure ZSH is Valid Shell
+  lineinfile:
+    path: /etc/shells
+    line: /usr/bin/zsh
+
+- name: Change Shell to ZSH
+  become: true
+  command: chsh {{ current_user.stdout }} -s /usr/bin/zsh
+  changed_when: false
+
+- name: Download Docker Script
+  get_url:
+    url: https://get.docker.com
+    dest: ~/.local/bin/get-docker
+    mode: '750'
+
+- name: Run Docker Script
+  command:
+    cmd: sh ~/.local/bin/get-docker
+  changed_when: false
+
+- name: Make Docker Group
+  become: true
+  group:
+    name: docker
+    state: present
+
+- name: Add User to Docker Group
+  become: true
+  user:
+    name: "{{ current_user.stdout }}"
+    groups: docker
+
+- name: Download bTop
+  unarchive:
+    remote_src: true
+    src: https://github.com/aristocratos/btop/releases/latest/download/btop-x86_64-linux-musl.tbz
+    dest: ~/.local/source
+  register: btop
+
+- block:
+  - name: Install bTop
+    become: true
+    command:
+      cmd: make install PREFIX=/home/{{ current_user.stdout }}/.local
+      chdir: /home/{{ current_user.stdout }}/.local/source/btop
+    changed_when: false
+
+  - name: Make bTop Root
+    become: true
+    command:
+      cmd: make setuid PREFIX=/home/{{ current_user.stdout }}/.local
+      chdir: /home/{{ current_user.stdout }}/.local/source/btop
+    changed_when: false
+  when: btop.changed
+
+- name: Install NVM
+  shell: PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash'
+  changed_when: false
