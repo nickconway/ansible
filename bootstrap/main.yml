@@ -38,3 +38,6 @@
       shell:
         cmd: ~/.local/bin/clone-all
       changed_when: false
+      environment:
+        GITEA_USER: "{{ gitea_user }}"
+        GITEA_TOKEN: "{{ gitea_token }}"
