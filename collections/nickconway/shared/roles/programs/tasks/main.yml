@@ -7,6 +7,15 @@
   register: current_user
   changed_when: false
 
+- name: Get Service Facts
+  service_facts:
+
+- name: Install Open-SSH Server
+  become: true
+  package:
+    name: openssh-server
+  when: "'ssh' in services"
+  
 - name: Add GitHub Keys to Known Hosts
   lineinfile:
     path: /home/{{ current_user.stdout }}/.ssh/known_hosts
