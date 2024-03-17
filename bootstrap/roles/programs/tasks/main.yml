@@ -18,7 +18,7 @@
     dest: ~/.local/source/password-store
   register: pass_store
 
-- name: Install Pass
+- name: Initialize Password Store
   shell:
     cmd: make install PREFIX=$HOME/.local
     chdir: ~/.local/source/password-store
