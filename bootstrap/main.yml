@@ -30,6 +30,10 @@
       import_role:
         name: nickconway.shared.yadm
 
+    - name: Import WSL Role
+      import_role:
+        name: nickconway.shared.wsl
+
     - name: Clone Git Repositories
       shell:
         cmd: ~/.local/bin/clone-all
@@ -37,7 +41,3 @@
       environment:
         GITEA_USER: "{{ gitea_user }}"
         GITEA_TOKEN: "{{ gitea_token }}"
-
-    - name: Import WSL Role
-      import_role:
-        name: nickconway.shared.wsl

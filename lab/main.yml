@@ -2,10 +2,6 @@
 - name: Lab
   hosts: all
   tasks:
-    - name: Import WSL Role
-      import_role:
-        name: nickconway.shared.wsl
-
     - name: Import Security Role
       import_role:
         name: nickconway.shared.security
@@ -26,11 +22,6 @@
       import_role:
         name: programs
 
-    - name: Import DNS Role
-      import_role:
-        name: dns
-      when: "'dns' in group_names"
-
     - name: Import VPN Role
       import_role:
         name: nickconway.shared.vpn
@@ -39,6 +30,15 @@
     - name: Import YADM Role
       import_role:
         name: nickconway.shared.yadm
+
+    - name: Import WSL Role
+      import_role:
+        name: nickconway.shared.wsl
+
+    - name: Import DNS Role
+      import_role:
+        name: dns
+      when: "'dns' in group_names"
 
     - name: Import Reboot
       import_role:
