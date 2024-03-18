@@ -4,6 +4,12 @@
 - name: Get Service Facts
   service_facts:
 
+- name: Install Open-SSH Server
+  become: true
+  package:
+    name: openssh-server
+  when: "'ssh' not in services and 'sshd' not in services"
+
 - name: Add NTFY-SSH to PAM
   become: true
   lineinfile:
@@ -11,7 +17,7 @@
     line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
     state: present
     mode: 0644
-  when: "'sshd' in services"
+  when: "'ssh' in services or 'sshd' in services"
 
 - name: Copy NTFY-SSH Script
   become: true
@@ -22,11 +28,19 @@
     group: root
     mode: 0755
 
+- name: Start SSH Service (Debian)
+  become: true
+  service:
+    name: "ssh"
+    state: "started"
+  when: "ansible_os_family == 'Debian' and 'ssh' in services"
+
 - name: Start SSH Service
+  become: true
   service:
     name: "sshd"
     state: "started"
-  when: "'sshd' in services"
+  when: "ansible_os_family != 'Debian' and 'sshd' in services"
 
 - name: Secure SSH Configuration
   lineinfile:

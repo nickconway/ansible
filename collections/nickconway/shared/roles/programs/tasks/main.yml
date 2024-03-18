@@ -10,12 +10,6 @@
 - name: Get Service Facts
   service_facts:
 
-- name: Install Open-SSH Server
-  become: true
-  package:
-    name: openssh-server
-  when: "'sshd' not in services"
-  
 - name: Add GitHub Keys to Known Hosts
   lineinfile:
     path: /home/{{ current_user.stdout }}/.ssh/known_hosts
