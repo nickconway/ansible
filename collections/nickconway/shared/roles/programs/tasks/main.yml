@@ -14,7 +14,7 @@
   become: true
   package:
     name: openssh-server
-  when: "'ssh' not in services"
+  when: "'sshd' not in services"
   
 - name: Add GitHub Keys to Known Hosts
   lineinfile:

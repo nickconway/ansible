@@ -11,7 +11,7 @@
     line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
     state: present
     mode: 0644
-  when: "'ssh' in services"
+  when: "'sshd' in services"
 
 - name: Copy NTFY-SSH Script
   become: true
@@ -26,7 +26,7 @@
   service:
     name: "sshd"
     state: "started"
-  when: "'ssh' in services"
+  when: "'sshd' in services"
 
 - name: Secure SSH Configuration
   lineinfile:
