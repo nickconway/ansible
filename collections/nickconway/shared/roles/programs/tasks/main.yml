@@ -198,3 +198,9 @@
 - name: Install NVM
   shell: PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash'
   changed_when: false
+
+- name: Install Node With NVM
+  shell: "source ~/.config/nvm/nvm.sh && nvm install node"
+  args:
+    executable: /bin/bash
+  changed_when: false
