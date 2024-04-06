@@ -78,7 +78,7 @@
   - name: Build Neovim
     shell:
       chdir: ~/.local/source/neovim
-      cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$HOME/.local
+      cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
 
   - name: Install Neovim
     command:
