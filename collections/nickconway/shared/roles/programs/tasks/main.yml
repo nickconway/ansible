@@ -230,10 +230,15 @@
     executable: /bin/bash
   changed_when: false
 
+- name: Remove Go Folder
+  file:
+    path: ~/.local/go
+    state: absent
+
 - name: Download Go
   unarchive:
     remote_src: true
-    src: https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+    src: https://go.dev/dl/go1.22.2.linux-amd64.tar.gz
     dest: ~/.local
 
 - name: Download rClone
