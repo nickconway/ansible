@@ -2,20 +2,6 @@
 - name: Lab
   hosts: all
   tasks:
-    - name: Create Server File
-      file:
-        path: .server
-        state: touch
-        mode: 600
-      when: "'servers' in group_names"
-
-    - name: Create Work File
-      file:
-        path: .work
-        state: touch
-        mode: 600
-      when: "'work' in group_names"
-
     - name: Import Security Role
       import_role:
         name: nickconway.shared.security

@@ -13,19 +13,19 @@
     path: .dns
   register: dns
 
-- name: Create VPN File
-  file:
-    path: .vpn
-    state: touch
-    mode: 600
-  when: "'vpn' in group_names"
-
-- name: Check for VPN File
-  stat:
-    path: .vpn
-  register: vpn
-
 - block:
+  - name: Create VPN File
+    file:
+      path: .vpn
+      state: touch
+      mode: 600
+    when: "'vpn' in group_names"
+
+  - name: Check for VPN File
+    stat:
+      path: .vpn
+    register: vpn
+
   - name: Create Resolve Symlink
     become: true
     file:

@@ -1,13 +1,56 @@
 ---
 # tasks file for vpn
 
+- name: Create VPN File
+  file:
+    path: ~/.vpn
+    state: touch
+    mode: 600
+  when: "'vpn' in group_names"
+
+- name: Check for VPN File
+  stat:
+    path: ~/.vpn
+  register: vpn
+
 - block:
   - name: Check If WSL
     stat:
       path: /proc/sys/fs/binfmt_misc/WSLInterop
     register: wsl
 
-  - name: Check If Work Device
+  - name: Create Server File
+    file:
+      path: ~/.server
+      state: touch
+      mode: 600
+    when: "'servers' in group_names"
+
+  - name: Check for Server File
+    stat:
+      path: ~/.server
+    register: server
+
+  - name: Create DNS File
+    file:
+      path: ~/.dns
+      state: touch
+      mode: 600
+    when: "'dns' in group_names"
+
+  - name: Check for DNS File
+    stat:
+      path: ~/.dns
+    register: dns
+
+  - name: Create Work File
+    file:
+      path: ~/.work
+      state: touch
+      mode: 600
+    when: "'work' in group_names"
+
+  - name: Check for Work File
     stat:
       path: ~/.work
     register: work
@@ -21,14 +64,14 @@
     become: true
     shell:
       cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server
-    when: "'servers' in group_names and 'dns' not in group_names"
+    when: "server.stat.exists and not dns.stat.exists"
     changed_when: false
 
   - name: Connect to VPN (DNS)
     become: true
     shell:
       cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server --accept-dns=false
-    when: "'dns' in group_names"
+    when: "dns.stat.exists"
     changed_when: false
 
   - name: Connect to VPN (Work)
@@ -42,7 +85,7 @@
     become: true
     shell:
       cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:client
-    when: "'local' in group_names and not work.stat.exists"
+    when: "not server.stat.exists and not dns.stat.exists and not work.stat.exists"
     changed_when: false
 
   - name: Enable Auto-Updates
@@ -50,4 +93,4 @@
     shell:
       cmd: tailscale set --auto-update
     changed_when: false
-  when: "'vpn' in group_names"
+  when: "vpn.stat.exists"
