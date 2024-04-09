@@ -230,16 +230,16 @@
     executable: /bin/bash
   changed_when: false
 
-- name: Remove Go Folder
-  file:
-    path: ~/.local/go
-    state: absent
-
 - name: Download Go
   unarchive:
     remote_src: true
     src: https://go.dev/dl/go1.22.2.linux-amd64.tar.gz
     dest: ~/.local
+
+- name: Change Go Permissions
+  command:
+    cmd: chmod -R +rw ~/.local/go
+  changed_when: false
 
 - name: Download rClone
   git:
@@ -251,4 +251,11 @@
   command:
     cmd: go build
     chdir: /home/{{ current_user.stdout }}/.local/source/rclone
+  when: rclone.changed
+
+- name: Install rClone
+  copy:
+    remote_src: true
+    src: ~/.local/source/rclone/rclone
+    dest: ~/.local/bin/rclone
   when: rclone.changed
