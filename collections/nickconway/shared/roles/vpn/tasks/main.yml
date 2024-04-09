@@ -1,17 +1,17 @@
 ---
 # tasks file for vpn
 
-- name: Check If WSL
-  stat:
-    path: /proc/sys/fs/binfmt_misc/WSLInterop
-  register: wsl
-
-- name: Check If Work Device
-  stat:
-    path: ~/.work
-  register: work
-
 - block:
+  - name: Check If WSL
+    stat:
+      path: /proc/sys/fs/binfmt_misc/WSLInterop
+    register: wsl
+
+  - name: Check If Work Device
+    stat:
+      path: ~/.work
+    register: work
+
   - name: Install Tailscale
     shell:
       cmd: curl -fsSL https://tailscale.com/install.sh | sh
@@ -50,4 +50,4 @@
     shell:
       cmd: tailscale set --auto-update
     changed_when: false
-  when: not wsl.stat.exists or work.stat.exists
+  when: "'vpn' in group_names"

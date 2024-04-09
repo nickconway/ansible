@@ -1,16 +1,30 @@
 ---
 # tasks file for passwordless
 
-- name: Get Current User
-  command: whoami
-  register: current_user
-  changed_when: false
+- name: Create Passwordless File
+  file:
+    path: .passwordless
+    state: touch
+    mode: 600
+  when: "'passwordless' in group_names"
 
-- name: Add Passwordless Sudo
-  become: true
-  lineinfile:
-    path: "/etc/sudoers.d/{{ current_user.stdout }}-nopasswd"
-    create: true
-    state: present
-    line: "{{ current_user.stdout }} ALL=(ALL) NOPASSWD:ALL"
-    validate: 'visudo -cf %s'
+- name: Check for Passwordless File
+  stat:
+    path: ~/.passwordless
+  register: passwordless
+
+- block:
+  - name: Get Current User
+    command: whoami
+    register: current_user
+    changed_when: false
+
+  - name: Add Passwordless Sudo
+    become: true
+    lineinfile:
+      path: "/etc/sudoers.d/{{ current_user.stdout }}-nopasswd"
+      create: true
+      state: present
+      line: "{{ current_user.stdout }} ALL=(ALL) NOPASSWD:ALL"
+      validate: 'visudo -cf %s'
+  when: passwordless.stat.exists

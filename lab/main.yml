@@ -2,6 +2,20 @@
 - name: Lab
   hosts: all
   tasks:
+    - name: Create Server File
+      file:
+        path: .server
+        state: touch
+        mode: 600
+      when: "'servers' in group_names"
+
+    - name: Create Work File
+      file:
+        path: .work
+        state: touch
+        mode: 600
+      when: "'work' in group_names"
+
     - name: Import Security Role
       import_role:
         name: nickconway.shared.security
@@ -29,11 +43,14 @@
     - name: Import VPN Role
       import_role:
         name: nickconway.shared.vpn
-      when: "'vpn' in group_names"
 
     - name: Import YADM Role
       import_role:
         name: nickconway.shared.yadm
+
+    - name: Import Passwordless Role
+      import_role:
+        name: nickconway.shared.passwordless
 
     - name: Import WSL Role
       import_role:
@@ -42,4 +59,3 @@
     - name: Import DNS Role
       import_role:
         name: dns
-      when: "'dns' in group_names"

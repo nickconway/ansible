@@ -23,11 +23,6 @@
     register: yadm_classes
     changed_when: false
 
-  - name: Import Passwordless Role
-    import_role:
-      name: nickconway.shared.passwordless
-    when: yadm_classes.stdout.find('passwordless') != -1
-
   - name: Check if YADM Archive Exists
     stat:
       path: ~/.local/share/yadm/archive
@@ -38,3 +33,4 @@
       cmd: gpg --batch --passphrase {{ gpg_passphrase }} -d ~/.local/share/yadm/archive | tar vxf - -C ~
     when: yadm_archive.stat.exists
     changed_when: false
+  when: yadm.stat.exists

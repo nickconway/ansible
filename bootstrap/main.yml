@@ -30,6 +30,10 @@
       import_role:
         name: nickconway.shared.yadm
 
+    - name: Import Passwordless Role
+      import_role:
+        name: nickconway.shared.passwordless
+
     - name: Import WSL Role
       import_role:
         name: nickconway.shared.wsl
