@@ -196,6 +196,7 @@
   user:
     name: "{{ current_user.stdout }}"
     groups: docker
+    append: yes
 
 - name: Download bTop
   unarchive:
