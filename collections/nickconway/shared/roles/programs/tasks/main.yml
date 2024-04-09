@@ -39,6 +39,11 @@
     cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
   changed_when: false
 
+- name: Install Zoxide
+  shell:
+    cmd: cargo install zoxide --locked
+  changed_when: false
+
 - name: Install Ripgrep
   shell:
     cmd: cargo install ripgrep
@@ -137,11 +142,6 @@
   get_url:
     url: https://github.com/rvcas/room/releases/latest/download/room.wasm
     dest: ~/.config/zellij/plugins/room.wasm
-
-- name: Install Zoxide
-  shell:
-    cmd: curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-  changed_when: false
 
 - name: Install ZSH
   become: true
