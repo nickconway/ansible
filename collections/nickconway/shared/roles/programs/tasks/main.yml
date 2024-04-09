@@ -229,3 +229,21 @@
   args:
     executable: /bin/bash
   changed_when: false
+
+- name: Download Go
+  unarchive:
+    remote_src: true
+    src: https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+    dest: ~/.local
+
+- name: Download rClone
+  git:
+    repo: https://github.com/rclone/rclone.git
+    dest: ~/.local/source/rclone
+  register: rclone
+
+- name: Build rClone
+  command:
+    cmd: go build
+    chdir: /home/{{ current_user.stdout }}/.local/source/rclone
+  when: rclone.changed
