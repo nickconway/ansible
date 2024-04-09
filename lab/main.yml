@@ -10,6 +10,10 @@
       import_role:
         name: nickconway.shared.update
 
+    - name: Import Reboot
+      import_role:
+        name: reboot
+
     - name: Import Cron Role
       import_role:
         name: nickconway.shared.cron
@@ -39,7 +43,3 @@
       import_role:
         name: dns
       when: "'dns' in group_names"
-
-    - name: Import Reboot
-      import_role:
-        name: reboot
