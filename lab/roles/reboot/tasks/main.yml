@@ -9,3 +9,4 @@
 - name: Reboot
   reboot:
   when: reboot_required_file.stat.exists == true
+  become: true
