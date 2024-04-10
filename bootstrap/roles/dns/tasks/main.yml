@@ -5,7 +5,7 @@
   file:
     path: .dns
     state: touch
-    mode: 600
+    mode: '600'
   when: "'dns' in group_names"
 
 - name: Check for DNS File
@@ -18,7 +18,7 @@
     file:
       path: .vpn
       state: touch
-      mode: 600
+      mode: '600'
     when: "'vpn' in group_names"
 
   - name: Check for VPN File

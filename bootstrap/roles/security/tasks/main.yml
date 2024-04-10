@@ -16,7 +16,7 @@
     path: "/etc/pam.d/sshd"
     line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
     state: present
-    mode: 0644
+    mode: '644'
   when: "'ssh' in services or 'sshd' in services"
 
 - name: Copy NTFY-SSH Script
@@ -26,7 +26,7 @@
     dest: /usr/bin/ntfy-ssh
     owner: root
     group: root
-    mode: 0755
+    mode: '755'
 
 - name: Start SSH Service (Debian)
   become: true
@@ -49,7 +49,7 @@
     line: "{{ item.line }}"
     state: present
     validate: 'sshd -T -f %s'
-    mode: 0644
+    mode: '644'
   with_items:
     - regexp: "^PasswordAuthentication"
       line: "PasswordAuthentication no"

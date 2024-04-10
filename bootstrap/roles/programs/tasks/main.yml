@@ -28,7 +28,7 @@
   get_url:
     url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
     dest: ~/.local/bin/jq
-    mode: '0700'
+    mode: '700'
 
 - name: Install Borg
   get_url:
@@ -112,7 +112,7 @@
   get_url:
     url: https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
     dest: ~/.local/bin/yq
-    mode: '0755'
+    mode: '755'
 
 - name: Install Zellij
   unarchive:
