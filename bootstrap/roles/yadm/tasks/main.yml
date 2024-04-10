@@ -3,7 +3,7 @@
 
 - name: Check if YADM Exists
   stat:
-    path: ~/.local/bin/yadm
+    path: ~/.local/share/yadm/repo.git
   register: yadm
 
 - block:
@@ -18,11 +18,6 @@
     command: ~/.local/bin/yadm pull https master
     changed_when: false
 
-  - name: Get YADM Classes
-    command: ~/.local/bin/yadm config --get-all local.class
-    register: yadm_classes
-    changed_when: false
-
   - name: Check if YADM Archive Exists
     stat:
       path: ~/.local/share/yadm/archive
@@ -32,5 +27,10 @@
     shell:
       cmd: gpg --batch --passphrase {{ gpg_passphrase }} -d ~/.local/share/yadm/archive | tar vxf - -C ~
     when: yadm_archive.stat.exists
+    changed_when: false
+
+  - name: Create YADM Alt Files
+    shell:
+      cmd: ~/.local/bin/yadm alt
     changed_when: false
   when: yadm.stat.exists
