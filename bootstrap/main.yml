@@ -45,4 +45,4 @@
       environment:
         GITEA_USER: "{{ gitea_user }}"
         GITEA_TOKEN: "{{ gitea_token }}"
-      when: "'local' not in group_names"
+      when: "'local' in group_names"
