@@ -260,7 +260,7 @@
 - block:
   - name: Build rClone
     command:
-      cmd: go build
+      cmd: /home/{{ current_user.stdout }} /.local/go/bin/go build
       chdir: /home/{{ current_user.stdout }}/.local/source/rclone
 
   - name: Install rClone
