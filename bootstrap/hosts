@@ -1,2 +1,18 @@
 [local]
 localhost ansible_connection=local
+
+[servers]
+pihole
+server
+
+[dns]
+pihole
+server
+
+[vpn]
+server
+pihole
+work-laptop
+
+[work]
+work-laptop
