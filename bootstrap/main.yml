@@ -18,10 +18,6 @@
       import_role:
         name: cron
 
-    - name: Import Shared Programs Role
-      import_role:
-        name: programs
-
     - name: Import Programs Role
       import_role:
         name: programs

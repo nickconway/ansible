@@ -257,17 +257,17 @@
     dest: ~/.local/source/rclone
   register: rclone
 
-- name: Build rClone
-  command:
-    cmd: go build
-    chdir: /home/{{ current_user.stdout }}/.local/source/rclone
-  when: rclone.changed
+- block:
+  - name: Build rClone
+    command:
+      cmd: go build
+      chdir: /home/{{ current_user.stdout }}/.local/source/rclone
 
-- name: Install rClone
-  copy:
-    remote_src: true
-    src: ~/.local/source/rclone/rclone
-    dest: ~/.local/bin/rclone
+  - name: Install rClone
+    copy:
+      remote_src: true
+      src: ~/.local/source/rclone/rclone
+      dest: ~/.local/bin/rclone
   when: rclone.changed
 
 - name: Install Pass
