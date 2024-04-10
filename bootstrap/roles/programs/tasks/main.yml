@@ -240,16 +240,16 @@
     executable: /bin/bash
   changed_when: false
 
+- name: Remove Go
+  file:
+    path: ~/.local/go
+    state: absent
+
 - name: Download Go
   unarchive:
     remote_src: true
     src: https://go.dev/dl/go1.22.2.linux-amd64.tar.gz
     dest: ~/.local
-
-- name: Change Go Permissions
-  command:
-    cmd: chmod -R +rw ~/.local/go
-  changed_when: false
 
 - name: Download rClone
   git:
@@ -426,4 +426,9 @@
     cmd: make install PREFIX=$HOME/.local
     chdir: ~/.local/source/unix-tree-2.1.1
   when: tree.changed
+  changed_when: false
+
+- name: Change Go Permissions
+  command:
+    cmd: chmod -R +rw ~/.local/go
   changed_when: false

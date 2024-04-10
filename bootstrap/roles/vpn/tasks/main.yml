@@ -56,6 +56,7 @@
     register: work
 
   - name: Install Tailscale
+    become: true
     shell:
       cmd: curl -fsSL https://tailscale.com/install.sh | sh
     changed_when: false
