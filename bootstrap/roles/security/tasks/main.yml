@@ -43,6 +43,7 @@
   when: "ansible_os_family != 'Debian' and 'sshd' in services"
 
 - name: Secure SSH Configuration
+  become: true
   lineinfile:
     path: "/etc/ssh/sshd_config"
     regexp: "{{ item.regexp }}"
