@@ -56,4 +56,4 @@
     - regexp: "^PermitRootLogin"
       line: "PermitRootLogin no"
   notify: Restart SSH
-  when: "'sshd' in services"
+  when: "'ssh' in services or 'sshd' in services"
