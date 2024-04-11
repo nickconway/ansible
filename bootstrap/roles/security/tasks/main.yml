@@ -42,6 +42,11 @@
     state: "started"
   when: "ansible_os_family != 'Debian' and 'sshd' in services"
 
+- name: Check If SSHD Config Exists
+  stat:
+    path: "/etc/ssh/sshd_config"
+  register: sshd_config
+
 - name: Secure SSH Configuration
   become: true
   lineinfile:
@@ -57,4 +62,4 @@
     - regexp: "^PermitRootLogin"
       line: "PermitRootLogin no"
   notify: Restart SSH
-  when: "'ssh' in services or 'sshd' in services"
+  when: "sshd_config.stat.exists"
