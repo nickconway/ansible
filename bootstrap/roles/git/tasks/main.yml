@@ -5,6 +5,10 @@
   command: hostname
   register: hostname
 
+- name: Get User
+  command: whoami
+  register: whoami
+
 - name: Check If GitHub Key Exists
   stat:
     path: ~/.ssh/github_ed25519
@@ -12,7 +16,7 @@
 
 - name: Generate SSH Key for GitHub
   shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}"
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}" -C "github {{ whoami.stdout }}@{{ hostname.stdout }}"
   when: "not github.stat.exists"
 
 - name: Get SSH Key for GitHub
@@ -33,7 +37,7 @@
 
 - name: Generate SSH Key for Gitea
   shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}"
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ whoami.stdout }}@{{ hostname.stdout }}"
   when: "not gitea.stat.exists"
 
 - name: Get SSH Key for Gitea
