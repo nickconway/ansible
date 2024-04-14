@@ -267,6 +267,8 @@
     command:
       cmd: /home/{{ current_user.stdout }}/.local/go/bin/go build
       chdir: /home/{{ current_user.stdout }}/.local/source/rclone
+    environment:
+      GOPATH: /home/{{ current_user.stdout }}/.local/go
 
   - name: Install rClone
     copy:
