@@ -6,9 +6,9 @@
       import_role:
         name: security
 
-    - name: Import GitHub Role
+    - name: Import Git Role
       import_role:
-        name: github
+        name: git
 
     - name: Import Update Role
       import_role:

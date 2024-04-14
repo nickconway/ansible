@@ -1,0 +1,52 @@
+---
+# tasks file for git
+
+- name: Get Hostname
+  command: hostname
+  register: hostname
+
+- name: Check If GitHub Key Exists
+  stat:
+    path: ~/.ssh/github_ed25519
+  register: github
+
+- name: Generate SSH Key for GitHub
+  shell:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}"
+  when: "not github.stat.exists"
+
+- name: Get SSH Key for GitHub
+  shell: cat ~/.ssh/github_ed25519.pub
+  register: ssh_key
+  changed_when: false
+
+- name: Add SSH Key to GitHub Account
+  github_key:
+    name: "{{ hostname.stdout }}"
+    token: '{{ github_token }}'
+    pubkey: "{{ ssh_key.stdout }}"
+
+- name: Check If Gitea Key Exists
+  stat:
+    path: ~/.ssh/gitea_ed25519
+  register: gitea
+
+- name: Generate SSH Key for Gitea
+  shell:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea -q -N "{{ ansible_become_pass }}"
+  when: "not gitea.stat.exists"
+
+- name: Get SSH Key for Gitea
+  shell: cat ~/.ssh/gitea_ed25519.pub
+  register: ssh_key
+  changed_when: false
+
+- name: Add SSH Key to Gitea Account
+  shell:
+    cmd: >
+        curl -s -H "Authorization: token {{ gitea_token }}"
+        -H "Content-Type: application/json"
+        -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
+        https://git.conway.dev/api/v1/user/keys
+  changed_when: false
+  register: giteassh
