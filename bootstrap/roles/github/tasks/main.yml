@@ -1,0 +1,27 @@
+---
+# tasks file for github
+
+- name: Check If GitHub Key Exists
+  stat:
+    path: ~/.ssh/github_ed25519
+  register: github
+
+- block:
+  - name: Generate SSH Key for GitHub
+    shell:
+      cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}"
+
+  - name: Get Hostname
+    command: hostname
+    register: hostname
+
+  - name: Get SSH Key Ffor GitHub
+    shell: cat ~/.ssh/github_ed25519.pub
+    register: ssh_key
+
+  - name: Add SSH Key to GitHub Account
+    github_key:
+      name: "{{ hostname.stdout }}"
+      token: '{{ github_token }}'
+      pubkey: '{{ ssh_key.stdout }}'
+  when: "not github.stat.exists"
