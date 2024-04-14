@@ -4,6 +4,30 @@
 - name: Get Service Facts
   service_facts:
 
+- name: Get Current User
+  command: whoami
+  register: whoami
+
+- name: Check If SSH Key Exists
+  stat:
+    path: ~/.ssh/id_ed25519
+  delegate_to: localhost
+  run_once: true
+  register: ssh_key
+
+- name: Generate SSH Key
+  shell:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -q -N "{{ ansible_become_pass }}"
+  delegate_to: localhost
+  run_once: true
+  when: "not ssh_key.stat.exists"
+
+- name: Add SSH Key to Authorized Keys
+  authorized_key:
+    user: "{{ whoami.stdout }}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+
 - name: Install Open-SSH Server
   become: true
   package:

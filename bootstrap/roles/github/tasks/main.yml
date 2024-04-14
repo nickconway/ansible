@@ -15,8 +15,12 @@
   command: hostname
   register: hostname
 
+- name: Get SSH Key for GitHub
+  shell: cat ~/.ssh/github_ed25519.pub
+  register: ssh_key
+
 - name: Add SSH Key to GitHub Account
   github_key:
     name: "{{ hostname.stdout }}"
     token: '{{ github_token }}'
-    pubkey: "{{ lookup('ansible.builtin.file', '~/.ssh/github_ed25519.pub') }}"
+    pubkey: "{{ ssh_key.stdout }}"
