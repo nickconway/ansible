@@ -33,7 +33,7 @@
 
 - name: Generate SSH Key for Gitea
   shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea -q -N "{{ ansible_become_pass }}"
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}"
   when: "not gitea.stat.exists"
 
 - name: Get SSH Key for Gitea
