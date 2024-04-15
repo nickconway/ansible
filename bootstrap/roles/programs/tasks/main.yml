@@ -240,15 +240,30 @@
     executable: /bin/bash
   changed_when: false
 
+- name: Get Most Recent Go Version
+  shell: curl -s 'https://go.dev/dl/?mode=json' | grep version | head -n 1 | xargs | awk '{print $2}' | tr -d ','
+  register: go_version
+
+- name: Check if Go Exists
+  stat:
+    path: ~/.local/go
+  register: go
+
+- name: Get Current Go Version
+  shell: head ~/.local/go/VERSION -n 1
+  register: installed_go_version
+  when: go.stat.exists
+
 - name: Remove Go
   file:
     path: ~/.local/go
     state: absent
+  when: "go_version.stdout != installed_go_version.stdout"
 
 - name: Download Go
   unarchive:
     remote_src: true
-    src: https://go.dev/dl/go1.22.2.linux-amd64.tar.gz
+    src: https://go.dev/dl/{{ go_version.stdout }}.linux-amd64.tar.gz
     dest: ~/.local
 
 - name: Change Go Permissions
