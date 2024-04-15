@@ -4,10 +4,12 @@
 - name: Get Hostname
   command: hostname
   register: hostname
+  changed_when: false
 
 - name: Get User
   command: whoami
   register: whoami
+  changed_when: false
 
 - name: Check If GitHub Key Exists
   stat:
