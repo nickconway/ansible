@@ -265,6 +265,7 @@
     remote_src: true
     src: https://go.dev/dl/{{ go_version.stdout }}.linux-amd64.tar.gz
     dest: ~/.local
+  when: "not go.stat.exists or go_version.stdout != installed_go_version.stdout"
 
 - name: Change Go Permissions
   command:
