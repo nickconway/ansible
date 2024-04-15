@@ -5,42 +5,52 @@
     - name: Import Security Role
       import_role:
         name: security
+      tag: security
 
     - name: Import Git Role
       import_role:
         name: git
+      tag: git
 
     - name: Import Update Role
       import_role:
         name: update
+      tag: update
 
     - name: Import Reboot
       import_role:
         name: reboot
+      tag: reboot
 
     - name: Import Cron Role
       import_role:
         name: cron
+      tag: cron
 
     - name: Import Programs Role
       import_role:
         name: programs
+      tag: programs
 
     - name: Import VPN Role
       import_role:
         name: vpn
+      tag: vpn
 
     - name: Import YADM Role
       import_role:
         name: yadm
+      tag: yadm
 
     - name: Import Passwordless Role
       import_role:
         name: passwordless
+      tag: passwordless
 
     - name: Import WSL Role
       import_role:
         name: wsl
+      tag: wsl
 
     - name: Clone Git Repositories
       shell:
