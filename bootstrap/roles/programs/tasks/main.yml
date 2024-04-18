@@ -455,3 +455,13 @@
   command:
     cmd: chmod -R +rw ~/.local/go
   changed_when: false
+
+- name: Clone Neofetch
+  git:
+    repo: https://github.com/dylanaraps/neofetch
+    dest: ~/.local/source/neofetch
+
+- name: Install neofetch
+  shell:
+    cmd: make PREFIX=~/.local install
+    chdir: ~/.local/source/neofetch
