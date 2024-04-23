@@ -106,7 +106,7 @@
 - name: Install Tmuxp
   pip:
     name: tmuxp
-    extra_args: --user
+    extra_args: --user --break-system-packages
 
 - name: Install YQ
   get_url:
@@ -308,7 +308,7 @@
 - name: Install Keyring-Pass
   pip:
     name: keyring-pass
-    extra_args: --user
+    extra_args: --user --break-system-packages
 
 - name: Install Kitty
   shell:
