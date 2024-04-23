@@ -258,7 +258,7 @@
   file:
     path: ~/.local/go
     state: absent
-  when: "go_version.stdout != installed_go_version.stdout"
+  when: "go.stat.exists and go_version.stdout != installed_go_version.stdout"
 
 - name: Download Go
   unarchive:
