@@ -18,6 +18,7 @@
     command:
       cmd: systemd-detect-virt
     register: virt
+    changed_when: false
 
   - name: Create Server File
     file:
@@ -62,13 +63,17 @@
     changed_when: false
 
   - name: Use Userspace Networking
+    become: true
     lineinfile:
       path: "/etc/default/tailscaled"
-    regexp: "^Flags"
-    line: "Flags=\"--tun=userspace-networking\""
-    state: present
+      regexp: "^FLAGS="
+      line: "FLAGS=\"--tun=userspace-networking\""
+      state: present
     notify: Restart Tailscale
     when: virt.stdout == "lxc"
+
+  - name: Flush
+    meta: flush_handlers
 
   - name: Connect to VPN (Server)
     become: true

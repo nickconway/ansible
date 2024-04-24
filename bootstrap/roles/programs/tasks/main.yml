@@ -243,6 +243,7 @@
 - name: Get Most Recent Go Version
   shell: curl -s 'https://go.dev/dl/?mode=json' | grep version | head -n 1 | xargs | awk '{print $2}' | tr -d ','
   register: go_version
+  changed_when: false
 
 - name: Check if Go Exists
   stat:
@@ -253,6 +254,7 @@
   shell: head ~/.local/go/VERSION -n 1
   register: installed_go_version
   when: go.stat.exists
+  changed_when: false
 
 - name: Remove Go
   file:
@@ -465,3 +467,4 @@
   shell:
     cmd: make PREFIX=~/.local install
     chdir: ~/.local/source/neofetch
+  changed_when: false
