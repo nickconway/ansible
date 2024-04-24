@@ -44,6 +44,8 @@
 - name: Install Zoxide
   shell:
     cmd: cargo install zoxide --locked
+  environment:
+    PATH: "/home/{{ current_user.stdout }}/.cargo/bin:{{ ansible_env.PATH }}"
   changed_when: false
 
 - name: Install Ripgrep
@@ -106,7 +108,7 @@
 - name: Install Tmuxp
   pip:
     name: tmuxp
-    extra_args: --user --break-system-packages
+    extra_args: --user
 
 - name: Install YQ
   get_url:
@@ -293,7 +295,14 @@
       remote_src: true
       src: ~/.local/source/rclone/rclone
       dest: ~/.local/bin/rclone
+      mode: 0750
   when: rclone.changed
+
+- name: Fix rClone Permissions
+  file:
+    path: ~/.local/bin/rclone
+    state: file
+    mode: 0750
 
 - name: Install Pass
   git:
@@ -310,7 +319,7 @@
 - name: Install Keyring-Pass
   pip:
     name: keyring-pass
-    extra_args: --user --break-system-packages
+    extra_args: --user
 
 - name: Install Kitty
   shell:
