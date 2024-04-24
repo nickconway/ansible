@@ -14,10 +14,10 @@
   register: vpn
 
 - block:
-  - name: Check If WSL
-    stat:
-      path: /proc/sys/fs/binfmt_misc/WSLInterop
-    register: wsl
+  - name: Check Environment
+    command:
+      cmd: systemd-detect-virt
+    register: virt
 
   - name: Create Server File
     file:
@@ -60,6 +60,15 @@
     shell:
       cmd: curl -fsSL https://tailscale.com/install.sh | sh
     changed_when: false
+
+  - name: Use Userspace Networking
+    lineinfile:
+      path: "/etc/default/tailscaled"
+    regexp: "^Flags"
+    line: "Flags=\"--tun=userspace-networking\""
+    state: present
+    notify: Restart Tailscale
+    when: virt.stdout == "lxc"
 
   - name: Connect to VPN (Server)
     become: true
