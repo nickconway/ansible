@@ -28,7 +28,7 @@
     user: "{{ whoami.stdout }}"
     state: present
     key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
-  when: ansible_hostname != 'localhost'
+  when: inventory_hostname != 'localhost'
 
 - name: Install Open-SSH Server
   become: true
