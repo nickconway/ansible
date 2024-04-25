@@ -28,6 +28,7 @@
     user: "{{ whoami.stdout }}"
     state: present
     key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+  when: ansible_hostname == 'localhost'
 
 - name: Install Open-SSH Server
   become: true
@@ -89,5 +90,5 @@
   notify: Restart SSH
   when: "sshd_config.stat.exists"
 
-- name: Flush
+- name: Flush Handlers
   meta: flush_handlers

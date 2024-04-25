@@ -72,7 +72,7 @@
     notify: Restart Tailscale
     when: virt.stdout == "lxc"
 
-  - name: Flush
+  - name: Flush Handlers
     meta: flush_handlers
 
   - name: Connect to VPN (Server)
