@@ -88,3 +88,6 @@
       line: "PermitRootLogin no"
   notify: Restart SSH
   when: "sshd_config.stat.exists"
+
+- name: Flush
+  meta: flush_handlers
