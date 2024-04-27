@@ -14,12 +14,6 @@
   register: vpn
 
 - block:
-  - name: Check Environment
-    command:
-      cmd: systemd-detect-virt
-    register: virt
-    changed_when: false
-
   - name: Create Server File
     file:
       path: ~/.server
@@ -61,16 +55,6 @@
     shell:
       cmd: curl -fsSL https://tailscale.com/install.sh | sh
     changed_when: false
-
-  - name: Use Userspace Networking
-    become: true
-    lineinfile:
-      path: "/etc/default/tailscaled"
-      regexp: "^FLAGS="
-      line: "FLAGS=\"--tun=userspace-networking\""
-      state: present
-    notify: Restart Tailscale
-    when: virt.stdout == "lxc"
 
   - name: Flush Handlers
     meta: flush_handlers
