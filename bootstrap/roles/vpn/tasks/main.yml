@@ -68,8 +68,23 @@
       cmd: curl -fsSL https://tailscale.com/install.sh | sh
     changed_when: false
 
-  - name: Flush Handlers
-    meta: flush_handlers
+  - name: Enable IP Forwarding
+    become: true
+    lineinfile:
+      create: true
+      path: /etc/sysctl.d/99-tailscale.conf
+      line: "{{ item }}"
+    loop:
+      - net.ipv4.ip_forward = 1
+      - net.ipv6.conf.all.forwarding = 1
+    when: "dns.stat.exists"
+    register: ip_forwarding
+
+  - name: Reload Sysctl
+    become: true
+    shell:
+      cmd: sysctl -p /etc/sysctl.conf
+    when: "dns.stat.exists and ip_forwarding.changed"
 
   - name: Connect to VPN (Client-Server)
     become: true
@@ -88,7 +103,7 @@
   - name: Connect to VPN (DNS)
     become: true
     shell:
-      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server --accept-dns=false
+      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server --accept-dns=false --advertise-routes=10.0.10.0/24,10.0.107.0/24
     when: "dns.stat.exists"
     changed_when: false
 
