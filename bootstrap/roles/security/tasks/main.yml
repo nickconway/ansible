@@ -9,6 +9,16 @@
   register: whoami
   changed_when: false
 
+- name: Get Environment
+  command: systemd-detect-virt
+  register: virt
+
+- name: Enable Ping
+  become: true
+  shell:
+    cmd: setcap cap_net_raw+p $(which ping)
+  when: virt.stdout == 'lxc'
+
 - name: Check If SSH Key Exists
   stat:
     path: ~/.ssh/id_ed25519
