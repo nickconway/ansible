@@ -2,6 +2,12 @@
 - name: Bootstrap
   hosts: all
   tasks:
+    - name: Set Timezone
+      become: true
+      timezone:
+        name: America/New_York
+      tags: tz
+
     - name: Import Security Role
       import_role:
         name: security
