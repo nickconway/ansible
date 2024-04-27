@@ -26,6 +26,18 @@
       path: ~/.server
     register: server
 
+  - name: Create Client-Server File
+    file:
+      path: ~/.client-server
+      state: touch
+      mode: '600'
+    when: "'client-server' in group_names"
+
+  - name: Check for Client-Server File
+    stat:
+      path: ~/.client-server
+    register: client_server
+
   - name: Create DNS File
     file:
       path: ~/.dns
@@ -59,6 +71,13 @@
   - name: Flush Handlers
     meta: flush_handlers
 
+  - name: Connect to VPN (Client-Server)
+    become: true
+    shell:
+      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server,tag:client
+    when: "client_server.stat.exists"
+    changed_when: false
+
   - name: Connect to VPN (Server)
     become: true
     shell:
@@ -84,7 +103,7 @@
     become: true
     shell:
       cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:client
-    when: "not server.stat.exists and not dns.stat.exists and not work.stat.exists"
+    when: "not server.stat.exists and not dns.stat.exists and not work.stat.exists and not client_server.stat.exists"
     changed_when: false
 
   - name: Enable Auto-Updates
