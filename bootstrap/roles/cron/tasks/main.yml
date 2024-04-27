@@ -7,4 +7,4 @@
     hour: 5
     minute: 0
     state: present
-    job: ".local/bin/backup-containers > /tmp/backup-containers.log 2>&1"
+    job: "bash -lc '.local/bin/backup-containers' > /tmp/backup-containers.log 2>&1"
