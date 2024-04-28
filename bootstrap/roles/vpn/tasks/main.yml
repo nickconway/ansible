@@ -78,13 +78,13 @@
       - net.ipv4.ip_forward = 1
       - net.ipv6.conf.all.forwarding = 1
     when: "dns.stat.exists"
-    register: ip_forwarding
 
   - name: Reload Sysctl
     become: true
     shell:
-      cmd: sysctl -p /etc/sysctl.conf
-    when: "dns.stat.exists and ip_forwarding.changed"
+      cmd: sysctl -p /etc/sysctl.d/99-tailscale.conf
+    when: "dns.stat.exists"
+    changed_when: false
 
   - name: Connect to VPN (Client-Server)
     become: true
