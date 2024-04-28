@@ -103,7 +103,7 @@
   - name: Connect to VPN (DNS)
     become: true
     shell:
-      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server --accept-dns=false --advertise-routes=10.0.10.0/24,10.0.107.0/24
+      cmd: tailscale up --ssh --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server --accept-dns=false --advertise-routes=10.0.10.0/24,10.0.107.0/24
     when: "dns.stat.exists"
     changed_when: false
 
