@@ -110,8 +110,10 @@
     - name: Add Accept Routes Flags
       set_fact:
         flags: "{{ flags }} --accept-routes"
-    when: (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.10.0/24')) == [] and
-          (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24')) == []
+    when:
+      - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.10.0/24'))
+      - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.100.0/24'))
+      - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24'))
 
   - name: Install Tailscale
     become: true
