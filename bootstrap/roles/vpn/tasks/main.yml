@@ -99,7 +99,7 @@
   - block:
     - name: Add Accept Routes Flags
       set_fact:
-        flags: echo "{{ flags }} --accept-routes"
+        flags: "{{ flags }} --accept-routes"
     when: not ansible_default_ipv4.address.startswith('10.0.10') and
           not ansible_default_ipv4.address.startswith('10.0.107')
 
