@@ -7,6 +7,7 @@
     state: touch
     mode: '600'
   when: "'vpn' in group_names"
+  changed_when: false
 
 - name: Check for VPN File
   stat:
@@ -20,6 +21,7 @@
       state: touch
       mode: '600'
     when: "'servers' in group_names"
+    changed_when: false
 
   - name: Check for Server File
     stat:
@@ -32,6 +34,7 @@
       state: touch
       mode: '600'
     when: "'client-server' in group_names"
+    changed_when: false
 
   - name: Check for Client-Server File
     stat:
@@ -44,6 +47,7 @@
       state: touch
       mode: '600'
     when: "'dns' in group_names"
+    changed_when: false
 
   - name: Check for DNS File
     stat:
@@ -56,6 +60,7 @@
       state: touch
       mode: '600'
     when: "'work' in group_names"
+    changed_when: false
 
   - name: Check for Work File
     stat:
@@ -100,8 +105,8 @@
     - name: Add Accept Routes Flags
       set_fact:
         flags: "{{ flags }} --accept-routes"
-    when: not ansible_default_ipv4.address.startswith('10.0.10') and
-          not ansible_default_ipv4.address.startswith('10.0.107')
+    when: (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.10.0/24')) == [] and
+          (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24')) == []
 
   - name: Install Tailscale
     become: true
