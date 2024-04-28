@@ -62,6 +62,47 @@
       path: ~/.work
     register: work
 
+  - name: Get Current User
+    shell:
+      cmd: whoami
+    register: current_user
+    changed_when: false
+
+  - name: Create Default Flags
+    set_fact:
+      flags: "--ssh --operator={{ current_user.stdout }} --authkey {{ vpn_key }}"
+
+  - block:
+    - name: Add Client-Server Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:server,tag:client"
+    when: "client_server.stat.exists"
+
+  - block:
+    - name: Add Server Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:server"
+    when: "server.stat.exists"
+
+  - block:
+    - name: Add DNS Flags
+      set_fact:
+        flags: "{{ flags }} --accept-dns=false --advertise-routes=10.0.10.0/24,10.0.107.0/24"
+    when: "dns.stat.exists"
+
+  - block:
+    - name: Add Work Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:work"
+    when: work.stat.exists
+
+  - block:
+    - name: Add Accept Routes Flags
+      set_fact:
+        flags: echo "{{ flags }} --accept-routes"
+    when: not ansible_default_ipv4.address.startswith('10.0.10') and
+          not ansible_default_ipv4.address.startswith('10.0.107')
+
   - name: Install Tailscale
     become: true
     shell:
@@ -86,39 +127,10 @@
     when: "dns.stat.exists"
     changed_when: false
 
-  - name: Connect to VPN (Client-Server)
+  - name: Connect to VPN
     become: true
     shell:
-      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server,tag:client
-    when: "client_server.stat.exists"
-    changed_when: false
-
-  - name: Connect to VPN (Server)
-    become: true
-    shell:
-      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server
-    when: "server.stat.exists and not dns.stat.exists"
-    changed_when: false
-
-  - name: Connect to VPN (DNS)
-    become: true
-    shell:
-      cmd: tailscale up --ssh --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:server --accept-dns=false --advertise-routes=10.0.10.0/24,10.0.107.0/24
-    when: "dns.stat.exists"
-    changed_when: false
-
-  - name: Connect to VPN (Work)
-    become: true
-    shell:
-      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:work
-    when: work.stat.exists
-    changed_when: false
-
-  - name: Connect to VPN (Client)
-    become: true
-    shell:
-      cmd: tailscale up --ssh --accept-routes --operator=$(whoami) --authkey {{ vpn_key }} --advertise-tags=tag:client
-    when: "not server.stat.exists and not dns.stat.exists and not work.stat.exists and not client_server.stat.exists"
+      cmd: tailscale up {{ flags }}
     changed_when: false
 
   - name: Enable Auto-Updates
