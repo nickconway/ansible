@@ -15,6 +15,11 @@
   register: vpn
 
 - block:
+  - name: Install Netaddr
+    pip:
+      name: netaddr
+      extra_args: --user --break-system-packages
+
   - name: Create Server File
     file:
       path: ~/.server
