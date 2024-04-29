@@ -39,7 +39,7 @@
   - name: Install Regctl
     copy:
       remote_src: true
-      src: ~/.local/source/regctl/bin/regtl
+      src: ~/.local/source/regctl/bin/regctl
       dest: ~/.local/bin/regctl
       mode: 0750
   when: regctl.changed
