@@ -12,12 +12,14 @@
 - name: Get Environment
   command: systemd-detect-virt
   register: virt
+  changed_when: false
 
 - name: Enable Ping
   become: true
   shell:
     cmd: setcap cap_net_raw+p $(which ping)
   when: virt.stdout == 'lxc'
+  changed_when: false
 
 - name: Check If SSH Key Exists
   stat:
