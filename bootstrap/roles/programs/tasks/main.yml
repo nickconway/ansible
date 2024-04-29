@@ -24,6 +24,12 @@
     - "git.conway.dev ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ308+nAV0FTUbT+JX4+57gNxqq0Z4H4Yt0xg/nlM+TABirY8URTq2Hj44JgjRbcF/Ar2w5uh4Xnp3PQjVF6XiA="
     - "git.conway.dev ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO0q6lYtSUsjXT5gyjImOlY4Pd5KX/PplED53zFlPmy5"
 
+- name: Install Dockcheck
+  get_url:
+    url: https://raw.githubusercontent.com/mag37/dockcheck/main/dockcheck.sh
+    dest: ~/.local/bin/dockcheck
+    mode: '755'
+
 - name: Install JQ
   get_url:
     url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
