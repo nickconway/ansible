@@ -295,6 +295,7 @@
       chdir: ~/.local/source/regctl
     environment:
       PATH: "/home/{{ current_user.stdout }}/.local/go/bin:{{ ansible_env.PATH }}"
+      GOPATH: /home/{{ current_user.stdout }}/.local/go
 
   - name: Install Regctl
     copy:
