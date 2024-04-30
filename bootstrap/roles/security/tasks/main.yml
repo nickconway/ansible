@@ -13,6 +13,7 @@
   command: systemd-detect-virt
   register: virt
   changed_when: false
+  ignore_errors: true
 
 - name: Enable Ping
   become: true
