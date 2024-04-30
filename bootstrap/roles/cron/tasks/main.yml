@@ -12,7 +12,7 @@
 - name: Install Docker Updates Cron
   cron:
     name: docker-updates
-    hour: 15
+    hour: "*/6"
     minute: 0
     state: present
     job: "bash -lc '.local/bin/get-docker-updates'"
