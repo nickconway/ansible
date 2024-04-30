@@ -9,6 +9,9 @@ server
 pihole
 server
 
+[vpn_subnet_router]
+subnet-router
+
 [vpn]
 server
 pihole

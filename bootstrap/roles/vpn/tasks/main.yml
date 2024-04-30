@@ -59,6 +59,19 @@
       path: ~/.dns
     register: dns
 
+  - name: Create Subnet-Router File
+    file:
+      path: ~/.subnet-router
+      state: touch
+      mode: '600'
+    when: "'vpn_subnet_router' in group_names"
+    changed_when: false
+
+  - name: Check for Subnet-Router File
+    stat:
+      path: ~/.subnet-router
+    register: subnet_router
+
   - name: Create Work File
     file:
       path: ~/.work
@@ -94,8 +107,18 @@
 
   - name: Add DNS Flags
     set_fact:
-      flags: "{{ flags }} --accept-dns=false --advertise-routes=10.0.10.0/24,10.0.107.0/24"
+      flags: "{{ flags }} --accept-dns=false"
     when: "dns.stat.exists"
+
+  - name: Add DNS False Flags
+    set_fact:
+      flags: "{{ flags }} --accept-dns=true"
+    when: "not dns.stat.exists"
+
+  - name: Add Subnet Router Flags
+    set_fact:
+      flags: "{{ flags }} --advertise-routes=10.0.10.0/24,10.0.100.0/24,10.0.107.0/24"
+    when: "subnet_router.stat.exists"
 
   - name: Add Work Flags
     set_fact:
@@ -107,13 +130,16 @@
       flags: "{{ flags }} --accept-routes"
     when:
       - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.10.0/24'))
+      - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.100.0/24'))
       - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24'))
 
   - name: Add Accept Routes False Flags
     set_fact:
       flags: "{{ flags }} --accept-routes=false"
     when: (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.10.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24'))
+          (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.100.0/24')) or
+          (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24')) or
+          subnet_router.stat.exists
 
   - name: Install Tailscale
     become: true

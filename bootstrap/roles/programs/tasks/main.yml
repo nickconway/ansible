@@ -24,26 +24,6 @@
     - "git.conway.dev ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ308+nAV0FTUbT+JX4+57gNxqq0Z4H4Yt0xg/nlM+TABirY8URTq2Hj44JgjRbcF/Ar2w5uh4Xnp3PQjVF6XiA="
     - "git.conway.dev ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO0q6lYtSUsjXT5gyjImOlY4Pd5KX/PplED53zFlPmy5"
 
-- name: Download Regctl
-  git:
-    repo: https://github.com/regclient/regclient.git
-    dest: ~/.local/source/regctl
-  register: regctl
-
-- block:
-  - name: Build Regctl
-    command:
-      cmd: make
-      chdir: ~/.local/source/regctl
-
-  - name: Install Regctl
-    copy:
-      remote_src: true
-      src: ~/.local/source/regctl/bin/regctl
-      dest: ~/.local/bin/regctl
-      mode: 0750
-  when: regctl.changed
-
 - name: Install Dockcheck
   get_url:
     url: https://raw.githubusercontent.com/mag37/dockcheck/main/dockcheck.sh
@@ -301,6 +281,28 @@
   command:
     cmd: chmod -R +rw ~/.local/go
   changed_when: false
+
+- name: Download Regctl
+  git:
+    repo: https://github.com/regclient/regclient.git
+    dest: ~/.local/source/regctl
+  register: regctl
+
+- block:
+  - name: Build Regctl
+    command:
+      cmd: make
+      chdir: ~/.local/source/regctl
+    environment:
+      PATH: "/home/{{ current_user.stdout }}/.local/go/bin:{{ ansible_env.PATH }}"
+
+  - name: Install Regctl
+    copy:
+      remote_src: true
+      src: ~/.local/source/regctl/bin/regctl
+      dest: ~/.local/bin/regctl
+      mode: 0750
+  when: regctl.changed
 
 - name: Download rClone
   git:
