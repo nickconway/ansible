@@ -15,4 +15,4 @@
     hour: "*/6"
     minute: 0
     state: present
-    job: "bash -lc '.local/bin/get-docker-updates'"
+    job: "bash -lc '.local/bin/get-docker-updates' > /dev/null 2>&1"
