@@ -39,6 +39,48 @@
   when: yadm_archive.stat.exists
   changed_when: false
 
+- name: Add Client-Server Class
+  shell:
+    cmd: grep "class = client-server" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class client-server
+  when: "'client-server' in group_names"
+  changed_when: false
+
+- name: Add DNS Class
+  shell:
+    cmd: grep "class = dns" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class dns
+  when: "'dns' in group_names"
+  changed_when: false
+
+- name: Add Passwordless Class
+  shell:
+    cmd: grep "class = passwordless" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class passwordless
+  when: "'passwordless' in group_names"
+  changed_when: false
+
+- name: Add Server Class
+  shell:
+    cmd: grep "class = server" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class server
+  when: "'servers' in group_names"
+  changed_when: false
+
+- name: Add Subnet-Router Class
+  shell:
+    cmd: grep "class = subnet-router" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class subnet-router
+  when: "'subnet_router' in group_names"
+  changed_when: false
+
+- name: Add VPN Class
+  shell:
+    cmd: grep "class = vpn" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class vpn
+  when: "'vpn' in group_names"
+  changed_when: false
+
+- name: Add Work Class
+  shell:
+    cmd: grep "class = work" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class work
+  when: "'work' in group_names"
+  changed_when: false
+
 - name: Create YADM Alt Files
   shell:
     cmd: ~/.local/bin/yadm alt
