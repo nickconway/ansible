@@ -4,6 +4,7 @@ localhost ansible_connection=local
 [servers]
 pihole
 server
+pve
 
 [dns]
 pihole
@@ -15,6 +16,7 @@ subnet-router
 [vpn]
 server
 pihole
+pve
 work-laptop
 
 [work]
