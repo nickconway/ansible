@@ -1,5 +1,8 @@
 #!/bin/bash
 
 if [ "${PAM_TYPE}" = "open_session" ]; then
-    curl -d "SSH login on $(hostname): ${PAM_USER} from ${PAM_RHOST}" https://ntfy.conway.dev/ssh -H "Authorization: Bearer {{ ntfy_ssh_token }}" || echo "Failed to notify of ssh login"
+    echo "${PAM_RHOST}" | grep -qE '^(192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.)'
+    if [[ "$?" -ne 0 ]]; then
+        curl -d "SSH login on $(hostname): ${PAM_USER} from ${PAM_RHOST}" https://ntfy.conway.dev/ssh -H "Authorization: Bearer {{ ntfy_ssh_token }}" || echo "Failed to notify of ssh login"
+    fi
 fi
