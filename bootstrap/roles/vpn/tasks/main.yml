@@ -129,16 +129,16 @@
     set_fact:
       flags: "{{ flags }} --accept-routes"
     when:
-      - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.10.0/24'))
-      - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.100.0/24'))
-      - not (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24'))
+      - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24'))
+      - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24'))
+      - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24'))
 
   - name: Add Accept Routes False Flags
     set_fact:
       flags: "{{ flags }} --accept-routes=false"
-    when: (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.10.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.100.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.ipaddr('10.0.107.0/24')) or
+    when: (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
+          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
+          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
           subnet_router.stat.exists
 
   - name: Install Tailscale
