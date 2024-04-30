@@ -1,13 +1,6 @@
 ---
 # tasks file for passwordless
 
-- name: Create Passwordless File
-  file:
-    path: .passwordless
-    state: touch
-    mode: '600'
-  when: "'passwordless' in group_names"
-
 - name: Check for Passwordless File
   stat:
     path: ~/.passwordless

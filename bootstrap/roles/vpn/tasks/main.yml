@@ -1,14 +1,6 @@
 ---
 # tasks file for vpn
 
-- name: Create VPN File
-  file:
-    path: ~/.vpn
-    state: touch
-    mode: '600'
-  when: "'vpn' in group_names"
-  changed_when: false
-
 - name: Check for VPN File
   stat:
     path: ~/.vpn
@@ -20,65 +12,25 @@
       name: netaddr
       extra_args: --user --break-system-packages
 
-  - name: Create Server File
-    file:
-      path: ~/.server
-      state: touch
-      mode: '600'
-    when: "'servers' in group_names"
-    changed_when: false
-
   - name: Check for Server File
     stat:
       path: ~/.server
     register: server
-
-  - name: Create Client-Server File
-    file:
-      path: ~/.client-server
-      state: touch
-      mode: '600'
-    when: "'client-server' in group_names"
-    changed_when: false
 
   - name: Check for Client-Server File
     stat:
       path: ~/.client-server
     register: client_server
 
-  - name: Create DNS File
-    file:
-      path: ~/.dns
-      state: touch
-      mode: '600'
-    when: "'dns' in group_names"
-    changed_when: false
-
   - name: Check for DNS File
     stat:
       path: ~/.dns
     register: dns
 
-  - name: Create Subnet-Router File
-    file:
-      path: ~/.subnet-router
-      state: touch
-      mode: '600'
-    when: "'vpn_subnet_router' in group_names"
-    changed_when: false
-
   - name: Check for Subnet-Router File
     stat:
       path: ~/.subnet-router
     register: subnet_router
-
-  - name: Create Work File
-    file:
-      path: ~/.work
-      state: touch
-      mode: '600'
-    when: "'work' in group_names"
-    changed_when: false
 
   - name: Check for Work File
     stat:

@@ -13,6 +13,11 @@
         name: security
       tags: security
 
+    - name: Import YADM Role
+      import_role:
+        name: yadm
+      tags: yadm
+
     - name: Import Git Role
       import_role:
         name: git
@@ -42,11 +47,6 @@
       import_role:
         name: vpn
       tags: vpn
-
-    - name: Import YADM Role
-      import_role:
-        name: yadm
-      tags: yadm
 
     - name: Import Passwordless Role
       import_role:

@@ -1,36 +1,45 @@
 ---
 # tasks file for yadm
 
-- name: Check if YADM Exists
+- name: Download YADM
+  get_url:
+    url: https://raw.githubusercontent.com/nickconway/dotfiles/master/.local/bin/yadm
+    dest: ~/.local/bin/yadm
+    mode: '755'
+
+- name: Check if YADM Repo Exists
   stat:
     path: ~/.local/share/yadm/repo.git
   register: yadm
 
-- block:
-  - name: Set YADM Remotes
-    shell:
-      cmd: |
-        ~/.local/bin/yadm remote set-url origin "git@github.com:nickconway/dotfiles.git"
-        ~/.local/bin/yadm remote add https "https://github.com/nickconway/dotfiles.git" || true
-    changed_when: false
+- name: Clone YADM Repo
+  shell:
+    command: ~/.local/bin/yadm clone https://github.com/nickconway/dotfiles
+  when: not yadm.stat.exists
 
-  - name: YADM Pull
-    command: ~/.local/bin/yadm pull https master
-    changed_when: false
+- name: Set YADM Remotes
+  shell:
+    cmd: |
+      ~/.local/bin/yadm remote set-url origin "git@github.com:nickconway/dotfiles.git"
+      ~/.local/bin/yadm remote add https "https://github.com/nickconway/dotfiles.git" || true
+  changed_when: false
 
-  - name: Check if YADM Archive Exists
-    stat:
-      path: ~/.local/share/yadm/archive
-    register: yadm_archive
+- name: YADM Pull
+  command: ~/.local/bin/yadm pull https master
+  changed_when: false
 
-  - name: Decrypt YADM Archive
-    shell:
-      cmd: gpg --batch --passphrase {{ gpg_passphrase }} -d ~/.local/share/yadm/archive | tar vxf - -C ~
-    when: yadm_archive.stat.exists
-    changed_when: false
+- name: Check if YADM Archive Exists
+  stat:
+    path: ~/.local/share/yadm/archive
+  register: yadm_archive
 
-  - name: Create YADM Alt Files
-    shell:
-      cmd: ~/.local/bin/yadm alt
-    changed_when: false
-  when: yadm.stat.exists
+- name: Decrypt YADM Archive
+  shell:
+    cmd: gpg --batch --passphrase {{ gpg_passphrase }} -d ~/.local/share/yadm/archive | tar vxf - -C ~
+  when: yadm_archive.stat.exists
+  changed_when: false
+
+- name: Create YADM Alt Files
+  shell:
+    cmd: ~/.local/bin/yadm alt
+  changed_when: false
