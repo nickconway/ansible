@@ -27,3 +27,7 @@ work-laptop
 [passwordless]
 pihole
 server
+gaming-server
+
+[gaming]
+gaming-server

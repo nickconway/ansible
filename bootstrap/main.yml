@@ -18,6 +18,11 @@
         name: yadm
       tags: yadm
 
+    - name: Import Passwordless Role
+      import_role:
+        name: passwordless
+      tags: passwordless
+
     - name: Import Git Role
       import_role:
         name: git
@@ -47,11 +52,6 @@
       import_role:
         name: programs
       tags: programs
-
-    - name: Import Passwordless Role
-      import_role:
-        name: passwordless
-      tags: passwordless
 
     - name: Import WSL Role
       import_role:

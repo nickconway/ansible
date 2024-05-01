@@ -56,6 +56,12 @@
   when: "'dns' in group_names"
   changed_when: false
 
+- name: Add Gaming Class
+  shell:
+    cmd: grep "class = gaming" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class gaming
+  when: "'gaming' in group_names"
+  changed_when: false
+
 - name: Add Passwordless Class
   shell:
     cmd: grep "class = passwordless" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class passwordless

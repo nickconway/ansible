@@ -7,6 +7,12 @@
   register: vpn
 
 - block:
+  - name: Install Pip
+    become: true
+    package:
+      name: python3-pip
+      state: present
+
   - name: Install Netaddr
     pip:
       name: netaddr
@@ -108,7 +114,7 @@
     loop:
       - net.ipv4.ip_forward = 1
       - net.ipv6.conf.all.forwarding = 1
-    when: "dns.stat.exists"
+    when: "subnet_router.stat.exists"
 
   - name: Reload Sysctl
     become: true
