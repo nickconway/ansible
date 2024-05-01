@@ -506,3 +506,17 @@
     cmd: make PREFIX=~/.local install
     chdir: ~/.local/source/neofetch
   changed_when: false
+
+- name: Download SSHPass
+  unarchive:
+    remote_src: true
+    src: https://sourceforge.net/projects/sshpass/files/latest/download
+    dest: ~/.local/source
+  tags: test
+
+- name: Install SSHPass
+  shell:
+    cmd: rm -rf sshpass; mv sshpass* sshpass && cd sshpass && ./configure --prefix=$HOME/.local && make install
+    chdir: ~/.local/source
+  tags: test
+

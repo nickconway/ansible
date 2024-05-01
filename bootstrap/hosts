@@ -5,6 +5,7 @@ localhost ansible_connection=local
 pihole
 server
 pve
+gaming-server
 
 [dns]
 pihole
@@ -18,6 +19,7 @@ server
 pihole
 pve
 work-laptop
+gaming-server
 
 [work]
 work-laptop

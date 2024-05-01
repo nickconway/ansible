@@ -1,6 +1,11 @@
 ---
 # tasks file for yadm
 
+- name: Create Local Bin
+  file:
+    path: ~/.local/bin
+    state: directory
+
 - name: Download YADM
   get_url:
     url: https://raw.githubusercontent.com/nickconway/dotfiles/master/.local/bin/yadm
@@ -14,7 +19,7 @@
 
 - name: Clone YADM Repo
   shell:
-    command: ~/.local/bin/yadm clone https://github.com/nickconway/dotfiles
+    cmd: ~/.local/bin/yadm clone https://github.com/nickconway/dotfiles
   when: not yadm.stat.exists
 
 - name: Set YADM Remotes
