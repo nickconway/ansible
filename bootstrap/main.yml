@@ -38,15 +38,15 @@
         name: cron
       tags: cron
 
-    - name: Import Programs Role
-      import_role:
-        name: programs
-      tags: programs
-
     - name: Import VPN Role
       import_role:
         name: vpn
       tags: vpn
+
+    - name: Import Programs Role
+      import_role:
+        name: programs
+      tags: programs
 
     - name: Import Passwordless Role
       import_role:
