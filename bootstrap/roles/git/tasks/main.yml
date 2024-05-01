@@ -11,6 +11,15 @@
   register: whoami
   changed_when: false
 
+- name: Check for Gaming File
+  stat:
+    path: ~/.gaming
+  register: gaming
+
+- name: Include Gaming Variables
+  include_vars: group_vars/gaming/vault.yml
+  when: gaming.stat.exists
+
 - name: Check If GitHub Key Exists
   stat:
     path: ~/.ssh/github_ed25519
@@ -47,12 +56,13 @@
   register: ssh_key
   changed_when: false
 
-# - name: Add SSH Key to Gitea Account
-#   shell:
-#     cmd: >
-#         curl -s -H "Authorization: token {{ gitea_token }}"
-#         -H "Content-Type: application/json"
-#         -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
-#         https://{{ git_url }}/api/v1/user/keys
-#   changed_when: false
-#   register: giteassh
+- name: Add SSH Key to Gitea Account
+  shell:
+    cmd: >
+        curl -s -H "Authorization: token {{ gitea_token }}"
+        -H "Content-Type: application/json"
+        -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
+        https://{{ git_url }}/api/v1/user/keys
+  changed_when: false
+  register: giteassh
+  when: git_url and gitea_token
