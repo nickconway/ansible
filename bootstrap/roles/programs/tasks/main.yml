@@ -197,6 +197,7 @@
       mode: '750'
 
   - name: Run Docker Script
+    become: true
     command:
       cmd: sh ~/.local/bin/get-docker
     changed_when: false
