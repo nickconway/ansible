@@ -497,15 +497,23 @@
     cmd: chmod -R +rw ~/.local/go
   changed_when: false
 
-- name: Clone Neofetch
+- name: Clone Fastfetch
   git:
-    repo: https://github.com/dylanaraps/neofetch
-    dest: ~/.local/source/neofetch
+    repo: https://github.com/fastfetch-cli/fastfetch
+    dest: ~/.local/source/fastfetch
+  register: fastfetch
 
-- name: Install neofetch
+- name: Install Fastfetch
   shell:
-    cmd: make PREFIX=~/.local install
-    chdir: ~/.local/source/neofetch
+    chdir: ~/.local/source/fastfetch
+    cmd: |
+      mkdir -p build
+      cd build
+      cmake ..
+      cmake --build . --target fastfetch --target flashfetch
+      cp ./fastfetch ~/.local/bin
+      cp ./flashfetch ~/.local/bin
+  when: fastfetch.changed
   changed_when: false
 
 - name: Download SSHPass
