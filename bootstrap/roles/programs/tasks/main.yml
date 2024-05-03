@@ -184,37 +184,45 @@
   command: chsh {{ current_user.stdout }} -s /usr/bin/zsh
   changed_when: false
 
-- name: Check If Docker Exists
-  stat:
-    path: /usr/bin/docker
-  register: docker
+- name: Get Environment
+  command: systemd-detect-virt
+  register: virt
+  changed_when: false
+  ignore_errors: true
 
 - block:
-  - name: Download Docker Script
-    get_url:
-      url: https://get.docker.com
-      dest: ~/.local/bin/get-docker
-      mode: '750'
+  - name: Check If Docker Exists
+    stat:
+      path: /usr/bin/docker
+    register: docker
 
-  - name: Run Docker Script
-    become: true
-    command:
-      cmd: sh ~/.local/bin/get-docker
-    changed_when: false
+  - block:
+    - name: Download Docker Script
+      get_url:
+        url: https://get.docker.com
+        dest: ~/.local/bin/get-docker
+        mode: '750'
 
-  - name: Make Docker Group
-    become: true
-    group:
-      name: docker
-      state: present
+    - name: Run Docker Script
+      become: true
+      command:
+        cmd: sh ~/.local/bin/get-docker
+      changed_when: false
 
-  - name: Add User to Docker Group
-    become: true
-    user:
-      name: "{{ current_user.stdout }}"
-      groups: docker
-      append: yes
-  when: "not docker.stat.exists"
+    - name: Make Docker Group
+      become: true
+      group:
+        name: docker
+        state: present
+
+    - name: Add User to Docker Group
+      become: true
+      user:
+        name: "{{ current_user.stdout }}"
+        groups: docker
+        append: yes
+    when: "not docker.stat.exists"
+  when: "virt.stdout != 'wsl'"
 
 - name: Download bTop
   unarchive:
