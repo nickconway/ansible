@@ -7,7 +7,7 @@
     hour: 5
     minute: 0
     state: present
-    job: "bash -lc '.local/bin/backup-containers' > /tmp/backup-containers.log 2>&1"
+    job: "bash -lc '[[ -e ~/docker ]] && .local/bin/backup-containers' > /tmp/backup-containers.log 2>&1"
 
 - name: Backup LXC Cron
   cron:
