@@ -1,7 +1,7 @@
 ---
 # tasks file for cron
 
-- name: Install Backup Containers Cron
+- name: Backup Containers Cron
   cron:
     name: backup-containers
     hour: 5
@@ -9,7 +9,14 @@
     state: present
     job: "bash -lc '.local/bin/backup-containers' > /tmp/backup-containers.log 2>&1"
 
-- name: Install Docker Updates Cron
+- name: Backup LXC Cron
+  cron:
+    name: backup-lxcs
+    minute: 0
+    state: present
+    job: "bash -lc '[[ -e /etc/pve/lxc ]] && .local/bin/backup-lxcs' > /tmp/backup-lxcs.log 2>&1"
+
+- name: Docker Updates Cron
   cron:
     name: docker-updates
     hour: "*/6"
