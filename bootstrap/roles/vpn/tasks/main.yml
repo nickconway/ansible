@@ -7,6 +7,11 @@
   register: vpn
 
 - block:
+  - name: Get Current User
+    command: whoami
+    register: current_user
+    changed_when: false
+
   - name: Install Pip
     become: true
     package:
@@ -51,7 +56,7 @@
 
   - name: Create Default Flags
     set_fact:
-      flags: "--ssh --operator={{ current_user.stdout }} --authkey {{ vpn_key }}"
+      flags: "--ssh --operator={{ current_user.stdout }} --authkey '{{ vpn_key }}'"
 
   - name: Add Client-Server Flags
     set_fact:
@@ -63,15 +68,24 @@
       flags: "{{ flags }} --advertise-tags=tag:server"
     when: "server.stat.exists"
 
-  - name: Add DNS Flags
-    set_fact:
-      flags: "{{ flags }} --accept-dns=false"
-    when: "dns.stat.exists"
-
   - name: Add DNS False Flags
     set_fact:
+      flags: "{{ flags }} --accept-dns=false"
+    when: (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
+          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24')) or
+          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
+          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
+          dns.stat.exists
+
+  - name: Add DNS Flags
+    set_fact:
       flags: "{{ flags }} --accept-dns=true"
-    when: "not dns.stat.exists"
+    when:
+      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24'))
+      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24'))
+      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24'))
+      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24'))
+      - "not dns.stat.exists"
 
   - name: Add Subnet Router Flags
     set_fact:
