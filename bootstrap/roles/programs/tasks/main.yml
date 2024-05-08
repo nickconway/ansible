@@ -206,7 +206,7 @@
     - name: Run Docker Script
       become: true
       command:
-        cmd: sh ~/.local/bin/get-docker
+        cmd: sh /home/{{ current_user.stdout }}/.local/bin/get-docker
       changed_when: false
 
     - name: Make Docker Group
