@@ -12,6 +12,7 @@
 - name: Backup LXC Cron
   cron:
     name: backup-lxcs
+    hour: 4
     minute: 0
     state: present
     job: "bash -lc '.local/bin/backup-lxcs' > /tmp/backup-lxcs.log 2>&1"
