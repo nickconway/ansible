@@ -190,6 +190,11 @@
   changed_when: false
   ignore_errors: true
 
+- name: Check If PVE Folder Exists
+  stat:
+    path: /etc/pve
+  register: pve
+
 - block:
   - name: Check If Docker Exists
     stat:
@@ -222,7 +227,9 @@
         groups: docker
         append: yes
     when: "not docker.stat.exists"
-  when: "virt.stdout != 'wsl'"
+  when:
+    - "virt.stdout != 'wsl'"
+    - "not pve.stat.exists"
 
 - name: Download bTop
   unarchive:
