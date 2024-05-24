@@ -64,7 +64,7 @@
 
   - name: Create Default Flags
     set_fact:
-      flags: "--ssh --operator={{ current_user.stdout }} --authkey '{{ vpn_key }}'"
+      flags: "--ssh --operator={{ current_user.stdout }} --authkey '{{ vpn_key }}' --stateful-filtering=false"
 
   - name: Add Client-Server Flags
     set_fact:
@@ -79,7 +79,7 @@
   - name: Add Client Flags
     set_fact:
       flags: "{{ flags }} --advertise-tags=tag:client"
-    when: 
+    when:
       - "not client_server.stat.exists"
       - "not server.stat.exists"
 
