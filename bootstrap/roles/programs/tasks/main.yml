@@ -71,7 +71,7 @@
   command: ~/.fzf/install --all --no-update-rc
   when: fzf.changed
 
-- name: Install Neovim Dependencies
+- name: Install Neovim Dependencies (Debian)
   become: true
   apt:
     state: present
@@ -81,6 +81,20 @@
     - cmake
     - unzip
     - curl
+  when: ansible_os_family == 'Debian'
+
+- name: Install Neovim Dependencies (Arch)
+  become: true
+  pacman:
+    state: present
+    pkg:
+    - ninja
+    - make
+    - gettext
+    - cmake
+    - unzip
+    - curl
+  when: ansible_os_family == 'Archlinux'
 
 - name: Clone Neovim
   git:
@@ -101,11 +115,19 @@
       cmd: make install
   when: neovim.changed
 
-- name: Install Pip
+- name: Install Pip (Debian)
   become: true
   package:
     name: python3-pip
     state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Install Pip (Arch)
+  become: true
+  package:
+    name: python-pip
+    state: present
+  when: ansible_os_family == 'Archlinux'
 
 - name: Install Starship
   shell: curl -sS https://starship.rs/install.sh | sh -s -- --bin-dir $HOME/.local/bin -y
@@ -213,6 +235,13 @@
       command:
         cmd: sh /home/{{ current_user.stdout }}/.local/bin/get-docker
       changed_when: false
+      when: ansible_os_family != 'Archlinux'
+
+    - name: Install Docker (Arch)
+      become: true
+      pacman:
+        package: docker
+      when: ansible_os_family == 'Archlinux'
 
     - name: Make Docker Group
       become: true
@@ -436,6 +465,21 @@
       - automake
       - pkg-config
     state: present
+  when: ansible_os_family != 'Archlinux'
+
+- name: Install Tmux Dependencies
+  become: true
+  package:
+    pkg:
+      - make
+      - bison
+      - libevent
+      - ncurses
+      - automake
+      - autoconf
+      - pkg-config
+    state: present
+  when: ansible_os_family == 'Archlinux'
 
 - name: Clone Tmux
   git:

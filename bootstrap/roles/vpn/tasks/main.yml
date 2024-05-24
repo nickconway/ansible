@@ -12,11 +12,19 @@
     register: current_user
     changed_when: false
 
-  - name: Install Pip
+  - name: Install Pip (Debian)
     become: true
     package:
       name: python3-pip
       state: present
+    when: ansible_os_family == 'Debian'
+
+  - name: Install Pip (Arch)
+    become: true
+    package:
+      name: python-pip
+      state: present
+    when: ansible_os_family == 'Archlinux'
 
   - name: Install Netaddr
     pip:
@@ -67,6 +75,13 @@
     set_fact:
       flags: "{{ flags }} --advertise-tags=tag:server"
     when: "server.stat.exists"
+
+  - name: Add Client Flags
+    set_fact:
+      flags: "{{ flags }} --advertise-tags=tag:client"
+    when: 
+      - "not client_server.stat.exists"
+      - "not server.stat.exists"
 
   - name: Add DNS False Flags
     set_fact:
@@ -150,4 +165,5 @@
     shell:
       cmd: tailscale set --auto-update
     changed_when: false
+    when: ansible_os_family != 'Archlinux'
   when: "vpn.stat.exists"

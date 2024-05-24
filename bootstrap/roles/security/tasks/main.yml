@@ -47,7 +47,7 @@
   become: true
   package:
     name: openssh-server
-  when: "'ssh' not in services and 'sshd' not in services"
+  when: "'ssh.service' not in services and 'sshd.service' not in services"
 
 - name: Add NTFY-SSH to PAM
   become: true
