@@ -104,7 +104,7 @@
 
   - name: Add Subnet Router Flags
     set_fact:
-      flags: "{{ flags }} --advertise-routes=10.0.10.0/24,10.0.100.0/24,10.0.107.0/24"
+      flags: "{{ flags }} --advertise-routes=10.0.10.0/24,10.0.100.0/24,10.0.107.0/24 --snat-subnet-routes=false"
     when: "subnet_router.stat.exists"
 
   - name: Add Work Flags
@@ -166,4 +166,5 @@
       cmd: tailscale set --auto-update
     changed_when: false
     when: ansible_os_family != 'Archlinux'
+    ignore_errors: true
   when: "vpn.stat.exists"
