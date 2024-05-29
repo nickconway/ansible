@@ -28,19 +28,19 @@
   get_url:
     url: https://raw.githubusercontent.com/mag37/dockcheck/main/dockcheck.sh
     dest: ~/.local/bin/dockcheck
-    mode: '755'
+    mode: "755"
 
 - name: Install JQ
   get_url:
     url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
     dest: ~/.local/bin/jq
-    mode: '700'
+    mode: "700"
 
 - name: Install Borg
   get_url:
     url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux64
     dest: ~/.local/bin/borg
-    mode: '755'
+    mode: "755"
 
 - name: Install Cargo
   shell:
@@ -76,11 +76,11 @@
   apt:
     state: present
     pkg:
-    - ninja-build
-    - gettext
-    - cmake
-    - unzip
-    - curl
+      - ninja-build
+      - gettext
+      - cmake
+      - unzip
+      - curl
   when: ansible_os_family == 'Debian'
 
 - name: Install Neovim Dependencies (Arch)
@@ -88,12 +88,12 @@
   pacman:
     state: present
     pkg:
-    - ninja
-    - make
-    - gettext
-    - cmake
-    - unzip
-    - curl
+      - ninja
+      - make
+      - gettext
+      - cmake
+      - unzip
+      - curl
   when: ansible_os_family == 'Archlinux'
 
 - name: Clone Neovim
@@ -104,15 +104,15 @@
   register: neovim
 
 - block:
-  - name: Build Neovim
-    shell:
-      chdir: ~/.local/source/neovim
-      cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
+    - name: Build Neovim
+      shell:
+        chdir: ~/.local/source/neovim
+        cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
 
-  - name: Install Neovim
-    command:
-      chdir: ~/.local/source/neovim
-      cmd: make install
+    - name: Install Neovim
+      command:
+        chdir: ~/.local/source/neovim
+        cmd: make install
   when: neovim.changed
 
 - name: Install Pip (Debian)
@@ -142,7 +142,7 @@
   get_url:
     url: https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
     dest: ~/.local/bin/yq
-    mode: '755'
+    mode: "755"
 
 - name: Install Zellij
   unarchive:
@@ -218,44 +218,44 @@
   register: pve
 
 - block:
-  - name: Check If Docker Exists
-    stat:
-      path: /usr/bin/docker
-    register: docker
+    - name: Check If Docker Exists
+      stat:
+        path: /usr/bin/docker
+      register: docker
 
-  - block:
-    - name: Download Docker Script
-      get_url:
-        url: https://get.docker.com
-        dest: ~/.local/bin/get-docker
-        mode: '750'
+    - block:
+        - name: Download Docker Script
+          get_url:
+            url: https://get.docker.com
+            dest: ~/.local/bin/get-docker
+            mode: "750"
 
-    - name: Run Docker Script
-      become: true
-      command:
-        cmd: sh /home/{{ current_user.stdout }}/.local/bin/get-docker
-      changed_when: false
-      when: ansible_os_family != 'Archlinux'
+        - name: Run Docker Script
+          become: true
+          command:
+            cmd: sh /home/{{ current_user.stdout }}/.local/bin/get-docker
+          changed_when: false
+          when: ansible_os_family != 'Archlinux'
 
-    - name: Install Docker (Arch)
-      become: true
-      pacman:
-        package: docker
-      when: ansible_os_family == 'Archlinux'
+        - name: Install Docker (Arch)
+          become: true
+          pacman:
+            package: docker
+          when: ansible_os_family == 'Archlinux'
 
-    - name: Make Docker Group
-      become: true
-      group:
-        name: docker
-        state: present
+        - name: Make Docker Group
+          become: true
+          group:
+            name: docker
+            state: present
 
-    - name: Add User to Docker Group
-      become: true
-      user:
-        name: "{{ current_user.stdout }}"
-        groups: docker
-        append: yes
-    when: "not docker.stat.exists"
+        - name: Add User to Docker Group
+          become: true
+          user:
+            name: "{{ current_user.stdout }}"
+            groups: docker
+            append: yes
+      when: "not docker.stat.exists"
   when:
     - "virt.stdout != 'wsl'"
     - "not pve.stat.exists"
@@ -268,19 +268,19 @@
   register: btop
 
 - block:
-  - name: Install bTop
-    become: true
-    command:
-      cmd: make install PREFIX=/home/{{ current_user.stdout }}/.local
-      chdir: /home/{{ current_user.stdout }}/.local/source/btop
-    changed_when: false
+    - name: Install bTop
+      become: true
+      command:
+        cmd: make install PREFIX=/home/{{ current_user.stdout }}/.local
+        chdir: /home/{{ current_user.stdout }}/.local/source/btop
+      changed_when: false
 
-  - name: Make bTop Root
-    become: true
-    command:
-      cmd: make setuid PREFIX=/home/{{ current_user.stdout }}/.local
-      chdir: /home/{{ current_user.stdout }}/.local/source/btop
-    changed_when: false
+    - name: Make bTop Root
+      become: true
+      command:
+        cmd: make setuid PREFIX=/home/{{ current_user.stdout }}/.local
+        chdir: /home/{{ current_user.stdout }}/.local/source/btop
+      changed_when: false
   when: btop.changed
 
 - name: Install NVM
@@ -334,20 +334,20 @@
   register: regctl
 
 - block:
-  - name: Build Regctl
-    command:
-      cmd: make
-      chdir: ~/.local/source/regctl
-    environment:
-      PATH: "/home/{{ current_user.stdout }}/.local/go/bin:{{ ansible_env.PATH }}"
-      GOPATH: /home/{{ current_user.stdout }}/.local/go
+    - name: Build Regctl
+      command:
+        cmd: make
+        chdir: ~/.local/source/regctl
+      environment:
+        PATH: "/home/{{ current_user.stdout }}/.local/go/bin:{{ ansible_env.PATH }}"
+        GOPATH: /home/{{ current_user.stdout }}/.local/go
 
-  - name: Install Regctl
-    copy:
-      remote_src: true
-      src: ~/.local/source/regctl/bin/regctl
-      dest: ~/.local/bin/regctl
-      mode: 0750
+    - name: Install Regctl
+      copy:
+        remote_src: true
+        src: ~/.local/source/regctl/bin/regctl
+        dest: ~/.local/bin/regctl
+        mode: 0750
   when: regctl.changed
 
 - name: Download rClone
@@ -357,19 +357,19 @@
   register: rclone
 
 - block:
-  - name: Build rClone
-    command:
-      cmd: /home/{{ current_user.stdout }}/.local/go/bin/go build
-      chdir: /home/{{ current_user.stdout }}/.local/source/rclone
-    environment:
-      GOPATH: /home/{{ current_user.stdout }}/.local/go
+    - name: Build rClone
+      command:
+        cmd: /home/{{ current_user.stdout }}/.local/go/bin/go build
+        chdir: /home/{{ current_user.stdout }}/.local/source/rclone
+      environment:
+        GOPATH: /home/{{ current_user.stdout }}/.local/go
 
-  - name: Install rClone
-    copy:
-      remote_src: true
-      src: ~/.local/source/rclone/rclone
-      dest: ~/.local/bin/rclone
-      mode: 0750
+    - name: Install rClone
+      copy:
+        remote_src: true
+        src: ~/.local/source/rclone/rclone
+        dest: ~/.local/bin/rclone
+        mode: 0750
   when: rclone.changed
 
 - name: Fix rClone Permissions
@@ -407,15 +407,16 @@
       && sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
   changed_when: false
 
-- name: Create Font Directory
-  file:
-    path: ~/.local/share/fonts/hack-nerd-font
-    state: directory
-
 - name: Install Hack Nerd Font
   unarchive:
     remote_src: true
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
+    dest: ~/.local/share/fonts/hack-nerd-font
+
+- name: Install Hack Nerd Font
+  unarchive:
+    remote_src: true
+    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
     dest: ~/.local/share/fonts/hack-nerd-font
 
 - name: Install Bat
@@ -488,23 +489,23 @@
   register: tmux
 
 - block:
-  - name: Autogen Tmux
-    command:
-      chdir: ~/.local/source/tmux
-      cmd: sh autogen.sh
-    changed_when: false
+    - name: Autogen Tmux
+      command:
+        chdir: ~/.local/source/tmux
+        cmd: sh autogen.sh
+      changed_when: false
 
-  - name: Configure Tmux
-    shell:
-      chdir: ~/.local/source/tmux
-      cmd: ./configure --prefix=$HOME/.local
-    changed_when: false
+    - name: Configure Tmux
+      shell:
+        chdir: ~/.local/source/tmux
+        cmd: ./configure --prefix=$HOME/.local
+      changed_when: false
 
-  - name: Build Tmux
-    shell:
-      chdir: ~/.local/source/tmux
-      cmd: make && make install
-    changed_when: false
+    - name: Build Tmux
+      shell:
+        chdir: ~/.local/source/tmux
+        cmd: make && make install
+      changed_when: false
   when: tmux.changed
 
 - name: Install Lazygit
@@ -585,4 +586,3 @@
   shell:
     cmd: rm -rf sshpass; mv sshpass* sshpass && cd sshpass && ./configure --prefix=$HOME/.local && make install
     chdir: ~/.local/source
-

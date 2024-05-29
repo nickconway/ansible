@@ -7,164 +7,165 @@
   register: vpn
 
 - block:
-  - name: Get Current User
-    command: whoami
-    register: current_user
-    changed_when: false
+    - name: Get Current User
+      command: whoami
+      register: current_user
+      changed_when: false
 
-  - name: Install Pip (Debian)
-    become: true
-    package:
-      name: python3-pip
-      state: present
-    when: ansible_os_family == 'Debian'
+    - name: Install Pip (Debian)
+      become: true
+      package:
+        name: python3-pip
+        state: present
+      when: ansible_os_family == 'Debian'
 
-  - name: Install Pip (Arch)
-    become: true
-    package:
-      name: python-pip
-      state: present
-    when: ansible_os_family == 'Archlinux'
+    - name: Install Pip (Arch)
+      become: true
+      package:
+        name: python-pip
+        state: present
+      when: ansible_os_family == 'Archlinux'
 
-  - name: Install Netaddr
-    pip:
-      name: netaddr
-      extra_args: --user --break-system-packages
+    - name: Install Netaddr
+      pip:
+        name: netaddr
+        extra_args: --user --break-system-packages
 
-  - name: Check for Server File
-    stat:
-      path: ~/.server
-    register: server
+    - name: Check for Server File
+      stat:
+        path: ~/.server
+      register: server
 
-  - name: Check for Client-Server File
-    stat:
-      path: ~/.client-server
-    register: client_server
+    - name: Check for Client-Server File
+      stat:
+        path: ~/.client-server
+      register: client_server
 
-  - name: Check for DNS File
-    stat:
-      path: ~/.dns
-    register: dns
+    - name: Check for DNS File
+      stat:
+        path: ~/.dns
+      register: dns
 
-  - name: Check for Subnet-Router File
-    stat:
-      path: ~/.subnet-router
-    register: subnet_router
+    - name: Check for Subnet-Router File
+      stat:
+        path: ~/.subnet-router
+      register: subnet_router
 
-  - name: Check for Work File
-    stat:
-      path: ~/.work
-    register: work
+    - name: Check for Work File
+      stat:
+        path: ~/.work
+      register: work
 
-  - name: Get Current User
-    shell:
-      cmd: whoami
-    register: current_user
-    changed_when: false
+    - name: Get Current User
+      shell:
+        cmd: whoami
+      register: current_user
+      changed_when: false
 
-  - name: Create Default Flags
-    set_fact:
-      flags: "--ssh --operator={{ current_user.stdout }} --authkey '{{ vpn_key }}' --stateful-filtering=false"
+    - name: Create Default Flags
+      set_fact:
+        flags: "--ssh --operator={{ current_user.stdout }} --authkey '{{ vpn_key }}' --stateful-filtering=false"
 
-  - name: Add Client-Server Flags
-    set_fact:
-      flags: "{{ flags }} --advertise-tags=tag:server,tag:client"
-    when: "client_server.stat.exists"
+    - name: Add Client-Server Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:server,tag:client"
+      when: "client_server.stat.exists"
 
-  - name: Add Server Flags
-    set_fact:
-      flags: "{{ flags }} --advertise-tags=tag:server"
-    when: "server.stat.exists"
+    - name: Add Server Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:server"
+      when: "server.stat.exists"
 
-  - name: Add Client Flags
-    set_fact:
-      flags: "{{ flags }} --advertise-tags=tag:client"
-    when:
-      - "not client_server.stat.exists"
-      - "not server.stat.exists"
+    - name: Add Client Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:client"
+      when:
+        - "not client_server.stat.exists"
+        - "not server.stat.exists"
 
-  - name: Add DNS False Flags
-    set_fact:
-      flags: "{{ flags }} --accept-dns=false"
-    when: (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
-          dns.stat.exists
+    - name: Add DNS False Flags
+      set_fact:
+        flags: "{{ flags }} --accept-dns=false"
+      when:
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
+        dns.stat.exists
 
-  - name: Add DNS Flags
-    set_fact:
-      flags: "{{ flags }} --accept-dns=true"
-    when:
-      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24'))
-      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24'))
-      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24'))
-      - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24'))
-      - "not dns.stat.exists"
+    - name: Add DNS Flags
+      set_fact:
+        flags: "{{ flags }} --accept-dns=true"
+      when:
+        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24'))
+        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24'))
+        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24'))
+        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24'))
+        - "not dns.stat.exists"
 
-  - name: Add Subnet Router Flags
-    set_fact:
-      flags: "{{ flags }} --advertise-routes=10.0.0.0/24,10.0.10.0/24,10.0.100.0/24,10.0.107.0/24"
-    when: "subnet_router.stat.exists"
+    - name: Add Subnet Router Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-routes=10.0.0.0/24,10.0.10.0/24,10.0.100.0/24,10.0.107.0/24"
+      when: "subnet_router.stat.exists"
 
-  - name: Add Work Flags
-    set_fact:
-      flags: "{{ flags }} --advertise-tags=tag:work"
-    when: work.stat.exists
+    - name: Add Work Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:work"
+      when: work.stat.exists
 
-  - name: Add Accept Routes Flags
-    set_fact:
-      flags: "{{ flags }} --accept-routes"
-    when:
-      - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24'))
-      - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24'))
-      - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24'))
-      - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24'))
+    - name: Add Accept Routes Flags
+      set_fact:
+        flags: "{{ flags }} --accept-routes"
+      when:
+        - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24'))
+        - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24'))
+        - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24'))
+        - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24'))
 
-  - name: Add Accept Routes False Flags
-    set_fact:
-      flags: "{{ flags }} --accept-routes=false"
-    when: (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
-          (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
-          subnet_router.stat.exists
+    - name: Add Accept Routes False Flags
+      set_fact:
+        flags: "{{ flags }} --accept-routes=false"
+      when:
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
+        subnet_router.stat.exists
 
-  - name: Install Tailscale
-    become: true
-    shell:
-      cmd: curl -fsSL https://tailscale.com/install.sh | sh
-    changed_when: false
+    - name: Install Tailscale
+      become: true
+      shell:
+        cmd: curl -fsSL https://tailscale.com/install.sh | sh
+      changed_when: false
 
-  - name: Enable IP Forwarding
-    become: true
-    lineinfile:
-      create: true
-      path: /etc/sysctl.d/99-tailscale.conf
-      line: "{{ item }}"
-    loop:
-      - net.ipv4.ip_forward = 1
-      - net.ipv6.conf.all.forwarding = 1
-    when: "subnet_router.stat.exists"
+    - name: Enable IP Forwarding
+      become: true
+      lineinfile:
+        create: true
+        path: /etc/sysctl.d/99-tailscale.conf
+        line: "{{ item }}"
+      loop:
+        - net.ipv4.ip_forward = 1
+        - net.ipv6.conf.all.forwarding = 1
+      when: "subnet_router.stat.exists"
 
-  - name: Reload Sysctl
-    become: true
-    shell:
-      cmd: sysctl -p /etc/sysctl.d/99-tailscale.conf
-    when: "dns.stat.exists"
-    changed_when: false
+    - name: Reload Sysctl
+      become: true
+      shell:
+        cmd: sysctl -p /etc/sysctl.d/99-tailscale.conf
+      when: "dns.stat.exists"
+      changed_when: false
 
-  - name: Connect to VPN
-    become: true
-    shell:
-      cmd: tailscale up {{ flags }}
-    changed_when: false
+    - name: Connect to VPN
+      become: true
+      shell:
+        cmd: tailscale up {{ flags }}
+      changed_when: false
 
-  - name: Enable Auto-Updates
-    become: true
-    shell:
-      cmd: tailscale set --auto-update
-    changed_when: false
-    when: ansible_os_family != 'Archlinux'
-    ignore_errors: true
+    - name: Enable Auto-Updates
+      become: true
+      shell:
+        cmd: tailscale set --auto-update
+      changed_when: false
+      ignore_errors: true
   when: "vpn.stat.exists"
