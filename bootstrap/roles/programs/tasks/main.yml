@@ -407,17 +407,27 @@
       && sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
   changed_when: false
 
+- name: Create Hack Font Directory
+  file:
+    path: ~/.local/share/fonts/hack-nerd-font
+    state: directory
+
 - name: Install Hack Nerd Font
   unarchive:
     remote_src: true
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
     dest: ~/.local/share/fonts/hack-nerd-font
 
-- name: Install Hack Nerd Font
+- name: Create JetBrains Font Directory
+  file:
+    path: ~/.local/share/fonts/jetbrains-mono-nerd-font
+    state: directory
+
+- name: Install JetBrains Mono Nerd Font
   unarchive:
     remote_src: true
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
-    dest: ~/.local/share/fonts/hack-nerd-font
+    dest: ~/.local/share/fonts/jetbrains-mono-nerd-font
 
 - name: Install Bat
   shell:
