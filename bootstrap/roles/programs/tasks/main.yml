@@ -397,17 +397,26 @@
     name: keyring-pass
     extra_args: --user --break-system-packages
 
+- name: Download Kitty
+  git:
+    repo: https://github.com/kovidgoyal/kitty.git
+    dest: ~/.local/source/kitty
+  register: kitty
+
 - name: Install Kitty
   shell:
     cmd: |
-      (curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n) \
-      && ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten ~/.local/bin/ \
+      ./dev.sh deps \
+      && ./dev.sh build \
+      && ln -sf ~/.local/source/kitty/kitty/launcher/kitty ~/.local/source/kitty/kitty/launcher/kitten ~/.local/bin/ \
       && mkdir -p ~/.local/share/applications \
-      && cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/ \
-      && cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/ \
-      && sed -i "s|Icon=kitty|Icon=/home/$USER/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop \
-      && sed -i "s|Exec=kitty|Exec=/home/$USER/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+      && curl -sL https://raw.githubusercontent.com/kovidgoyal/kitty/master/setup.py | grep 'kitty\.desktop' -A 20 | grep "''')" -B 20 | awk 'NR > 4 {print last} {last=$0}' > ~/.local/share/applications/kitty.desktop \
+      && curl -sL https://raw.githubusercontent.com/kovidgoyal/kitty/master/setup.py | grep 'kitty-open\.desktop' -A 20 | grep "''')" -B 20 | awk 'NR > 4 {print last} {last=$0}' > ~/.local/share/applications/kitty-open.desktop \
+      && sed -i "s|Icon=kitty|Icon=/home/$USER/.config/kitty/kitty.app.png|g" ~/.local/share/applications/kitty*.desktop \
+      && sed -i "s|Exec=kitty|Exec=/home/$USER/.local/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+    chdir: ~/.local/source/kitty
   changed_when: false
+  when: kitty.changed
 
 - name: Create Hack Font Directory
   file:
