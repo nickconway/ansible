@@ -97,10 +97,7 @@
       set_fact:
         flags: "{{ flags }} --accept-dns=true"
       when:
-        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24'))
-        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24'))
-        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24'))
-        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24'))
+        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.0.0/24'))
         - "not dns.stat.exists"
 
     - name: Add Subnet Router Flags
