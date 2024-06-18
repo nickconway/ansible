@@ -375,13 +375,14 @@
         src: ~/.local/source/rclone/rclone
         dest: ~/.local/bin/rclone
         mode: 0750
+
+    - name: Fix rClone Permissions
+      file:
+        path: ~/.local/bin/rclone
+        state: file
+        mode: 0750
   when: rclone.changed
 
-- name: Fix rClone Permissions
-  file:
-    path: ~/.local/bin/rclone
-    state: file
-    mode: 0750
 
 - name: Install Pass
   git:

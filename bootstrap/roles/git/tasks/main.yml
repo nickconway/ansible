@@ -2,7 +2,7 @@
 # tasks file for git
 
 - name: Get Hostname
-  command: hostname
+  command: uname -n
   register: hostname
   changed_when: false
 

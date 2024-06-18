@@ -1,26 +1,33 @@
 ---
 # tasks file for cron
 
-- name: Backup Containers Cron
-  cron:
-    name: backup-containers
-    hour: 5
-    minute: 0
-    state: present
-    job: "bash -lc '.local/bin/backup-containers' > /tmp/backup-containers.log 2>&1"
+- name: Check For Cron
+  command: crontab
+  register: cron
+  ignore_errors: true
 
-- name: Backup LXC Cron
-  cron:
-    name: backup-lxcs
-    hour: 4
-    minute: 0
-    state: present
-    job: "bash -lc '.local/bin/backup-lxcs' > /tmp/backup-lxcs.log 2>&1"
+- block:
+  - name: Backup Containers Cron
+    cron:
+      name: backup-containers
+      hour: 5
+      minute: 0
+      state: present
+      job: "bash -lc '.local/bin/backup-containers' > /tmp/backup-containers.log 2>&1"
 
-- name: Docker Updates Cron
-  cron:
-    name: docker-updates
-    hour: "*/6"
-    minute: 0
-    state: present
-    job: "bash -lc '.local/bin/get-docker-updates' > /tmp/get-docker-updates.log 2>&1"
+  - name: Backup LXC Cron
+    cron:
+      name: backup-lxcs
+      hour: 4
+      minute: 0
+      state: present
+      job: "bash -lc '.local/bin/backup-lxcs' > /tmp/backup-lxcs.log 2>&1"
+
+  - name: Docker Updates Cron
+    cron:
+      name: docker-updates
+      hour: "*/6"
+      minute: 0
+      state: present
+      job: "bash -lc '.local/bin/get-docker-updates' > /tmp/get-docker-updates.log 2>&1"
+  when: not cron.failed
