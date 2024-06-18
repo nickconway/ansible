@@ -120,14 +120,18 @@
 - name: Install Pip (Debian)
   become: true
   package:
-    name: python3-pip
+    name:
+      - python3-pip
+      - pipx
     state: present
   when: ansible_os_family == 'Debian'
 
 - name: Install Pip (Arch)
   become: true
   package:
-    name: python-pip
+    name:
+      - python-pip
+      - python-pipx
     state: present
   when: ansible_os_family == 'Archlinux'
 
@@ -136,9 +140,8 @@
   changed_when: false
 
 - name: Install Tmuxp
-  pip:
+  community.general.pipx:
     name: tmuxp
-    extra_args: --user --break-system-packages
 
 - name: Install YQ
   get_url:
@@ -607,3 +610,15 @@
   shell:
     cmd: rm -rf sshpass; mv sshpass* sshpass && cd sshpass && ./configure --prefix=$HOME/.local && make install
     chdir: ~/.local/source
+
+- name: Download GitLeaks
+  git:
+    repo: https://github.com/gitleaks/gitleaks.git
+    dest: ~/.local/source/gitleaks
+  register: gitleaks
+
+- name: Install GitLeaks
+  shell:
+    cmd: make build && cd ~/.local/bin && ln -sf ~/.local/source/gitleaks/gitleaks
+    chdir: ~/.local/source/gitleaks
+  when: gitleaks.changed

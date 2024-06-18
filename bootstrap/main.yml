@@ -4,7 +4,7 @@
   tasks:
     - name: Set Timezone
       become: true
-      timezone:
+      community.general.timezone:
         name: America/New_York
       tags: tz
 

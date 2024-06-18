@@ -26,11 +26,6 @@
         state: present
       when: ansible_os_family == 'Archlinux'
 
-    - name: Install Netaddr
-      pip:
-        name: netaddr
-        extra_args: --user --break-system-packages
-
     - name: Check for Server File
       stat:
         path: ~/.server
