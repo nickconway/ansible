@@ -12,20 +12,6 @@
       register: current_user
       changed_when: false
 
-    - name: Install Pip (Debian)
-      become: true
-      package:
-        name: python3-pip
-        state: present
-      when: ansible_os_family == 'Debian'
-
-    - name: Install Pip (Arch)
-      become: true
-      package:
-        name: python-pip
-        state: present
-      when: ansible_os_family == 'Archlinux'
-
     - name: Check for Server File
       stat:
         path: ~/.server

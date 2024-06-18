@@ -622,3 +622,7 @@
     cmd: make build && cd ~/.local/bin && ln -sf ~/.local/source/gitleaks/gitleaks
     chdir: ~/.local/source/gitleaks
   when: gitleaks.changed
+
+- name: Install Pre-Commit
+  community.general.pipx:
+    name: pre-commit
