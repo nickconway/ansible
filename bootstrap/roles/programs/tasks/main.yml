@@ -4,7 +4,7 @@
 - name: Import GPG Keys
   shell:
     cmd: |
-      find ~/.config/gpg/*.gpg &> /dev/null && gpg --batch --yes --passphrase {{ gpg_passphrase }} --import ~/.config/gpg/*.gpg
+      find ~/.config/gpg/*.asc &> /dev/null && gpg --batch --yes --passphrase {{ gpg_passphrase }} --import ~/.config/gpg/*.asc
       find ~/.config/gpg/*.trust && gpg --batch --yes --import-ownertrust ~/.config/gpg/*.trust
   changed_when: false
 
