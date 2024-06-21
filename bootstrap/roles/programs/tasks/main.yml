@@ -405,6 +405,7 @@
   git:
     repo: https://github.com/kovidgoyal/kitty.git
     dest: ~/.local/source/kitty
+    force: true
   register: kitty
 
 - name: Install Kitty
