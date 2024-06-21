@@ -8,7 +8,7 @@
 
 - name: Download YADM
   get_url:
-    url: https://raw.githubusercontent.com/nickconway/dotfiles/master/.local/bin/yadm
+    url: https://raw.githubusercontent.com/nickconway/dotfiles/main/.local/bin/yadm
     dest: ~/.local/bin/yadm
     mode: '755'
 
@@ -30,7 +30,7 @@
   changed_when: false
 
 - name: YADM Pull
-  command: ~/.local/bin/yadm pull https master
+  command: ~/.local/bin/yadm pull https main
   changed_when: false
 
 - name: Check if YADM Archive Exists
