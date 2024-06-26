@@ -47,7 +47,14 @@
   become: true
   package:
     name: openssh-server
-  when: "'ssh.service' not in services and 'sshd.service' not in services"
+  when:
+    - "'ssh.service' not in services and 'sshd.service' not in services"
+    - "'ssh' not in services and 'sshd' not in services"
+
+- name: Check for SSHD Pam Module
+  stat:
+    path: /etc/pam.d/sshd
+  register: pamsshd
 
 - name: Add NTFY-SSH to PAM
   become: true
@@ -56,7 +63,7 @@
     line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
     state: present
     mode: '644'
-  when: "'ssh' in services or 'sshd' in services"
+  when: "pamsshd.stat.exists"
 
 - name: Copy NTFY-SSH Script
   become: true
