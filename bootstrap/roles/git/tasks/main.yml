@@ -11,6 +11,12 @@
   register: whoami
   changed_when: false
 
+- name: Get Environment
+  command: systemd-detect-virt
+  register: virt
+  changed_when: false
+  ignore_errors: true
+
 - name: Check for Gaming File
   stat:
     path: ~/.gaming
@@ -28,7 +34,16 @@
 - name: Generate SSH Key for GitHub
   shell:
     cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}" -C "github {{ whoami.stdout }}@{{ hostname.stdout }}"
-  when: "not github.stat.exists"
+  when:
+    - "not github.stat.exists"
+    - "virt.stdout != 'wsl'"
+
+- name: Generate SSH Key for GitHub (WSL)
+  shell:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}" -C "github {{ whoami.stdout }}@{{ hostname.stdout }}-wsl"
+  when:
+    - "not github.stat.exists"
+    - "virt.stdout == 'wsl'"
 
 - name: Get SSH Key for GitHub
   shell: cat ~/.ssh/github_ed25519.pub
@@ -49,7 +64,16 @@
 - name: Generate SSH Key for Gitea
   shell:
     cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ whoami.stdout }}@{{ hostname.stdout }}"
-  when: "not gitea.stat.exists"
+  when:
+    - "not gitea.stat.exists"
+    - "virt.stdout != 'wsl'"
+
+- name: Generate SSH Key for Gitea (WSL)
+  shell:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ whoami.stdout }}@{{ hostname.stdout }}-wsl"
+  when:
+    - "not gitea.stat.exists"
+    - "virt.stdout == 'wsl'"
 
 - name: Get SSH Key for Gitea
   shell: cat ~/.ssh/gitea_ed25519.pub
