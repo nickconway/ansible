@@ -80,11 +80,12 @@
         flags: "{{ flags }} --accept-dns=true"
       when:
         - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.0.0/24'))
+        - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.0.2/32'))
         - "not dns.stat.exists"
 
     - name: Add Subnet Router Flags
       set_fact:
-        flags: "{{ flags }} --advertise-routes=10.0.0.0/24,10.0.10.0/24,10.0.100.0/24,10.0.107.0/24"
+        flags: "{{ flags }} --advertise-routes=10.0.10.2/32"
       when: "subnet_router.stat.exists"
 
     - name: Add Work Flags
@@ -129,4 +130,22 @@
         cmd: tailscale set --auto-update
       changed_when: false
       ignore_errors: true
+
+    - name: Install Networkd Dispatcher
+      become: true
+      package: pkg=networkd-dispatcher
+      when: "subnet_router.stat.exists"
+
+    - name: Optimize Subnet Routers
+      become: true
+      shell:
+        cmd: |
+          NETDEV=$(ip route show 0/0 | cut -f5 -d' ')
+          ethtool -K $NETDEV rx-udp-gro-forwarding on rx-gro-list off
+          printf '#!/bin/sh\n\nethtool -K %s rx-udp-gro-forwarding on rx-gro-list off \n' "$(ip route show 0/0 | cut -f5 -d" ")" | tee /etc/networkd-dispatcher/routable.d/50-tailscale
+          chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
+          /etc/networkd-dispatcher/routable.d/50-tailscale
+          test $? -eq 0 || echo 'An error occurred.'
+      changed_when: false
+      when: "subnet_router.stat.exists"
   when: "vpn.stat.exists"
