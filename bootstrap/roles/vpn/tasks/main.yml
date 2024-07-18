@@ -18,6 +18,7 @@
       shell:
         cmd: tailscale status
       register: tailscale_connected
+      changed_when: false
       ignore_errors: true
 
     - name: Check for Server File
