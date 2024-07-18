@@ -29,6 +29,11 @@
         path: ~/.client-server
       register: client_server
 
+    - name: Check for Mobile File
+      stat:
+        path: ~/.mobile
+      register: mobile
+
     - name: Check for DNS File
       stat:
         path: ~/.dns
@@ -46,7 +51,7 @@
 
     - name: Create Default Flags
       set_fact:
-        flags: "--ssh --operator={{ ansible_env.USER }} --accept-routes=true --auth-key '{{ vpn_key }}'"
+        flags: "--ssh --operator={{ ansible_env.USER }} --auth-key '{{ vpn_key }}'"
 
     - name: Add Client-Server Flags
       set_fact:
@@ -68,25 +73,27 @@
     - name: Add DNS False Flags
       set_fact:
         flags: "{{ flags }} --accept-dns=false"
-      when:
-        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
-        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24')) or
-        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
-        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
-        dns.stat.exists
+      when: not mobile.stat.exists or dns.stat.exists
 
     - name: Add DNS Flags
       set_fact:
         flags: "{{ flags }} --accept-dns=true"
-      when:
-        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.0.0/24'))
-        - not (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.0.2/32'))
-        - "not dns.stat.exists"
+      when: mobile.stat.exists or not dns.stat.exists
 
     - name: Add Subnet Router Flags
       set_fact:
         flags: "{{ flags }} --advertise-routes=10.0.10.2/32"
       when: "subnet_router.stat.exists"
+
+    - name: Add Accept Routes Flags
+      set_fact:
+        flags: "{{ flags }} --accept-routes"
+      when: mobile.stat.exists
+
+    - name: Add Accept Routes False Flags
+      set_fact:
+        flags: "{{ flags }} --accept-routes=false"
+      when: not mobile.stat.exists or subnet_router.stat.exists
 
     - name: Add Work Flags
       set_fact:
