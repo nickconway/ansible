@@ -1,0 +1,17 @@
+---
+# tasks file for passwordless
+
+- name: Check for Passwordless File
+  stat:
+    path: ~/.passwordless
+  register: passwordless
+
+- name: Add Passwordless Sudo
+  become: true
+  lineinfile:
+    path: "/etc/sudoers.d/{{ ansible_env.USER }}-nopasswd"
+    create: true
+    state: present
+    line: "{{ ansible_env.USER }} ALL=(ALL) NOPASSWD:ALL"
+    validate: 'visudo -cf %s'
+  when: passwordless.stat.exists

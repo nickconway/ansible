@@ -1,0 +1,132 @@
+---
+# tasks file for vpn
+
+- name: Check for VPN File
+  stat:
+    path: ~/.vpn
+  register: vpn
+
+- block:
+    - name: Check if Already Installed
+      shell:
+        cmd: command -v tailscale
+      register: tailscale_installed
+      ignore_errors: true
+
+    - name: Check if Already Connected
+      shell:
+        cmd: tailscale status
+      register: tailscale_connected
+      ignore_errors: true
+
+    - name: Check for Server File
+      stat:
+        path: ~/.server
+      register: server
+
+    - name: Check for Client-Server File
+      stat:
+        path: ~/.client-server
+      register: client_server
+
+    - name: Check for DNS File
+      stat:
+        path: ~/.dns
+      register: dns
+
+    - name: Check for Subnet-Router File
+      stat:
+        path: ~/.subnet-router
+      register: subnet_router
+
+    - name: Check for Work File
+      stat:
+        path: ~/.work
+      register: work
+
+    - name: Create Default Flags
+      set_fact:
+        flags: "--ssh --operator={{ ansible_env.USER }} --accept-routes=true --auth-key '{{ vpn_key }}'"
+
+    - name: Add Client-Server Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:server,tag:client"
+      when: "client_server.stat.exists"
+
+    - name: Add Server Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:server"
+      when: "server.stat.exists"
+
+    - name: Add Client Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:client"
+      when:
+        - "not client_server.stat.exists"
+        - "not server.stat.exists"
+
+    - name: Add DNS False Flags
+      set_fact:
+        flags: "{{ flags }} --accept-dns=false"
+      when:
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.10.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.20.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.100.0/24')) or
+        (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.107.0/24')) or
+        dns.stat.exists
+
+    - name: Add DNS Flags
+      set_fact:
+        flags: "{{ flags }} --accept-dns=true"
+      when:
+        - (ansible_all_ipv4_addresses | ansible.utils.reduce_on_network('10.0.0.0/24'))
+        - "not dns.stat.exists"
+
+    - name: Add Subnet Router Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-routes=10.0.0.0/24,10.0.10.0/24,10.0.100.0/24,10.0.107.0/24"
+      when: "subnet_router.stat.exists"
+
+    - name: Add Work Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-tags=tag:work"
+      when: work.stat.exists
+
+    - name: Install Tailscale
+      become: true
+      shell:
+        cmd: curl -fsSL https://tailscale.com/install.sh | sh
+      changed_when: false
+
+    - name: Enable IP Forwarding
+      become: true
+      lineinfile:
+        create: true
+        path: /etc/sysctl.d/99-tailscale.conf
+        line: "{{ item }}"
+      loop:
+        - net.ipv4.ip_forward = 1
+        - net.ipv6.conf.all.forwarding = 1
+      when: "subnet_router.stat.exists"
+
+    - name: Reload Sysctl
+      become: true
+      shell:
+        cmd: sysctl -p /etc/sysctl.d/99-tailscale.conf
+      when: "dns.stat.exists"
+      changed_when: false
+
+    - name: Connect to VPN
+      become: true
+      shell:
+        cmd: tailscale up {{ flags }}
+      changed_when: false
+      when: tailscale_installed.failed or not tailscale_connected.failed
+
+    - name: Enable Auto-Updates
+      become: true
+      shell:
+        cmd: tailscale set --auto-update
+      changed_when: false
+      ignore_errors: true
+  when: "vpn.stat.exists"
