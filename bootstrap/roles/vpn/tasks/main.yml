@@ -11,6 +11,7 @@
       shell:
         cmd: command -v tailscale
       register: tailscale_installed
+      changed_when: false
       ignore_errors: true
 
     - name: Check if Already Connected
