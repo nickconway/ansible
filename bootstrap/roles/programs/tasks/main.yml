@@ -68,6 +68,11 @@
   command: ~/.fzf/install --all --no-update-rc
   when: fzf.changed
 
+- name: Get FZF Git
+  get_url:
+    url: https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh
+    dest: ~/.fzf/fzf-git
+
 - name: Install Neovim Dependencies (Debian)
   become: true
   apt:
