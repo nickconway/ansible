@@ -69,8 +69,8 @@
   when: fzf.changed
 
 - name: Get FZF Git
-  get_url:
-    url: https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh
+  git:
+    repo: https://github.com/junegunn/fzf-git.sh
     dest: ~/.fzf/fzf-git
 
 - name: Install Neovim Dependencies (Debian)
