@@ -70,7 +70,7 @@
 
 - name: Get FZF Git
   git:
-    repo: https://github.com/junegunn/fzf-git.sh
+    repo: https://github.com/nickconway/fzf-git.sh
     dest: ~/.fzf/fzf-git
 
 - name: Install Neovim Dependencies (Debian)
