@@ -8,7 +8,7 @@
 
 - name: Download YADM
   get_url:
-    url: https://raw.githubusercontent.com/nickconway/dotfiles/main/.local/bin/yadm
+    url: https://raw.githubusercontent.com/nickconway/yadm/master/yadm
     dest: ~/.local/bin/yadm
     mode: "755"
 
