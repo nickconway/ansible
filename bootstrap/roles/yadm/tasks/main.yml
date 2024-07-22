@@ -89,7 +89,15 @@
   when: "'work' in group_names"
   changed_when: false
 
+- name: Get User ID
+  shell:
+    cmd: id -u
+  changed_when: false
+  register: user_id
+
 - name: Create YADM Alt Files
   shell:
     cmd: ~/.local/bin/yadm alt
   changed_when: false
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ user_id.stdout }}"
