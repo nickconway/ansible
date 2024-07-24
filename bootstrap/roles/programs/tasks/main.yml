@@ -189,27 +189,27 @@
 - name: Clone ZSH-Autosuggestions
   git:
     repo: https://github.com/zsh-users/zsh-autosuggestions
-    dest: ~/.zsh/zsh-autosuggestions
+    dest: ~/.config/zsh/zsh-autosuggestions
 
 - name: Clone ZSH-Completions
   git:
     repo: https://github.com/zsh-users/zsh-completions
-    dest: ~/.zsh/zsh-completions
+    dest: ~/.config/zsh/zsh-completions
 
 - name: Clone ZSH-Syntax-Highlighting
   git:
     repo: https://github.com/zsh-users/zsh-syntax-highlighting
-    dest: ~/.zsh/zsh-syntax-highlighting
+    dest: ~/.config/zsh/zsh-syntax-highlighting
 
 - name: Get ZSH Sudo Plugin
   get_url:
     url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh
-    dest: ~/.zsh/sudo.plugin.zsh
+    dest: ~/.config/zsh/sudo.plugin.zsh
 
 - name: Get ZSH FZF Tab Plugin
   git:
     repo: https://github.com/nickconway/fzf-tab
-    dest: ~/.zsh/fzf-tab
+    dest: ~/.config/zsh/fzf-tab
     version: feat/tmux-popup-follow-cursor
   tags:
     - test
@@ -217,7 +217,7 @@
 - name: Get ZSH Command Not Found Plugin
   get_url:
     url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/command-not-found/command-not-found.plugin.zsh
-    dest: ~/.zsh/command-not-found.plugin.zsh
+    dest: ~/.config/zsh/command-not-found.plugin.zsh
 
 - name: Ensure ZSH is Valid Shell
   lineinfile:
