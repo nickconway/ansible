@@ -425,6 +425,21 @@
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
     dest: ~/.local/share/fonts/hack-nerd-font
 
+- name: Create Noto Font Directory
+  file:
+    path: ~/.local/share/fonts/hack-nerd-font
+    state: directory
+  tags:
+    - noto
+
+- name: Install Noto Nerd Font
+  unarchive:
+    remote_src: true
+    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
+    dest: ~/.local/share/fonts/hack-nerd-font
+  tags:
+    - noto
+
 - name: Create JetBrains Font Directory
   file:
     path: ~/.local/share/fonts/jetbrains-mono-nerd-font
