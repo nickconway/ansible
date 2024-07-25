@@ -11,6 +11,12 @@
         name: America/New_York
       tags: tz
 
+    - name: Set Language
+      become: true
+      shell:
+        cmd: localectl set-locale LANG=en_US.UTF-8
+      tags: lang
+
     - name: Import Security Role
       import_role:
         name: security
