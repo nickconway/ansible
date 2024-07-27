@@ -263,7 +263,10 @@
         - name: Install Docker (Arch)
           become: true
           pacman:
-            package: docker
+            package:
+              - docker
+              - docker-compose
+
           when: ansible_os_family == 'Archlinux'
 
         - name: Make Docker Group
