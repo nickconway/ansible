@@ -618,7 +618,7 @@
 
 - name: Install Lazygit
   command:
-    cmd: ~/.local/go/bin/go install github.com/jesseduffield/lazygit@latest
+    cmd: go install github.com/jesseduffield/lazygit@latest
   changed_when: false
 
 - name: Install Lazydocker
