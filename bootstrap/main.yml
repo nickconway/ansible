@@ -2,8 +2,9 @@
 - name: Bootstrap
   hosts: all
   environment:
-    PATH: "{{ ansible_env.HOME }}/.local/go/bin:{{ ansible_env.HOME }}/.cargo/bin:/usr/sbin:{{ ansible_env.PATH }}"
-    GOPATH: "{{ ansible_env.HOME }}/.local/go"
+    PATH: "{{ ansible_env.HOME }}/.local/go/packages/bin:{{ ansible_env.HOME }}/.local/go/go/bin:{{ ansible_env.HOME }}/.cargo/bin:/usr/sbin:{{ ansible_env.PATH }}"
+    GOROOT: "{{ ansible_env.HOME }}/.local/go/go"
+    GOPATH: "{{ ansible_env.HOME }}/.local/go/packages"
   tasks:
     - name: Set Timezone
       become: true

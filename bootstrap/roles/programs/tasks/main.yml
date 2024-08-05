@@ -61,17 +61,23 @@
 - name: Clone FZF
   git:
     repo: https://github.com/junegunn/fzf.git
-    dest: ~/.fzf
+    dest: ~/.config/fzf
   register: fzf
+  tags:
+    - fzf
 
 - name: Install FZF
-  command: ~/.fzf/install --all --no-update-rc
+  command: ~/.config/fzf/install --all --no-update-rc
   when: fzf.changed
+  tags:
+    - fzf
 
 - name: Get FZF Git
   git:
     repo: https://github.com/nickconway/fzf-git.sh
-    dest: ~/.fzf/fzf-git
+    dest: ~/.config/fzf/fzf-git
+  tags:
+    - fzf
 
 - name: Install Neovim Dependencies (Debian)
   become: true
@@ -319,39 +325,51 @@
     executable: /bin/bash
   changed_when: false
 
+- name: Create Go Directory
+  file:
+    path: ~/.local/go
+    state: directory
+  tags:
+    - go
+
 - name: Get Most Recent Go Version
   shell: curl -s 'https://go.dev/dl/?mode=json' | grep version | head -n 1 | xargs | awk '{print $2}' | tr -d ','
   register: go_version
   changed_when: false
+  tags:
+    - go
 
 - name: Check if Go Exists
   stat:
-    path: ~/.local/go
+    path: ~/.local/go/go
   register: go
+  tags:
+    - go
 
 - name: Get Current Go Version
-  shell: head ~/.local/go/VERSION -n 1
+  shell: head ~/.local/go/go/VERSION -n 1
   register: installed_go_version
   when: go.stat.exists
   changed_when: false
+  tags:
+    - go
 
 - name: Remove Go
   file:
-    path: ~/.local/go
+    path: ~/.local/go/go
     state: absent
   when: "go.stat.exists and go_version.stdout != installed_go_version.stdout"
+  tags:
+    - go
 
 - name: Download Go
   unarchive:
     remote_src: true
     src: https://go.dev/dl/{{ go_version.stdout }}.linux-amd64.tar.gz
-    dest: ~/.local
+    dest: ~/.local/go
   when: "not go.stat.exists or go_version.stdout != installed_go_version.stdout"
-
-- name: Change Go Permissions
-  command:
-    cmd: chmod -R +rw ~/.local/go
-  changed_when: false
+  tags:
+    - go
 
 - name: Download Regctl
   git:
@@ -633,11 +651,6 @@
     cmd: make install PREFIX=$HOME/.local
     chdir: ~/.local/source/unix-tree-2.1.1
   when: tree.changed
-  changed_when: false
-
-- name: Change Go Permissions
-  command:
-    cmd: chmod -R +rw ~/.local/go
   changed_when: false
 
 - name: Clone Fastfetch
