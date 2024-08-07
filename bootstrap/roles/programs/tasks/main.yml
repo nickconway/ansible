@@ -540,16 +540,6 @@
     cmd: cargo install git-delta
   changed_when: false
 
-- name: Create Delta Directory
-  file:
-    path: ~/.config/delta
-    state: directory
-
-- name: Download Delta Themes
-  get_url:
-    url: https://raw.githubusercontent.com/dandavison/delta/main/themes.gitconfig
-    dest: ~/.config/delta/themes.gitconfig
-
 - name: Install Atuin
   shell:
     cmd: |
