@@ -90,6 +90,9 @@
       - unzip
       - curl
   when: ansible_os_family == 'Debian'
+  tags:
+    - neovim
+    - nvim
 
 - name: Install Neovim Dependencies (Arch)
   become: true
@@ -103,6 +106,9 @@
       - unzip
       - curl
   when: ansible_os_family == 'Archlinux'
+  tags:
+    - neovim
+    - nvim
 
 - name: Clone Neovim
   git:
@@ -110,6 +116,9 @@
     dest: ~/.local/source/neovim
     force: true
   register: neovim
+  tags:
+    - neovim
+    - nvim
 
 - block:
     - name: Build Neovim
@@ -122,6 +131,9 @@
         chdir: ~/.local/source/neovim
         cmd: make install
   when: neovim.changed
+  tags:
+    - neovim
+    - nvim
 
 - name: Install Pip (Debian)
   become: true
