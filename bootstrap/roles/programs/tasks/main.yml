@@ -412,7 +412,7 @@
 - block:
     - name: Build rClone
       command:
-        cmd: "{{ ansible_env.HOME }}/.local/go/bin/go build"
+        cmd: "go build"
         chdir: "{{ ansible_env.HOME }}/.local/source/rclone"
 
     - name: Install rClone
