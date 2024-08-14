@@ -16,6 +16,7 @@
       become: true
       shell:
         cmd: localectl set-locale LANG=en_US.UTF-8
+      changed_when: false
       tags: lang
 
     - name: Import Security Role
