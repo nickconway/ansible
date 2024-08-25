@@ -664,6 +664,30 @@
     - gh
     - dash
 
+- name: Install Mods
+  shell:
+    cmd: go install github.com/charmbracelet/mods@latest
+  changed_when: false
+  tags:
+    - charm
+    - mods
+
+- name: Install Glow
+  shell:
+    cmd: go install github.com/charmbracelet/glow@latest
+  changed_when: false
+  tags:
+    - charm
+    - glow
+
+- name: Install Gum
+  shell:
+    cmd: go install github.com/charmbracelet/gum@latest
+  changed_when: false
+  tags:
+    - charm
+    - gum
+
 - name: Download Tree
   unarchive:
     remote_src: true
