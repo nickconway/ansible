@@ -644,6 +644,8 @@
     repo: https://github.com/cli/cli.git
     dest: ~/.local/source/gh-cli
   register: gh
+  tags:
+    - gh
 
 - name: Install GH-CLI
   shell:
@@ -651,6 +653,16 @@
     chdir: ~/.local/source/gh-cli
   when: gh.changed
   changed_when: false
+  tags:
+    - gh
+
+- name: Install GH-Dash
+  shell:
+    cmd: gh extension install dlvhdr/gh-dash
+  changed_when: false
+  tags:
+    - gh
+    - dash
 
 - name: Download Tree
   unarchive:
