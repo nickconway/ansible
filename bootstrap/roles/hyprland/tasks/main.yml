@@ -30,6 +30,21 @@
         - thunar
         - nautilus
         - kdeconnect
+        - zen-browser-bin
+        - firefox-pwa-bin
+        - brightnessctl
+        - pavucontrol
+        - pamixer
+        - orchis-theme
+        - papirus-icon-theme
+        - breeze-default-cursor-theme
+        - cliphist
+        - flatpak
+        - grim
+        - slurp
+        - feh
+        - noto-fonts
+        - noto-fonts-emoji
       changed_when: false
 
     - name: Install Hyprspace
