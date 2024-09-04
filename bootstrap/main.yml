@@ -68,3 +68,8 @@
       import_role:
         name: wsl
       tags: wsl
+
+    - name: Import Hyprland Role
+      import_role:
+        name: hyprland
+      tags: hyprland

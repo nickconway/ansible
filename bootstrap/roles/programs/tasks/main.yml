@@ -453,10 +453,14 @@
     chdir: ~/.local/source/password-store
   when: pass_store.changed
 
+- name: Install Virtualenv
+  community.general.pipx:
+    name: virtualenv
+
 - name: Install Keyring-Pass
   pip:
     name: keyring-pass
-    virtualenv: ~/.venv
+    virtualenv: ~/.venvs/ansible
 
 - name: Create Hack Font Directory
   file:

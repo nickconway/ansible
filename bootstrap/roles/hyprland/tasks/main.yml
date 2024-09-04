@@ -1,0 +1,38 @@
+---
+- name: Check for Hyprland File
+  stat:
+    path: ~/.hyprland
+  register: hyprland
+
+- block:
+    - name: Install Hyprland Packages
+      command: yay -S --noconfirm --needed {{item}}
+      with_items:
+        - hyprland
+        - cpio
+        - sddm
+        - nwg-look
+        - qt5ct
+        - qt6ct
+        - hyprpaper
+        - hyprpicker
+        - hypridle
+        - hyprlock
+        - hyprcursor
+        - xdg-desktop-portal-hyprland
+        - wl-clipboard
+        - rofi-wayland
+        - waybar
+        - wtype
+        - yazi
+        - imagemagick
+        - swaync
+        - thunar
+        - nautilus
+        - kdeconnect
+      changed_when: false
+
+    - name: Install Hyprspace
+      command: hyprpm update && hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
+      changed_when: false
+  when: "hyprland.stat.exists"
