@@ -45,6 +45,9 @@
         - feh
         - noto-fonts
         - noto-fonts-emoji
+        - qt5-quickcontrols
+        - qt5-quickcontrols2
+        - qt5-graphicaleffects
       changed_when: false
 
     - name: Install Hyprspace
