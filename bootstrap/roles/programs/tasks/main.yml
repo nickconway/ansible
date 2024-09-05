@@ -466,18 +466,28 @@
   file:
     path: ~/.local/share/fonts/hack-nerd-font
     state: directory
+  tags:
+    - fonts
+    - font
+    - hack
 
 - name: Install Hack Nerd Font
   unarchive:
     remote_src: true
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
     dest: ~/.local/share/fonts/hack-nerd-font
+  tags:
+    - fonts
+    - font
+    - hack
 
 - name: Create Noto Font Directory
   file:
     path: ~/.local/share/fonts/noto-nerd-font
     state: directory
   tags:
+    - fonts
+    - font
     - noto
 
 - name: Install Noto Nerd Font
@@ -486,29 +496,47 @@
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
     dest: ~/.local/share/fonts/noto-nerd-font
   tags:
+    - fonts
+    - font
     - noto
 
 - name: Create JetBrains Font Directory
   file:
     path: ~/.local/share/fonts/jetbrains-mono-nerd-font
     state: directory
+  tags:
+    - fonts
+    - font
+    - jetbrains
+    - jetbrainsmono
 
 - name: Install JetBrains Mono Nerd Font
   unarchive:
     remote_src: true
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
     dest: ~/.local/share/fonts/jetbrains-mono-nerd-font
+  tags:
+    - fonts
+    - font
+    - jetbrains
+    - jetbrainsmono
 
 - name: Create Nerd Font Symbols Font Directory
   file:
     path: ~/.local/share/fonts/nerd-font-symbols
     state: directory
+  tags:
+    - fonts
+    - font
 
 - name: Install Nerd Font Symbols
   unarchive:
     remote_src: true
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip
     dest: ~/.local/share/fonts/nerd-font-symbols
+  tags:
+    - fonts
+    - font
 
 - name: Download Kitty
   git:
