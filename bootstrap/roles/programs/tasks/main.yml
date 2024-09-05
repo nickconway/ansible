@@ -475,7 +475,7 @@
 
 - name: Create Noto Font Directory
   file:
-    path: ~/.local/share/fonts/hack-nerd-font
+    path: ~/.local/share/fonts/noto-nerd-font
     state: directory
   tags:
     - noto
@@ -484,7 +484,7 @@
   unarchive:
     remote_src: true
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
-    dest: ~/.local/share/fonts/hack-nerd-font
+    dest: ~/.local/share/fonts/noto-nerd-font
   tags:
     - noto
 
