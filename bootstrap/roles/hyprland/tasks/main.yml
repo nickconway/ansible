@@ -35,7 +35,6 @@
         - brightnessctl
         - pavucontrol
         - pamixer
-        - orchis-theme
         - papirus-icon-theme
         - breeze-default-cursor-theme
         - cliphist
@@ -49,6 +48,18 @@
         - qt5-quickcontrols2
         - qt5-graphicaleffects
       changed_when: false
+
+    - name: Download Orchis Theme
+      git:
+        repo: https://github.com/vinceliuice/Orchis-theme.git
+        dest: ~/.local/source/orchis
+      register: orchis
+
+    - name: Install Orchis
+      shell:
+        cmd: ./install.sh --tweaks black
+        chdir: ~/.local/source/orchis
+      # when: orchis.changed
 
     - name: Install Hyprspace
       command: hyprpm update && hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
