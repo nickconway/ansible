@@ -59,7 +59,7 @@
       shell:
         cmd: ./install.sh --tweaks black
         chdir: ~/.local/source/orchis
-      # when: orchis.changed
+      when: orchis.changed
 
     - name: Install Hyprspace
       command: hyprpm update && hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
@@ -69,7 +69,7 @@
         - hyprspace
 
     - name: Install Hyprchroma
-      command: hyprpm update && hyprpm add https://github.com/alexhulbert/HyprChroma && hyprpm enable Hypr-Chroma
+      command: hyprpm update && hyprpm add https://github.com/nickconway/HyprChroma && hyprpm enable Hypr-Chroma
       changed_when: false
       tags:
         - hyprpm
