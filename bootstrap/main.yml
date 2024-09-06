@@ -2,7 +2,7 @@
 - name: Bootstrap
   hosts: all
   environment:
-    PATH: "{{ ansible_env.HOME }}/.local/go/packages/bin:{{ ansible_env.HOME }}/.local/go/go/bin:{{ ansible_env.HOME }}/.cargo/bin:/usr/sbin:{{ ansible_env.PATH }}"
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.HOME }}/.local/go/packages/bin:{{ ansible_env.HOME }}/.local/go/go/bin:{{ ansible_env.HOME }}/.cargo/bin:/usr/sbin:{{ ansible_env.PATH }}"
     GOROOT: "{{ ansible_env.HOME }}/.local/go/go"
     GOPATH: "{{ ansible_env.HOME }}/.local/go/packages"
   tasks:
