@@ -692,6 +692,7 @@
   shell:
     cmd: gh extension install dlvhdr/gh-dash
   changed_when: false
+  ignore_errors: true
   tags:
     - gh
     - dash
