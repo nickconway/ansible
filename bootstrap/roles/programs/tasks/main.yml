@@ -419,6 +419,8 @@
     repo: https://github.com/rclone/rclone.git
     dest: ~/.local/source/rclone
   register: rclone
+  tags:
+    - rclone
 
 - block:
     - name: Build rClone
@@ -438,7 +440,15 @@
         path: ~/.local/bin/rclone
         state: file
         mode: 0750
+
+    - name: Create rClone Symlinks
+      shell:
+        cmd: ln -sf {{ ansible_env.HOME }}/.local/bin/rclone /usr/bin/rclonefs && ln -sf {{ ansible_env.HOME }}/.local/bin/rclone /sbin/mount.rclone
+      become: true
+      changed_when: false
   when: rclone.changed
+  tags:
+    - rclone
 
 - name: Download Pass
   git:
