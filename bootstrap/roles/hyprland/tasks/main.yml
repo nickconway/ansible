@@ -20,6 +20,8 @@
           hyprlock
           hyprcursor
           xdg-desktop-portal-hyprland
+          xdg-desktop-portal-gtk
+          xdg-desktop-portal
           wl-clipboard
           rofi-wayland
           waybar
