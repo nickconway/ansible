@@ -50,6 +50,8 @@
           xdg-user-dirs
           qimgv
           ungoogled-chromium-bin
+          leptonica
+          tesseract-data-eng
       changed_when: false
 
     - name: Download Orchis Theme
@@ -78,4 +80,24 @@
         - hyprpm
         - hyprchroma
 
+    - name: Download Tesseract
+      git:
+        repo: https://github.com/tesseract-ocr/tesseract
+        dest: ~/.local/source/tesseract
+      register: tesseract
+      tags:
+        - tesseract
+
+    - name: Install tesseract
+      shell:
+        cmd: |
+          ./autogen.sh
+          ./configure --prefix=$HOME/.local
+          make
+          make install
+        chdir: ~/.local/source/tesseract
+      when: tesseract.changed
+      changed_when: false
+      tags:
+        - tesseract
   when: "hyprland.stat.exists"
