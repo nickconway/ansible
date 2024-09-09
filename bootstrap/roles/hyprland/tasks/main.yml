@@ -32,8 +32,6 @@
           thunar
           nautilus
           kdeconnect
-          zen-browser-bin
-          firefox-pwa-bin
           brightnessctl
           pavucontrol
           pamixer
@@ -50,6 +48,8 @@
           qt5-quickcontrols2
           qt5-graphicaleffects
           xdg-user-dirs
+          qimgv
+          brave-beta-bin
       changed_when: false
 
     - name: Download Orchis Theme
