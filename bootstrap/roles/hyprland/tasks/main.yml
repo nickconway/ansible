@@ -49,7 +49,7 @@
           qt5-graphicaleffects
           xdg-user-dirs
           qimgv
-          brave-beta-bin
+          ungoogled-chromium-bin
       changed_when: false
 
     - name: Download Orchis Theme
