@@ -52,6 +52,7 @@
           ungoogled-chromium-bin
           leptonica
           tesseract-data-eng
+          wf-recorder
       changed_when: false
 
     - name: Download Orchis Theme
@@ -95,6 +96,7 @@
           ./configure --prefix=$HOME/.local
           make
           make install
+          git reset --hard
         chdir: ~/.local/source/tesseract
       when: tesseract.changed
       changed_when: false
