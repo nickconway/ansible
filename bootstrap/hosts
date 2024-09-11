@@ -18,11 +18,7 @@ server
 server
 pihole
 pve
-work-laptop
 gaming-server
-
-[work]
-work-laptop
 
 [passwordless]
 pihole
