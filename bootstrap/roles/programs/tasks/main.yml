@@ -310,6 +310,11 @@
             name: "{{ ansible_env.USER }}"
             groups: docker
             append: yes
+
+        - name: Install Fuse Overlay FS
+          become: true
+          package:
+            pkg: fuse-overlayfs
       when: "not docker.stat.exists"
   when:
     - "virt.stdout != 'wsl'"
