@@ -10,6 +10,7 @@
         yay -S --noconfirm --needed
           hyprland
           cpio
+          meson
           sddm
           nwg-look
           qt5ct
