@@ -98,6 +98,7 @@
           ./configure --prefix=$HOME/.local
           make
           make install
+          rm -rf unittest/third_party/googletest
           git reset --hard
         chdir: ~/.local/source/tesseract
       when: tesseract.changed
