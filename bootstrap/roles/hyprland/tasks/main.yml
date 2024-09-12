@@ -54,7 +54,7 @@
           leptonica
           tesseract-data-eng
           wf-recorder
-          satty
+          satty-bin
       changed_when: false
 
     - name: Download Orchis Theme
