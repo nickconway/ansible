@@ -52,7 +52,7 @@
           qimgv
           ungoogled-chromium-bin
           leptonica
-          tesseract-data-eng
+          tesseract
           wf-recorder
           satty-bin
       changed_when: false
@@ -83,26 +83,17 @@
         - hyprpm
         - hyprchroma
 
-    - name: Download Tesseract
-      git:
-        repo: https://github.com/tesseract-ocr/tesseract
-        dest: ~/.local/source/tesseract
-      register: tesseract
+    - name: Create Tessdata Directory
+      file:
+        path: ~/.local/share/tessdata
+        state: directory
       tags:
         - tesseract
 
-    - name: Install tesseract
-      shell:
-        cmd: |
-          ./autogen.sh
-          ./configure --prefix=$HOME/.local
-          make
-          make install
-          rm -rf unittest/third_party/googletest
-          git reset --hard
-        chdir: ~/.local/source/tesseract
-      when: tesseract.changed
-      changed_when: false
+    - name: Download Tesseract Best Data
+      get_url:
+        url: https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata
+        dest: ~/.local/share/tessdata/eng.traineddata
       tags:
         - tesseract
   when: "hyprland.stat.exists"
