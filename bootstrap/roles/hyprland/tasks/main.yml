@@ -55,6 +55,7 @@
           tesseract
           wf-recorder
           satty-bin
+          qrencode
       changed_when: false
 
     - name: Download Orchis Theme
