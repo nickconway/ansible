@@ -69,6 +69,14 @@
     cmd: cargo install eza
   changed_when: false
 
+- name: Install Cargo Update
+  shell:
+    cmd: cargo install cargo-update
+  changed_when: false
+  tags:
+    - cargo
+    - cargo-update
+
 - name: Clone FZF
   git:
     repo: https://github.com/junegunn/fzf.git
