@@ -94,7 +94,7 @@
 - name: Get FZF Git
   git:
     repo: https://github.com/nickconway/fzf-git.sh
-    dest: ~/.config/fzf/fzf-git
+    dest: ~/.config/fzf-git
   tags:
     - fzf
 
