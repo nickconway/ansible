@@ -249,7 +249,8 @@
     dest: ~/.config/zsh/fzf-tab
     version: feat/tmux-popup-follow-cursor
   tags:
-    - test
+    - fzf
+    - fzf-tab
 
 - name: Get ZSH Command Not Found Plugin
   get_url:
