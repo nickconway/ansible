@@ -77,6 +77,13 @@
     - cargo
     - cargo-update
 
+- name: Install PNPM
+  shell:
+    cmd: curl -fsSL https://get.pnpm.io/install.sh | sh -
+  changed_when: false
+  tags:
+    - pnpm
+
 - name: Clone FZF
   git:
     repo: https://github.com/junegunn/fzf.git
