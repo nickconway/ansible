@@ -79,7 +79,7 @@
         - hyprspace
 
     - name: Install Hyprchroma
-      command: hyprpm update && hyprpm add https://github.com/nickconway/HyprChroma && hyprpm enable Hypr-Chroma
+      command: hyprpm update && hyprpm add https://github.com/alexhulbert/HyprChroma && hyprpm enable Hypr-Chroma
       changed_when: false
       tags:
         - hyprpm
