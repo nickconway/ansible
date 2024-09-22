@@ -811,3 +811,11 @@
 - name: Install Pre-Commit
   community.general.pipx:
     name: pre-commit
+
+- name: Install Kubectl
+  shell:
+    cmd: curl --output ~/.local/bin/kubectl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x ~/.local/bin/kubectl
+  changed_when: false
+  tags:
+    - k8s
+    - kubectl
