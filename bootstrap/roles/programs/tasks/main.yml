@@ -814,7 +814,9 @@
 
 - name: Install Kubectl
   shell:
-    cmd: curl --output ~/.local/bin/kubectl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x ~/.local/bin/kubectl
+    cmd: |
+      curl --output ~/.local/bin/kubectl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x ~/.local/bin/kubectl
+      go install github.com/derailed/popeye@latest
   changed_when: false
   tags:
     - k8s
