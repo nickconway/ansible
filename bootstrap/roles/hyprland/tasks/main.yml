@@ -98,4 +98,9 @@
         dest: ~/.local/share/tessdata/eng.traineddata
       tags:
         - tesseract
+
+    - name: Install Pyprland
+      shell:
+        cmd: yes | sh <(curl -s https://raw.githubusercontent.com/hyprland-community/pyprland/main/scripts/get-pypr)
+      changed_when: false
   when: "hyprland.stat.exists"
