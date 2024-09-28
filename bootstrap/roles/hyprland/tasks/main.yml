@@ -54,7 +54,7 @@
           leptonica
           tesseract
           wf-recorder
-          satty-bin
+          satty
           qrencode
           topgrade
       changed_when: false
