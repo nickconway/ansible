@@ -752,6 +752,20 @@
     - charm
     - gum
 
+- name: Download Tree
+  unarchive:
+    remote_src: true
+    src: https://gitlab.com/OldManProgrammer/unix-tree/-/archive/2.1.1/unix-tree-2.1.1.tar.bz2
+    dest: ~/.local/source
+  register: tree
+
+- name: Install Tree
+  shell:
+    cmd: make install PREFIX=$HOME/.local
+    chdir: ~/.local/source/unix-tree-2.1.1
+  when: tree.changed
+  changed_when: false
+
 - name: Clone Fastfetch
   git:
     repo: https://github.com/fastfetch-cli/fastfetch
