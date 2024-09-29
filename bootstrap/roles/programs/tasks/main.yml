@@ -48,6 +48,8 @@
     url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux-glibc236
     dest: ~/.local/bin/borg
     mode: "755"
+  tags:
+    - borg
 
 - name: Install Cargo
   shell:
