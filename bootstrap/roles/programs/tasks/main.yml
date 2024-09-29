@@ -44,10 +44,11 @@
     - direnv
 
 - name: Install Borg
-  get_url:
-    url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux-glibc236
-    dest: ~/.local/bin/borg
-    mode: "755"
+  shell:
+    cmd: curl -L https://github.com/borgbackup/borg/releases/download/$(curl -s https://api.github.com/repos/borgbackup/borg/releases | jq -r 'first | .tag_name')/borg-linux-glibc236 -o ~/.local/bin/borg && chmod +x ~/.local/bin/borg
+  changed_when: false
+  tags:
+    - borg
 
 - name: Install Cargo
   shell:
