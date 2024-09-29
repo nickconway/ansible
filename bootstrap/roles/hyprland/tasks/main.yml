@@ -33,6 +33,7 @@
           thunar
           nautilus
           kdeconnect
+          network-manager-applet
           brightnessctl
           pavucontrol
           pamixer
