@@ -71,6 +71,14 @@
     cmd: cargo install eza
   changed_when: false
 
+- name: Install libssl-dev (Debian)
+  become: true
+  apt:
+    state: present
+    pkg:
+      - libssl-dev
+  when: ansible_os_family == 'Debian'
+
 - name: Install Cargo Update
   shell:
     cmd: cargo install cargo-update
@@ -158,7 +166,7 @@
       command:
         chdir: ~/.local/source/neovim
         cmd: make install
-  when: neovim.changed
+  when: neovim.changed or (force is defined and force == 'true')
   tags:
     - neovim
     - nvim
