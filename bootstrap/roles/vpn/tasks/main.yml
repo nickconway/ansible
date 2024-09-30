@@ -84,7 +84,7 @@
 
     - name: Add Subnet Router Flags
       set_fact:
-        flags: "{{ flags }} --advertise-routes=10.0.10.2/32"
+        flags: "{{ flags }} --advertise-routes=10.0.10.2/32,10.0.0.40/32"
       when: "subnet_router.stat.exists"
 
     - name: Add Accept Routes Flags
