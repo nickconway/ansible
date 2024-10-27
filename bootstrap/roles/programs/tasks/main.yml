@@ -89,7 +89,14 @@
 
 - name: Install PNPM
   shell:
-    cmd: curl -fsSL https://get.pnpm.io/install.sh | sh -
+    cmd: |
+      BASHRC="$(cat ~/.bashrc)"
+      ZSHRC="$(cat ~/.zshrc)"
+      curl -fsSL https://get.pnpm.io/install.sh | sh -
+      echo "$BASHRC" > ~/.bashrc
+      if [[ -e ~/.zshrc ]] then
+        echo "$ZSHRC" > ~/.zshrc
+      fi
   changed_when: false
   tags:
     - pnpm
