@@ -58,6 +58,7 @@
           satty
           qrencode
           topgrade
+          openbsd-netcat
       changed_when: false
 
     - name: Download Orchis Theme
