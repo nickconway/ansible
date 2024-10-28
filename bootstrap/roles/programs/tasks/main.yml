@@ -613,6 +613,14 @@
     cmd: cargo install --locked bat
   changed_when: false
 
+- name: Install difftastic
+  shell:
+    cmd: cargo install --locked difftastic
+  changed_when: false
+  tags:
+    - diff
+    - difftastic
+
 - name: Install RIP
   shell:
     cmd: cargo install rm-improved
