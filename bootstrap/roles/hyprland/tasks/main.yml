@@ -58,7 +58,7 @@
           satty
           qrencode
           topgrade
-          openbsd-netcat
+          gnu-netcat
       changed_when: false
 
     - name: Download Orchis Theme
@@ -81,7 +81,7 @@
         - hyprspace
 
     - name: Install Hyprchroma
-      command: hyprpm update && hyprpm add https://github.com/alexhulbert/HyprChroma && hyprpm enable Hypr-Chroma
+      command: hyprpm update && hyprpm add https://github.com/alexhulbert/HyprChroma && hyprpm enable hyprchroma
       changed_when: false
       tags:
         - hyprpm
