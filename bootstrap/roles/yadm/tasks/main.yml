@@ -19,15 +19,14 @@
 
 - name: Clone YADM Repo
   shell:
-    cmd: ~/.local/bin/yadm clone https://github.com/nickconway/dotfiles
+    cmd: |
+      ~/.local/bin/yadm clone https://github.com/nickconway/dotfiles
+      ~/.local/bin/yadm remote set-url origin "git@github.com:nickconway/dotfiles.git" --push
   when: not yadm.stat.exists
 
 - name: YADM Pull
   shell:
-    cmd: |
-      ~/.local/bin/yadm remote set-url origin "https://github.com/nickconway/dotfiles.git"
-      ~/.local/bin/yadm pull
-      ~/.local/bin/yadm remote set-url origin "git@github.com:nickconway/dotfiles.git"
+    cmd: ~/.local/bin/yadm pull
   changed_when: false
 
 - name: Check if YADM Archive Exists
