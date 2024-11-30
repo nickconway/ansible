@@ -94,7 +94,7 @@
       ZSHRC="$(cat ~/.zshrc)"
       curl -fsSL https://get.pnpm.io/install.sh | sh -
       echo "$BASHRC" > ~/.bashrc
-      if [[ -e ~/.zshrc ]] then
+      if [[ -e ~/.zshrc ]]; then
         echo "$ZSHRC" > ~/.zshrc
       fi
   changed_when: false
@@ -215,6 +215,8 @@
     remote_src: true
     src: https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz
     dest: ~/.local/bin
+  tags:
+    - zellij
 
 - name: Create Zellij Plugins Directory
   file:
