@@ -2,26 +2,22 @@
 localhost ansible_connection=local
 
 [servers]
-pihole
 server
 pve
 gaming-server
 
 [dns]
-pihole
 server
 
 [vpn_subnet_router]
-server
+pve
 
 [vpn]
 server
-pihole
 pve
 gaming-server
 
 [passwordless]
-pihole
 server
 gaming-server
 
