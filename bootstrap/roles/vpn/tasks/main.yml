@@ -46,6 +46,11 @@
         path: ~/.subnet-router
       register: subnet_router
 
+    - name: Check for Exit Node File
+      stat:
+        path: ~/.exit-node
+      register: exit_node
+
     - name: Check for Work File
       stat:
         path: ~/.work
@@ -62,7 +67,7 @@
 
     - name: Add Server Flags
       set_fact:
-        flags: "{{ flags }} --advertise-tags=tag:server"
+        flags: "{{ flags }} --advertise-tags=tag:server --advertise-exit-node"
       when: "server.stat.exists"
 
     - name: Add Client Flags
@@ -86,6 +91,11 @@
       set_fact:
         flags: "{{ flags }} --advertise-routes=10.0.10.2/32,10.0.0.40/32"
       when: "subnet_router.stat.exists"
+
+    - name: Add Exit Node Flags
+      set_fact:
+        flags: "{{ flags }} --advertise-exit-node"
+      when: "exit_node.stat.exists"
 
     - name: Add Accept Routes Flags
       set_fact:
