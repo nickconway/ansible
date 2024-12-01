@@ -141,7 +141,7 @@
       shell:
         cmd: tailscale up {{ flags }}
       changed_when: false
-      when: tailscale_installed.failed or not tailscale_connected.failed
+      when: tailscale_installed.failed or not tailscale_connected.failed or (force is defined and force == 'true')
 
     - name: Enable Auto-Updates
       become: true
