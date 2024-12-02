@@ -67,7 +67,7 @@
 
     - name: Add Server Flags
       set_fact:
-        flags: "{{ flags }} --advertise-tags=tag:server --advertise-exit-node"
+        flags: "{{ flags }} --advertise-tags=tag:server"
       when: "server.stat.exists"
 
     - name: Add Client Flags
