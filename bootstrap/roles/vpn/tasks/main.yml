@@ -85,7 +85,7 @@
     - name: Add DNS Flags
       set_fact:
         flags: "{{ flags }} --accept-dns=true"
-      when: mobile.stat.exists or not dns.stat.exists
+      when: mobile.stat.exists and not dns.stat.exists
 
     - name: Add Subnet Router Flags
       set_fact:
@@ -133,7 +133,7 @@
       become: true
       shell:
         cmd: sysctl -p /etc/sysctl.d/99-tailscale.conf
-      when: "dns.stat.exists"
+      when: "subnet_router.stat.exists"
       changed_when: false
 
     - name: Connect to VPN
