@@ -66,12 +66,12 @@
     path: ~/.ssh/gitea_ed25519
   register: gitea
 
-- name: Generate SSH Key for Gitea
-  shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ ansible_env.USER }}@{{ hostname.stdout }}"
-  when:
-    - "not gitea.stat.exists"
-    - "virt.stdout != 'wsl'"
+    # - name: Generate SSH Key for Gitea
+    # shell:
+    # cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ ansible_env.USER }}@{{ hostname.stdout }}"
+    # when:
+    # - "not gitea.stat.exists"
+    # - "virt.stdout != 'wsl'"
 
 - name: Generate SSH Key for Gitea (WSL)
   shell:
@@ -85,13 +85,13 @@
   register: ssh_key
   changed_when: false
 
-- name: Add SSH Key to Gitea Account
-  shell:
-    cmd: >
-      curl -s -H "Authorization: token {{ gitea_token }}"
-      -H "Content-Type: application/json"
-      -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
-      https://{{ git_url }}/api/v1/user/keys
-  changed_when: false
-  register: giteassh
-  when: git_url and gitea_token
+    # - name: Add SSH Key to Gitea Account
+    # shell:
+    # cmd: >
+    # curl -s -H "Authorization: token {{ gitea_token }}"
+    # -H "Content-Type: application/json"
+    # -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
+    # https://{{ git_url }}/api/v1/user/keys
+    # changed_when: false
+    # register: giteassh
+    # when: git_url and gitea_token

@@ -2,10 +2,9 @@
 # tasks file for cron
 
 - name: Check For Cron
-  command: crontab -l
+  stat:
+    path: /usr/bin/crontab
   register: cron
-  changed_when: false
-  ignore_errors: true
 
 - block:
   - name: Backup Containers Cron
@@ -31,4 +30,4 @@
       minute: 0
       state: present
       job: "bash -lc '.local/bin/get-docker-updates' > /tmp/get-docker-updates.log 2>&1"
-  when: not cron.failed
+  when: cron.stat.exists
