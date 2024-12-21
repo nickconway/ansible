@@ -59,6 +59,7 @@
           qrencode
           topgrade
           gnu-netcat
+          hyprland-qtutils
       changed_when: false
 
     - name: Download Orchis Theme
