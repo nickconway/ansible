@@ -60,6 +60,7 @@
           topgrade
           gnu-netcat
           hyprland-qtutils
+          bitwarden-bin
       changed_when: false
 
     - name: Download Orchis Theme

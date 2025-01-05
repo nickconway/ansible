@@ -678,6 +678,8 @@
       - pkg-config
     state: present
   when: ansible_os_family != 'Archlinux'
+  tags:
+    - tmux
 
 - name: Install Tmux Dependencies
   become: true
@@ -692,12 +694,16 @@
       - pkg-config
     state: present
   when: ansible_os_family == 'Archlinux'
+  tags:
+    - tmux
 
 - name: Clone Tmux
   git:
     repo: https://github.com/tmux/tmux.git
     dest: ~/.local/source/tmux
   register: tmux
+  tags:
+    - tmux
 
 - block:
     - name: Autogen Tmux
@@ -718,6 +724,8 @@
         cmd: make && make install
       changed_when: false
   when: tmux.changed
+  tags:
+    - tmux
 
 - name: Install Lazygit
   command:
