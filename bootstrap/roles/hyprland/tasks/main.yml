@@ -61,6 +61,8 @@
           gnu-netcat
           hyprland-qtutils
           bitwarden-bin
+          neovim-nightly-bin
+          tmux-git
       changed_when: false
 
     - name: Download Orchis Theme

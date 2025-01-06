@@ -681,7 +681,7 @@
   tags:
     - tmux
 
-- name: Install Tmux Dependencies
+- name: Install Tmux Dependencies (Arch)
   become: true
   package:
     pkg:
@@ -697,35 +697,37 @@
   tags:
     - tmux
 
-- name: Clone Tmux
-  git:
-    repo: https://github.com/tmux/tmux.git
-    dest: ~/.local/source/tmux
-  register: tmux
-  tags:
-    - tmux
-
 - block:
-    - name: Autogen Tmux
-      command:
-        chdir: ~/.local/source/tmux
-        cmd: sh autogen.sh
-      changed_when: false
+  - name: Clone Tmux
+    git:
+      repo: https://github.com/tmux/tmux.git
+      dest: ~/.local/source/tmux
+    register: tmux
+    tags:
+      - tmux
 
-    - name: Configure Tmux
-      shell:
-        chdir: ~/.local/source/tmux
-        cmd: ./configure --prefix=$HOME/.local
-      changed_when: false
+  - block:
+      - name: Autogen Tmux
+        command:
+          chdir: ~/.local/source/tmux
+          cmd: sh autogen.sh
+        changed_when: false
 
-    - name: Build Tmux
-      shell:
-        chdir: ~/.local/source/tmux
-        cmd: make && make install
-      changed_when: false
-  when: tmux.changed
-  tags:
-    - tmux
+      - name: Configure Tmux
+        shell:
+          chdir: ~/.local/source/tmux
+          cmd: ./configure --prefix=$HOME/.local
+        changed_when: false
+
+      - name: Build Tmux
+        shell:
+          chdir: ~/.local/source/tmux
+          cmd: make && make install
+        changed_when: false
+    when: tmux.changed
+    tags:
+      - tmux
+  when: ansible_os_family != 'Archlinux'
 
 - name: Install Lazygit
   command:
