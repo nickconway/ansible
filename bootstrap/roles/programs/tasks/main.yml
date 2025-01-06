@@ -153,30 +153,32 @@
     - neovim
     - nvim
 
-- name: Clone Neovim
-  git:
-    repo: https://github.com/neovim/neovim
-    dest: ~/.local/source/neovim
-    force: true
-  register: neovim
-  tags:
-    - neovim
-    - nvim
-
 - block:
-    - name: Build Neovim
-      shell:
-        chdir: ~/.local/source/neovim
-        cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
+  - name: Clone Neovim
+    git:
+      repo: https://github.com/neovim/neovim
+      dest: ~/.local/source/neovim
+      force: true
+    register: neovim
+    tags:
+      - neovim
+      - nvim
 
-    - name: Install Neovim
-      command:
-        chdir: ~/.local/source/neovim
-        cmd: make install
-  when: neovim.changed or (force is defined and force == 'true')
-  tags:
-    - neovim
-    - nvim
+  - block:
+      - name: Build Neovim
+        shell:
+          chdir: ~/.local/source/neovim
+          cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
+
+      - name: Install Neovim
+        command:
+          chdir: ~/.local/source/neovim
+          cmd: make install
+    when: neovim.changed or (force is defined and force == 'true')
+    tags:
+      - neovim
+      - nvim
+  when: ansible_os_family != 'Archlinux'
 
 - name: Install Pip (Debian)
   become: true
