@@ -437,24 +437,10 @@
     - go
 
 - name: Download Regctl
-  git:
-    repo: https://github.com/regclient/regclient.git
-    dest: ~/.local/source/regctl
-  register: regctl
-
-- block:
-    - name: Build Regctl
-      command:
-        cmd: make
-        chdir: ~/.local/source/regctl
-
-    - name: Install Regctl
-      copy:
-        remote_src: true
-        src: ~/.local/source/regctl/bin/regctl
-        dest: ~/.local/bin/regctl
-        mode: 0750
-  when: regctl.changed
+  shell:
+    cmd: curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 > {{ ansible_env.HOME}}/.local/bin/regctl && chmod 755 {{ ansible_env.HOME}}/.local/bin/regctl
+  tags:
+    - regctl
 
 - name: Download rClone
   git:
