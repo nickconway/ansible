@@ -85,13 +85,13 @@
   register: ssh_key
   changed_when: false
 
-    # - name: Add SSH Key to Gitea Account
-    # shell:
-    # cmd: >
-    # curl -s -H "Authorization: token {{ gitea_token }}"
-    # -H "Content-Type: application/json"
-    # -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
-    # https://{{ git_url }}/api/v1/user/keys
-    # changed_when: false
-    # register: giteassh
-    # when: git_url and gitea_token
+- name: Add SSH Key to Gitea Account
+  shell:
+    cmd: >
+      curl -s -H "Authorization: token {{ gitea_token }}"
+      -H "Content-Type: application/json"
+      -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
+      https://{{ git_url }}/api/v1/user/keys
+  changed_when: false
+  register: giteassh
+  when: git_url and gitea_token
