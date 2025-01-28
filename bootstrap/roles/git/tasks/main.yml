@@ -66,12 +66,12 @@
     path: ~/.ssh/gitea_ed25519
   register: gitea
 
-    # - name: Generate SSH Key for Gitea
-    # shell:
-    # cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ ansible_env.USER }}@{{ hostname.stdout }}"
-    # when:
-    # - "not gitea.stat.exists"
-    # - "virt.stdout != 'wsl'"
+- name: Generate SSH Key for Gitea
+  shell:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ ansible_env.USER }}@{{ hostname.stdout }}"
+  when:
+    - "not gitea.stat.exists"
+    - "virt.stdout != 'wsl'"
 
 - name: Generate SSH Key for Gitea (WSL)
   shell:
