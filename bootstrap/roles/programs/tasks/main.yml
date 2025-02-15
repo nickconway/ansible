@@ -721,6 +721,8 @@
   command:
     cmd: go install github.com/jesseduffield/lazygit@latest
   changed_when: false
+  tags:
+    - lazygit
 
 - name: Install Lazydocker
   shell:
