@@ -63,6 +63,11 @@
           bitwarden-bin
           neovim-nightly-bin
           tmux-git
+          texlive-bin
+          texlive-binextra
+          texlive-latex
+          zathura
+          zathura-pdf-mupdf
       changed_when: false
 
     - name: Download Orchis Theme
