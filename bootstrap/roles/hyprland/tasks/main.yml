@@ -68,6 +68,7 @@
           texlive-latex
           zathura
           zathura-pdf-mupdf
+          pandoc
       changed_when: false
 
     - name: Download Orchis Theme
