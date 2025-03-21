@@ -582,6 +582,8 @@
     dest: ~/.local/source/kitty
     force: true
   register: kitty
+  tags:
+    - kitty
 
 - name: Install Kitty
   shell:
@@ -597,6 +599,8 @@
     chdir: ~/.local/source/kitty
   changed_when: false
   when: kitty.changed
+  tags:
+    - kitty
 
 - name: Install Bat
   shell:
