@@ -85,7 +85,7 @@
     - name: Add DNS Flags
       set_fact:
         flags: "{{ flags }} --accept-dns=true"
-      when: mobile.stat.exists and not dns.stat.exists
+      when: mobile.stat.exists or not dns.stat.exists
 
     - name: Add Subnet Router Flags
       set_fact:
