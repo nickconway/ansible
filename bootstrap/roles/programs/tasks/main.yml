@@ -852,3 +852,12 @@
   tags:
     - k8s
     - kubectl
+
+- name: Install UV
+  shell:
+    cmd: |
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+  changed_when: false
+  tags:
+    - python
+    - uv
