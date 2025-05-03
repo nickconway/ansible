@@ -203,8 +203,8 @@
   changed_when: false
 
 - name: Install Tmuxp
-  community.general.pipx:
-    name: tmuxp
+  shell:
+    cmd: uv tool install tmuxp
 
 - name: Install YQ
   get_url:
@@ -492,8 +492,8 @@
   when: pass_store.changed
 
 - name: Install Virtualenv
-  community.general.pipx:
-    name: virtualenv
+  shell:
+    cmd: uv tool install virtualenv
 
 - name: Install Keyring-Pass
   pip:
@@ -840,8 +840,9 @@
   when: gitleaks.changed
 
 - name: Install Pre-Commit
-  community.general.pipx:
-    name: pre-commit
+  shell:
+    cmd: uv tool install pre-commit
+
 
 - name: Install Kubectl
   shell:
