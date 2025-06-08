@@ -24,10 +24,10 @@
         name: security
       tags: security
 
-    - name: Import YADM Role
+    - name: Import dotfiles Role
       import_role:
-        name: yadm
-      tags: yadm
+        name: dotfiles
+      tags: dotfiles
 
     - name: Import Passwordless Role
       import_role:
