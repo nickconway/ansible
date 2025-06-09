@@ -83,15 +83,23 @@
         chdir: ~/.local/source/orchis
       when: orchis.changed
 
+    - name: Purge HyprPM Cache
+      command: hyprpm purge-cache
+      changed_when: false
+      tags:
+        - hyprpm
+
     - name: Install Hyprspace
-      command: hyprpm update && hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
+      shell:
+        cmd: hyprpm update && yes | hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
       changed_when: false
       tags:
         - hyprpm
         - hyprspace
 
     - name: Install Hyprchroma
-      command: hyprpm update && hyprpm add https://github.com/alexhulbert/HyprChroma && hyprpm enable hyprchroma
+      shell:
+        cmd: hyprpm update && yes | hyprpm add https://github.com/AlexTroshkin/Hyprchroma && hyprpm enable hyprchroma
       changed_when: false
       tags:
         - hyprpm
