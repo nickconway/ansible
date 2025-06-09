@@ -24,7 +24,7 @@
         name: security
       tags: security
 
-    - name: Import dotfiles Role
+    - name: Import Dotfiles Role
       import_role:
         name: dotfiles
       tags: dotfiles
