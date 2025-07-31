@@ -96,6 +96,14 @@
       tags:
         - hyprpm
 
+    - name: Install Hypr-DarkWindow
+      shell:
+        cmd: yes | hyprpm add https://github.com/micha4w/Hypr-DarkWindow && hyprpm enable Hypr-DarkWindow
+      changed_when: false
+      tags:
+        - hyprpm
+        - hypr-darkwindow
+
     - name: Install Hyprspace
       shell:
         cmd: yes | hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
@@ -103,14 +111,6 @@
       tags:
         - hyprpm
         - hyprspace
-
-    - name: Install Hypr-darkwindow
-      shell:
-        cmd: yes | hyprpm add https://github.com/micha4w/Hypr-DarkWindow && hyprpm enable Hypr-DarkWindow
-      changed_when: false
-      tags:
-        - hyprpm
-        - hypr-darkwindow
 
     - name: Create Tessdata Directory
       file:
