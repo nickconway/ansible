@@ -69,6 +69,9 @@
           zathura
           zathura-pdf-mupdf
           pandoc
+          hyprland-preview-share-picker-git
+          hyprsysteminfo
+          hyprpolkitagent
       changed_when: false
 
     - name: Download Orchis Theme
