@@ -1,16 +1,21 @@
 ---
 # tasks file for dotfiles
 
-- name: Create Local Bin
-  file:
-    path: ~/.local/bin
-    state: directory
+- name: Install YADM (Arch)
+  become: true
+  pacman:
+    state: present
+    pkg:
+      - yadm
+  when: ansible_os_family == 'Archlinux'
 
-- name: Download YADM
-  get_url:
-    url: https://raw.githubusercontent.com/nickconway/yadm/master/yadm
-    dest: ~/.local/bin/yadm
-    mode: "755"
+- name: Install YADM (Debian)
+  become: true
+  apt:
+    state: present
+    pkg:
+      - yadm
+  when: ansible_os_family == 'Debian'
 
 - name: Check if YADM Repo Exists
   stat:
@@ -20,13 +25,13 @@
 - name: Clone YADM Repo
   shell:
     cmd: |
-      ~/.local/bin/yadm clone https://github.com/nickconway/dotfiles
-      ~/.local/bin/yadm remote set-url origin "git@github.com:nickconway/dotfiles.git" --push
+      yadm clone https://github.com/nickconway/dotfiles
+      yadm remote set-url origin "git@github.com:nickconway/dotfiles.git" --push
   when: not yadm.stat.exists
 
 - name: YADM Pull
   shell:
-    cmd: ~/.local/bin/yadm pull
+    cmd: yadm pull
   changed_when: false
 
 - name: Check if YADM Archive Exists
@@ -42,49 +47,49 @@
 
 - name: Add Client-Server Class
   shell:
-    cmd: grep "class = client-server" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class client-server
+    cmd: grep "class = client-server" ~/.local/share/yadm/repo.git/config || yadm config --add local.class client-server
   when: "'client-server' in group_names"
   changed_when: false
 
 - name: Add DNS Class
   shell:
-    cmd: grep "class = dns" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class dns
+    cmd: grep "class = dns" ~/.local/share/yadm/repo.git/config || yadm config --add local.class dns
   when: "'dns' in group_names"
   changed_when: false
 
 - name: Add Gaming Class
   shell:
-    cmd: grep "class = gaming" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class gaming
+    cmd: grep "class = gaming" ~/.local/share/yadm/repo.git/config || yadm config --add local.class gaming
   when: "'gaming' in group_names"
   changed_when: false
 
 - name: Add Passwordless Class
   shell:
-    cmd: grep "class = passwordless" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class passwordless
+    cmd: grep "class = passwordless" ~/.local/share/yadm/repo.git/config || yadm config --add local.class passwordless
   when: "'passwordless' in group_names"
   changed_when: false
 
 - name: Add Server Class
   shell:
-    cmd: grep "class = server" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class server
+    cmd: grep "class = server" ~/.local/share/yadm/repo.git/config || yadm config --add local.class server
   when: "'servers' in group_names"
   changed_when: false
 
 - name: Add Subnet-Router Class
   shell:
-    cmd: grep "class = subnet-router" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class subnet-router
+    cmd: grep "class = subnet-router" ~/.local/share/yadm/repo.git/config || yadm config --add local.class subnet-router
   when: "'vpn_subnet_router' in group_names"
   changed_when: false
 
 - name: Add VPN Class
   shell:
-    cmd: grep "class = vpn" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class vpn
+    cmd: grep "class = vpn" ~/.local/share/yadm/repo.git/config || yadm config --add local.class vpn
   when: "'vpn' in group_names"
   changed_when: false
 
 - name: Add Work Class
   shell:
-    cmd: grep "class = work" ~/.local/share/yadm/repo.git/config || ~/.local/bin/yadm config --add local.class work
+    cmd: grep "class = work" ~/.local/share/yadm/repo.git/config || yadm config --add local.class work
   when: "'work' in group_names"
   changed_when: false
 
@@ -96,7 +101,7 @@
 
 - name: Create YADM Alt Files
   shell:
-    cmd: ~/.local/bin/yadm alt
+    cmd: yadm alt
   changed_when: false
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ user_id.stdout }}"
