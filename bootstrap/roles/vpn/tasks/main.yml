@@ -80,11 +80,11 @@
     - name: Add DNS False Flags
       set_fact:
         flags: "{{ flags }} --accept-dns=false"
-      when: not mobile.stat.exists or dns.stat.exists
+      when: not mobile.stat.exists and dns.stat.exists
 
     - name: Add DNS Flags
       set_fact:
-        flags: "{{ flags }} --accept-dns=true"
+        flags: "{{ flags }} --accept-dns"
       when: mobile.stat.exists or not dns.stat.exists
 
     - name: Add Subnet Router Flags
@@ -99,7 +99,7 @@
 
     - name: Add Accept Routes Flags
       set_fact:
-        flags: "{{ flags }} --accept-routes=true"
+        flags: "{{ flags }} --accept-routes"
       when: mobile.stat.exists
 
     - name: Add Accept Routes False Flags
