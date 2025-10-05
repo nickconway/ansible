@@ -56,6 +56,14 @@
     cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
   changed_when: false
 
+- name: Install UV
+  shell:
+    cmd: curl -LsSf https://astral.sh/uv/install.sh | sh
+  changed_when: false
+  tags:
+    - python
+    - uv
+
 - include_tasks: ../utils/install.yml
   loop:
     - zsh
@@ -573,11 +581,3 @@
   tags:
     - k8s
     - kubectl
-
-- name: Install UV
-  shell:
-    cmd: curl -LsSf https://astral.sh/uv/install.sh | sh
-  changed_when: false
-  tags:
-    - python
-    - uv
