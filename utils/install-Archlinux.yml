@@ -1,0 +1,4 @@
+- name: Install {{ package.Archlinux | default(package) }} (Arch)
+  shell:
+    cmd: "yay --noconfirm --needed --sync {{ package.Archlinux | default(package) }}"
+  changed_when: false

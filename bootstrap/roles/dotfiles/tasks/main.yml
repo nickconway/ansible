@@ -1,21 +1,9 @@
 ---
 # tasks file for dotfiles
 
-- name: Install YADM (Arch)
-  become: true
-  pacman:
-    state: present
-    pkg:
-      - yadm
-  when: ansible_os_family == 'Archlinux'
-
-- name: Install YADM (Debian)
-  become: true
-  apt:
-    state: present
-    pkg:
-      - yadm
-  when: ansible_os_family == 'Debian'
+- include_tasks: ../utils/install.yml
+  loop:
+    - yadm
 
 - name: Check if YADM Repo Exists
   stat:

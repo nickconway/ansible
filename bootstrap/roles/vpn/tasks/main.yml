@@ -58,58 +58,62 @@
 
     - name: Create Default Flags
       set_fact:
-        flags: "--ssh --operator={{ ansible_env.USER }} --auth-key '{{ vpn_key }}'"
+        flags:
+          - "--ssh"
+          - "--operator={{ ansible_env.USER }}"
+          - flag: --auto-update
+            skip_os: Archlinux
 
     - name: Add Client-Server Flags
       set_fact:
-        flags: "{{ flags }} --advertise-tags=tag:server,tag:client"
+        tags: "--advertise-tags=tag:server,tag:client"
       when: "client_server.stat.exists"
 
     - name: Add Server Flags
       set_fact:
-        flags: "{{ flags }} --advertise-tags=tag:server"
+        tags: "--advertise-tags=tag:server"
       when: "server.stat.exists"
 
     - name: Add Client Flags
       set_fact:
-        flags: "{{ flags }} --advertise-tags=tag:client"
+        tags: "--advertise-tags=tag:client"
       when:
         - "not client_server.stat.exists"
         - "not server.stat.exists"
 
     - name: Add DNS False Flags
       set_fact:
-        flags: "{{ flags }} --accept-dns=false"
+        flags: "{{ flags + ['--accept-dns=false'] }}"
       when: not mobile.stat.exists and dns.stat.exists
 
     - name: Add DNS Flags
       set_fact:
-        flags: "{{ flags }} --accept-dns"
+        flags: "{{ flags + ['--accept-dns'] }}"
       when: mobile.stat.exists or not dns.stat.exists
 
     - name: Add Subnet Router Flags
       set_fact:
-        flags: "{{ flags }} --advertise-routes=10.0.10.2/32,10.0.10.10/32,10.0.0.40/32"
+        flags: "{{ flags + ['--advertise-routes=10.0.10.2/32,10.0.10.10/32,10.0.0.40/32'] }}"
       when: "subnet_router.stat.exists"
 
     - name: Add Exit Node Flags
       set_fact:
-        flags: "{{ flags }} --advertise-exit-node"
+        flags: "{{ flags + ['--advertise-exit-node'] }}"
       when: "exit_node.stat.exists"
 
     - name: Add Accept Routes Flags
       set_fact:
-        flags: "{{ flags }} --accept-routes"
+        flags: "{{ flags + ['--accept-routes'] }}"
       when: mobile.stat.exists
 
     - name: Add Accept Routes False Flags
       set_fact:
-        flags: "{{ flags }} --accept-routes=false"
+        flags: "{{ flags + ['--accept-routes=false'] }}"
       when: not mobile.stat.exists or subnet_router.stat.exists
 
     - name: Add Work Flags
       set_fact:
-        flags: "{{ flags }} --advertise-tags=tag:work"
+        tags: "--advertise-tags=tag:work"
       when: work.stat.exists
 
     - name: Install Tailscale
@@ -136,23 +140,32 @@
       when: "subnet_router.stat.exists"
       changed_when: false
 
+    - name: Connect to VPN (Initial)
+      become: true
+      shell:
+        cmd: "tailscale up --auth-key='{{ vpn_key }}' {{ tags }}"
+      changed_when: false
+      when: tailscale_installed.failed
+
     - name: Connect to VPN
       become: true
       shell:
-        cmd: tailscale up {{ flags }}
+        cmd: "tailscale up &> /tmp/tsa.log"
       changed_when: false
-      when: tailscale_installed.failed or not tailscale_connected.failed or (force is defined and force == 'true')
+      when: not tailscale_installed.failed and not tailscale_connected.failed or (force | default(false))
 
-    - name: Enable Auto-Updates
+    - name: Enable Settings
       become: true
       shell:
-        cmd: tailscale set --auto-update
+        cmd: tailscale set {{ item.flag | default(item) }}
       changed_when: false
       ignore_errors: true
+      loop: "{{ flags }}"
+      when: ansible_os_family != (item.skip_os | default(''))
 
-    - name: Install Networkd Dispatcher
-      become: true
-      package: pkg=networkd-dispatcher
+    - include_tasks: ../utils/install.yml
+      loop:
+        - networkd-dispatcher
       when: "subnet_router.stat.exists"
 
     - name: Optimize Subnet Routers

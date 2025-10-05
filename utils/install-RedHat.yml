@@ -1,0 +1,5 @@
+- name: Install {{ package.RedHat | default(package) }} (RedHat)
+  become: true
+  yum:
+    name:
+      - "{{ package.RedHat | default(package) }}"

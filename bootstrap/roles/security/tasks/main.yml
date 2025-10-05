@@ -38,10 +38,9 @@
     key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
   when: inventory_hostname != 'localhost'
 
-- name: Install Open-SSH Server
-  become: true
-  package:
-    name: openssh-server
+- include_tasks: ../utils/install.yml
+  loop:
+    - openssh-server
   when:
     - "'ssh.service' not in services and 'sshd.service' not in services"
     - "'ssh' not in services and 'sshd' not in services"

@@ -1,0 +1,5 @@
+- name: Install {{ package.cargo | default(package) }} (Cargo)
+  community.general.cargo:
+    name:
+      - "{{ package.cargo }}"
+    locked: "{{ package.locked | default(false) }}"
