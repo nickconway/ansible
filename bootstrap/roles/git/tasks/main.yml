@@ -1,13 +1,8 @@
 ---
 # tasks file for git
 
-- name: Get Hostname
-  command: uname -n
-  register: hostname
-  changed_when: false
-
 - name: Get Environment
-  command: systemd-detect-virt
+  shell: systemd-detect-virt
   register: virt
   changed_when: false
   ignore_errors: true
@@ -21,77 +16,86 @@
   include_vars: group_vars/gaming/vault.yml
   when: gaming.stat.exists
 
-- name: Check If GitHub Key Exists
-  stat:
-    path: ~/.ssh/github_ed25519
-  register: github
+- include_tasks: ../utils/install.yml
+  loop:
+    - Debian: python3-cryptography
+      Archlinux: python-cryptography
+    - Debian: python3-bcrypt
+      Archlinux: python-bcrypt
 
 - name: Generate SSH Key for GitHub
-  shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}" -C "github {{ ansible_env.USER }}@{{ hostname.stdout }}"
+  community.crypto.openssh_keypair:
+    type: ed25519
+    comment: "github {{ ansible_env.USER }}@{{ ansible_hostname }}"
+    path: ~/.ssh/github_ed25519
+    passphrase: "{{ ansible_become_pass }}"
+    regenerate: full_idempotence
+  register: ssh_key
   when:
-    - "not github.stat.exists"
     - "virt.stdout != 'wsl'"
 
 - name: Generate SSH Key for GitHub (WSL)
-  shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/github_ed25519 -q -N "{{ ansible_become_pass }}" -C "github {{ ansible_env.USER }}@{{ hostname.stdout }}-wsl"
+  community.crypto.openssh_keypair:
+    type: ed25519
+    comment: "github {{ ansible_env.USER }}@{{ ansible_hostname }}-wsl"
+    path: ~/.ssh/github_ed25519
+    passphrase: "{{ ansible_become_pass }}"
+    regenerate: full_idempotence
+  register: ssh_key_wsl
   when:
-    - "not github.stat.exists"
     - "virt.stdout == 'wsl'"
-
-- name: Get SSH Key for GitHub
-  shell: cat ~/.ssh/github_ed25519.pub
-  register: ssh_key
-  changed_when: false
 
 - name: Add SSH Key to GitHub Account
   github_key:
-    name: "{{ hostname.stdout }}"
+    name: "{{ ansible_hostname }}"
     token: "{{ github_token }}"
-    pubkey: "{{ ssh_key.stdout }}"
+    pubkey: "{{ ssh_key.public_key }}"
   when:
     - "virt.stdout != 'wsl'"
 
 - name: Add SSH Key to GitHub Account (WSL)
   github_key:
-    name: "{{ hostname.stdout }}-wsl"
+    name: "{{ ansible_hostname }}-wsl"
     token: "{{ github_token }}"
-    pubkey: "{{ ssh_key.stdout }}"
+    pubkey: "{{ ssh_key_wsl.public_key }}"
   when:
     - "virt.stdout == 'wsl'"
 
-- name: Check If Gitea Key Exists
-  stat:
-    path: ~/.ssh/gitea_ed25519
-  register: gitea
-
 - name: Generate SSH Key for Gitea
-  shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ ansible_env.USER }}@{{ hostname.stdout }}"
+  community.crypto.openssh_keypair:
+    type: ed25519
+    comment: "gitea {{ ansible_env.USER }}@{{ ansible_hostname }}"
+    path: ~/.ssh/gitea_ed25519
+    passphrase: "{{ ansible_become_pass }}"
+    regenerate: full_idempotence
+  register: ssh_key
   when:
-    - "not gitea.stat.exists"
     - "virt.stdout != 'wsl'"
 
 - name: Generate SSH Key for Gitea (WSL)
-  shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/gitea_ed25519 -q -N "{{ ansible_become_pass }}" -C "gitea {{ ansible_env.USER }}@{{ hostname.stdout }}-wsl"
+  community.crypto.openssh_keypair:
+    type: ed25519
+    comment: "gitea {{ ansible_env.USER }}@{{ ansible_hostname }}-wsl"
+    path: ~/.ssh/gitea_ed25519
+    passphrase: "{{ ansible_become_pass }}"
+    regenerate: full_idempotence
+  register: ssh_key_wsl
   when:
-    - "not gitea.stat.exists"
     - "virt.stdout == 'wsl'"
 
-- name: Get SSH Key for Gitea
-  shell: cat ~/.ssh/gitea_ed25519.pub
-  register: ssh_key
-  changed_when: false
-
 - name: Add SSH Key to Gitea Account
-  shell:
-    cmd: >
-      curl -H "Authorization: token {{ gitea_token }}"
-      -H "Content-Type: application/json"
-      -X POST --data-binary "{\"title\":\"{{ hostname.stdout }}\",\"key\":\"{{ ssh_key.stdout }}\"}"
-      https://{{ git_url }}/api/v1/user/keys
-  changed_when: false
-  register: giteassh
+  uri:
+    url: "https://{{ git_url }}/api/v1/user/keys"
+    body_format: json
+    method: POST
+    status_code:
+      - 200
+      - 201
+    headers:
+      Authorization: "token {{ gitea_token }}"
+    body:
+      title: "{{ ansible_hostname }}"
+      key: "{{ ssh_key_wsl.public_key | default(ssh_key.public_key) }}"
+  register: this
   when: git_url != "" and gitea_token != ""
+  failed_when: this is failed and "Key content has been used as non-deploy key" not in this.json.message | default("")

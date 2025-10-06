@@ -137,7 +137,7 @@
     - fzf
 
 - name: Install FZF
-  command: ~/.config/fzf/install --all --no-update-rc
+  shell: ~/.config/fzf/install --all --no-update-rc
   when: fzf.changed
   tags:
     - fzf
@@ -167,7 +167,7 @@
           cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
 
       - name: Install Neovim
-        command:
+        shell:
           chdir: ~/.local/source/neovim
           cmd: make install
     when: neovim.changed or (force | default(false))
@@ -263,12 +263,15 @@
     line: /usr/bin/zsh
 
 - name: Change Shell to ZSH
-  become: true
-  command: chsh {{ ansible_env.USER }} -s /usr/bin/zsh
-  changed_when: false
+  user:
+    name: "{{ ansible_env.USER }}"
+    shell: /usr/bin/zsh
+  tags:
+    - shell
+    - zsh
 
 - name: Get Environment
-  command: systemd-detect-virt
+  shell: systemd-detect-virt
   register: virt
   changed_when: false
   ignore_errors: true
@@ -292,7 +295,7 @@
 
     - name: Run Docker Script
       become: true
-      command:
+      shell:
         cmd: sh {{ ansible_env.HOME }}/.local/bin/get-docker
       changed_when: false
       when: ansible_os_family != 'Archlinux'
@@ -301,23 +304,49 @@
       loop:
         - docker
         - docker-compose
-
-    - name: Make Docker Group
-      become: true
-      group:
-        name: docker
-        state: present
-
-    - name: Add User to Docker Group
-      become: true
-      user:
-        name: "{{ ansible_env.USER }}"
-        groups: docker
-        append: yes
+      when: ansible_os_family == 'Archlinux'
   when:
     - "not docker.stat.exists"
     - "virt.stdout != 'wsl'"
     - "not pve.stat.exists"
+
+- name: Make Docker Group
+  become: true
+  group:
+    name: docker
+    state: present
+
+- name: Add User to Docker Group
+  become: true
+  user:
+    name: "{{ ansible_env.USER }}"
+    groups: docker
+    append: yes
+
+- name: Check for Live Restore File
+  stat:
+    path: ~/.live-restore
+  register: live_restore
+
+- block:
+  - include_tasks:
+      file: ../utils/add-json-key.yml
+      apply:
+        tags:
+          - test
+    loop:
+      - file: /etc/docker/daemon.json
+        key: live-restore
+        value: true
+        become: true
+
+  - name: Restart Docker Daemon
+    become: true
+    service:
+      name: docker
+      state: restarted
+    when: file.changed
+  when: live_restore.stat.exists
 
 - name: Install NVM
   shell: PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash'
@@ -345,7 +374,7 @@
 
 - block:
     - name: Build rClone
-      command:
+      shell:
         cmd: "go build"
         chdir: "{{ ansible_env.HOME }}/.local/source/rclone"
 
@@ -482,7 +511,7 @@
   changed_when: false
 
 - name: Install Lazygit
-  command:
+  shell:
     cmd: go install github.com/jesseduffield/lazygit@latest
   changed_when: false
   tags:

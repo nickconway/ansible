@@ -81,15 +81,9 @@
   when: "'work' in group_names"
   changed_when: false
 
-- name: Get User ID
-  shell:
-    cmd: id -u
-  changed_when: false
-  register: user_id
-
 - name: Create YADM Alt Files
   shell:
     cmd: yadm alt
   changed_when: false
   environment:
-    XDG_RUNTIME_DIR: "/run/user/{{ user_id.stdout }}"
+    XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts.user_uid }}"

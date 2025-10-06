@@ -1,0 +1,21 @@
+- name: Ensure {{ item.file }} exists
+  become: "{{ item.become | default(false) }}"
+  file:
+    state: touch
+    path: "{{ item.file }}"
+
+- name: Read {{ item.file }}
+  slurp:
+    src: "{{ item.file }}"
+  register: json
+
+- name: Set JSON
+  set_fact:
+    json: "{{ json.content | default([]) | b64decode | from_json | combine({ item.key : item.value }) }}"
+
+- name: Write JSON to {{ item.file }}
+  become: "{{ item.become | default(false) }}"
+  copy:
+    content: "{{ json | to_nice_json }}"
+    dest: "{{ item.file }}"
+  register: file

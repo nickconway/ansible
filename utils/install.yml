@@ -1,8 +1,8 @@
 - name: "Install {{ item }}"
   include_tasks:
-    file: ../utils/install-{{ (item | type_debug == 'AnsibleUnicode') | ternary(ansible_os_family, item.cargo | default(false) | ternary('cargo', ansible_os_family)) }}.yml
+    file: ../utils/install-{{ (item | type_debug == 'str') | ternary(ansible_os_family, item.cargo | default(false) | ternary('cargo', ansible_os_family)) }}.yml
   loop:
     - "{{ item }}"
   loop_control:
     loop_var: package
-  when: (item | type_debug == 'AnsibleUnicode') or (package[ansible_os_family] | default(item.cargo) | default(false))
+  when: (item | type_debug == 'str') or ((package[ansible_os_family] | default(item.cargo) | default(false)) != false)

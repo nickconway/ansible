@@ -85,7 +85,7 @@
       when: orchis.changed
 
     - name: Purge HyprPM Cache
-      command: hyprpm purge-cache
+      shell: hyprpm purge-cache
       changed_when: false
       tags:
         - hyprpm

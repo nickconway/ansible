@@ -12,10 +12,22 @@
       path: .vpn
     register: vpn
 
+  - include_tasks: ../utils/install.yml
+    loop:
+      - systemd-resolved
+
+  - name: Enable Systemd-Resolved
+    become: true
+    service:
+      enabled: true
+      name: systemd-resolved
+      state: started
+
   - name: Create Resolve Symlink
     become: true
     file:
       state: link
+      force: true
       src: /run/systemd/resolve/resolv.conf
       path: /etc/resolv.conf
 
@@ -34,25 +46,13 @@
       state: restarted
     when: resolvedconf.changed
 
-  - block:
-    - name: Enable IPV4 Forwarding
-      become: true
-      lineinfile:
-        line: 'net.ipv4.ip_forward = 1'
-        path: /etc/sysctl.conf
-      changed_when: false
-
-    - name: Enable IPV6 Forwarding
-      become: true
-      lineinfile:
-        line: 'net.ipv6.conf.all.forwarding = 1'
-        path: /etc/sysctl.conf
-      changed_when: false
-
-    - name: Reload IP Configs
-      become: true
-      shell:
-        cmd: sysctl -p /etc/sysctl.conf
-      changed_when: false
+  - name: Enable IP Forwarding
+    become: true
+    ansible.posix.sysctl:
+      value: 1
+      name: "{{ item }}"
+    loop:
+      - net.ipv4.ip_forward
+      - net.ipv6.conf.all.forwarding
     when: "vpn.stat.exists"
   when: "dns.stat.exists"

@@ -5,31 +5,26 @@
   service_facts:
 
 - name: Get Environment
-  command: systemd-detect-virt
+  shell: systemd-detect-virt
   register: virt
   changed_when: false
   ignore_errors: true
 
-- name: Enable Ping
+- name: Enable Ping in LXC
   become: true
-  shell:
-    cmd: setcap cap_net_raw+p $(which ping)
+  community.general.capabilities:
+    path: /usr/bin/ping
+    capability: cap_net_raw+p
+    state: present
   when: virt.stdout == 'lxc'
-  changed_when: false
-
-- name: Check If SSH Key Exists
-  stat:
-    path: ~/.ssh/id_ed25519
-  delegate_to: localhost
-  run_once: true
-  register: ssh_key
 
 - name: Generate SSH Key
-  shell:
-    cmd: ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -q -N "{{ ansible_become_pass }}"
+  community.crypto.openssh_keypair:
+    type: ed25519
+    path: ~/.ssh/id_ed25519
+    passphrase: "{{ ansible_become_pass }}"
   delegate_to: localhost
   run_once: true
-  when: "not ssh_key.stat.exists"
 
 - name: Add SSH Key to Authorized Keys
   authorized_key:

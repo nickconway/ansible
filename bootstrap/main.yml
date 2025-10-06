@@ -58,6 +58,11 @@
         name: vpn
       tags: vpn
 
+    - name: Import DNS Role
+      import_role:
+        name: dns
+      tags: dns
+
     - name: Import Programs Role
       import_role:
         name: programs
