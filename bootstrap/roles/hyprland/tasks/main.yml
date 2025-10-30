@@ -71,7 +71,7 @@
         - hyprland-preview-share-picker-git
         - hyprsysteminfo
         - hyprpolkitagent
-        - hyprmarker
+        - wayscriber-bin
 
     - name: Download Orchis Theme
       git:
