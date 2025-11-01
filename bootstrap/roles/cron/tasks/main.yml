@@ -13,7 +13,7 @@
       hour: 5
       minute: 0
       state: present
-      job: "bash -lc '.local/bin/backup-containers' > /tmp/backup-containers.log 2>&1"
+      job: "bash -lc 'backup-containers' > /tmp/backup-containers.log 2>&1"
 
   - name: Backup LXC Cron
     cron:
@@ -21,7 +21,7 @@
       hour: 4
       minute: 0
       state: present
-      job: "bash -lc '.local/bin/backup-lxcs' > /tmp/backup-lxcs.log 2>&1"
+      job: "bash -lc 'backup-lxcs' > /tmp/backup-lxcs.log 2>&1"
 
   - name: Docker Updates Cron
     cron:
@@ -29,5 +29,12 @@
       hour: "*/6"
       minute: 0
       state: present
-      job: "bash -lc '.local/bin/get-docker-updates' > /tmp/get-docker-updates.log 2>&1"
+      job: "bash -lc 'get-docker-updates' > /tmp/get-docker-updates.log 2>&1"
+
+  - name: Homelab Sync Cron
+    cron:
+      name: homelab-sync
+      minute: 0
+      state: present
+      job: "bash -lc 'sync-homelab' > /tmp/sync-homelab.log 2>&1"
   when: cron.stat.exists
