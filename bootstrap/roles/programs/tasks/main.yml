@@ -45,7 +45,7 @@
 
 - name: Install Borg
   get_url:
-    url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux-glibc236
+    url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux-glibc235-x86_64-gh
     dest: ~/.local/bin/borg
     mode: "755"
   tags:
