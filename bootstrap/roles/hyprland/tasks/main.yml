@@ -73,6 +73,7 @@
         - hyprpolkitagent
         - wayscriber-bin
         - kwallet
+        - vk-hdr-layer-kwin6-git
 
     - name: Download Orchis Theme
       git:
