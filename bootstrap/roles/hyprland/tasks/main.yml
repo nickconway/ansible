@@ -58,7 +58,7 @@
         - qrencode
         - topgrade
         - gnu-netcat
-        - hyprland-qtutils
+        - hyprland-guiutils
         - bitwarden-bin
         - neovim-nightly-bin
         - tmux-git
@@ -89,6 +89,7 @@
 
     - name: Purge HyprPM Cache
       shell: hyprpm purge-cache
+      when: (purge_hypr_cache | default(false)) is true
       changed_when: false
       tags:
         - hyprpm
