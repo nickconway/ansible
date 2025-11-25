@@ -7,6 +7,11 @@
   register: cron
 
 - block:
+  - name: Set USER Cron Variable
+    cron:
+      env: yes
+      name: USER
+      job: '{{ ansible_env.USER }}'
   - name: Backup Containers Cron
     cron:
       name: backup-containers
