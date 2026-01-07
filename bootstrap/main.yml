@@ -14,7 +14,7 @@
     - name: Set Language
       become: true
       shell:
-        cmd: localectl set-locale LANG=en_US.UTF-8
+        cmd: localectl set-locale LANG=en_US.UTF-8 || update-locale LANG=en_US.UTF-8
       changed_when: false
       tags: lang
 
