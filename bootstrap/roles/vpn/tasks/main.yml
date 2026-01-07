@@ -173,23 +173,4 @@
           test $? -eq 0
       changed_when: false
       when: "subnet_router.stat.exists"
-
-    - include_tasks: ../utils/install.yml
-      loop:
-        - systemd-resolved
-
-    - name: Enable Systemd-Resolved
-      become: true
-      service:
-        enabled: true
-        name: systemd-resolved
-        state: started
-
-    - name: Create Resolve Symlink
-      become: true
-      file:
-        state: link
-        force: true
-        src: /run/systemd/resolve/resolv.conf
-        path: /etc/resolv.conf
   when: "vpn.stat.exists"
