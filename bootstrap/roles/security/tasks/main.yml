@@ -62,6 +62,9 @@
     owner: root
     group: root
     mode: '755'
+  when: "ntfy_ssh_token is defined"
+  tags:
+    - ntfy-ssh
 
 - name: Start SSH Service (Debian)
   become: true

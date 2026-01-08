@@ -1,5 +1,5 @@
 #!/bin/bash
 
 if [ "${PAM_TYPE}" = "open_session" ]; then
-    curl -d "SSH login on $(uname -n): ${PAM_USER} from ${PAM_RHOST}" https://notifications.conway.dev/ssh -H "Authorization: Bearer {{ ntfy_ssh_token }}" || echo "Failed to notify of ssh login"
+    curl -d "SSH login on $(uname -n): ${PAM_USER} from ${PAM_RHOST}" "{{ ntfy_url }}/{{ ntfy_ssh_topic | default('ssh') }}" -H "Authorization: Bearer {{ ntfy_ssh_token }}" || echo "Failed to notify of ssh login"
 fi
