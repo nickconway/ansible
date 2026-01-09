@@ -1,0 +1,4 @@
+- name: Install {{ package.Darwin | default(package) }} (MacOS)
+  community.general.homebrew:
+    name:
+      - "{{ package.Darwin | default(package) }}"
