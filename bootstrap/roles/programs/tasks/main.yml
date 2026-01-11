@@ -3,178 +3,178 @@
 
 - name: Import GPG Keys
   shell:
-    cmd: |
-      find ~/.config/gpg/*.asc &> /dev/null && gpg --batch --yes --passphrase {{ gpg_passphrase }} --import ~/.config/gpg/*.asc
-      find ~/.config/gpg/*.trust && gpg --batch --yes --import-ownertrust ~/.config/gpg/*.trust
+      cmd: |
+          find ~/.config/gpg/*.asc &> /dev/null && gpg --batch --yes --passphrase {{ gpg_passphrase }} --import ~/.config/gpg/*.asc
+          find ~/.config/gpg/*.trust && gpg --batch --yes --import-ownertrust ~/.config/gpg/*.trust
   changed_when: false
 
 - name: Add GitHub Keys to Known Hosts
   lineinfile:
-    path: "{{ ansible_env.HOME }}/.ssh/known_hosts"
-    line: "{{ item }}"
-    create: true
+      path: "{{ ansible_env.HOME }}/.ssh/known_hosts"
+      line: "{{ item }}"
+      create: true
   loop:
-    - "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
-    - "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg="
-    - "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk="
-    - "git.conway.dev ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ308+nAV0FTUbT+JX4+57gNxqq0Z4H4Yt0xg/nlM+TABirY8URTq2Hj44JgjRbcF/Ar2w5uh4Xnp3PQjVF6XiA="
-    - "git.conway.dev ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO0q6lYtSUsjXT5gyjImOlY4Pd5KX/PplED53zFlPmy5"
+      - "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
+      - "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg="
+      - "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk="
+      - "git.conway.dev ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ308+nAV0FTUbT+JX4+57gNxqq0Z4H4Yt0xg/nlM+TABirY8URTq2Hj44JgjRbcF/Ar2w5uh4Xnp3PQjVF6XiA="
+      - "git.conway.dev ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO0q6lYtSUsjXT5gyjImOlY4Pd5KX/PplED53zFlPmy5"
 
 - name: Install Dockcheck
   get_url:
-    url: https://raw.githubusercontent.com/mag37/dockcheck/main/dockcheck.sh
-    dest: ~/.local/bin/dockcheck
-    mode: "755"
+      url: https://raw.githubusercontent.com/mag37/dockcheck/main/dockcheck.sh
+      dest: ~/.local/bin/dockcheck
+      mode: "755"
   tags:
-    - dockcheck
+      - dockcheck
 
 - name: Install JQ
   get_url:
-    url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
-    dest: ~/.local/bin/jq
-    mode: "700"
+      url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+      dest: ~/.local/bin/jq
+      mode: "700"
   tags:
-    - jq
+      - jq
 
 - name: Install Direnv
   shell:
-    cmd: curl -sfL https://direnv.net/install.sh | bash
+      cmd: curl -sfL https://direnv.net/install.sh | bash
   changed_when: false
   tags:
-    - direnv
+      - direnv
 
 - name: Install Borg
   get_url:
-    url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux-glibc235-x86_64-gh
-    dest: ~/.local/bin/borg
-    mode: "755"
+      url: https://github.com/borgbackup/borg/releases/latest/download/borg-linux-glibc235-x86_64-gh
+      dest: ~/.local/bin/borg
+      mode: "755"
   tags:
-    - borg
+      - borg
 
 - name: Install Cargo
   shell:
-    cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+      cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
   changed_when: false
 
 - name: Install UV
   shell:
-    cmd: curl -LsSf https://astral.sh/uv/install.sh | sh
+      cmd: curl -LsSf https://astral.sh/uv/install.sh | sh
   changed_when: false
   tags:
-    - python
-    - uv
+      - python
+      - uv
 
 - include_tasks: ../utils/install.yml
   loop:
-    - zsh
+      - zsh
 
-    - Debian: tmux
-      Archlinux: tmux-git
+      - Debian: tmux
+        Archlinux: tmux-git
 
-    - kitty
+      - kitty
 
-    - Archlinux: fastfetch
+      - Archlinux: fastfetch
 
-    - Archlinux: gitleaks
+      - Archlinux: gitleaks
 
-    - Debian: libssl-dev
+      - Debian: libssl-dev
 
-    - Debian: ninja-build
-      Archlinux: ninja
+      - Debian: ninja-build
+        Archlinux: ninja
 
-    - Archlinux: make
+      - Archlinux: make
 
-    - gettext
-    - cmake
-    - unzip
-    - curl
+      - gettext
+      - cmake
+      - unzip
+      - curl
 
-    - Archlinux: neovim-nightly-bin
+      - Archlinux: neovim-nightly-bin
 
-    - fuse-overlayfs
+      - fuse-overlayfs
 
-    - btop
+      - btop
 
-    - Archlinux: go
-      Debian: golang
+      - Archlinux: go
+        Debian: golang
 
-    - Debian: python3-pip
+      - Debian: python3-pip
 
-    - Debian: pipx
-      Archlinux: python-pipx
-    - cargo: zoxide
-      locked: true
+      - Debian: pipx
+        Archlinux: python-pipx
+      - cargo: zoxide
+        locked: true
 
-    - cargo: ripgrep
-    - cargo: eza
-    - cargo: cargo-update
+      - cargo: ripgrep
+      - cargo: eza
+      - cargo: cargo-update
 
-    - cargo: bat
-      locked: true
+      - cargo: bat
+        locked: true
 
-    - cargo: difftastic
-      locked: true
+      - cargo: difftastic
+        locked: true
 
-    - cargo: fd-find
-    - cargo: rbw
-    - cargo: tealdeer
-    - cargo: tree-sitter-cli
-    - cargo: git-delta
+      - cargo: fd-find
+      - cargo: rbw
+      - cargo: tealdeer
+      - cargo: tree-sitter-cli
+      - cargo: git-delta
 
 - name: Install PNPM
   shell:
-    cmd: curl -fsSL https://get.pnpm.io/install.sh | sh -
+      cmd: curl -fsSL https://get.pnpm.io/install.sh | sh -
   changed_when: false
   tags:
-    - pnpm
+      - pnpm
 
 - name: Clone FZF
   git:
-    repo: https://github.com/junegunn/fzf.git
-    dest: ~/.config/fzf
+      repo: https://github.com/junegunn/fzf.git
+      dest: ~/.config/fzf
   register: fzf
   tags:
-    - fzf
+      - fzf
 
 - name: Install FZF
   shell: ~/.config/fzf/install --all --no-update-rc
   when: fzf.changed
   tags:
-    - fzf
+      - fzf
 
 - name: Get FZF Git
   git:
-    repo: https://github.com/nickconway/fzf-git.sh
-    dest: ~/.config/fzf-git
+      repo: https://github.com/nickconway/fzf-git.sh
+      dest: ~/.config/fzf-git
   tags:
-    - fzf
+      - fzf
 
 - block:
-  - name: Clone Neovim
-    git:
-      repo: https://github.com/neovim/neovim
-      dest: ~/.local/source/neovim
-      force: true
-    register: neovim
-    tags:
-      - neovim
-      - nvim
+      - name: Clone Neovim
+        git:
+            repo: https://github.com/neovim/neovim
+            dest: ~/.local/source/neovim
+            force: true
+        register: neovim
+        tags:
+            - neovim
+            - nvim
 
-  - block:
-      - name: Build Neovim
-        shell:
-          chdir: ~/.local/source/neovim
-          cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
+      - block:
+            - name: Build Neovim
+              shell:
+                  chdir: ~/.local/source/neovim
+                  cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
 
-      - name: Install Neovim
-        shell:
-          chdir: ~/.local/source/neovim
-          cmd: make install
-    when: neovim.changed or (force | default(false))
+            - name: Install Neovim
+              shell:
+                  chdir: ~/.local/source/neovim
+                  cmd: make install
+        when: neovim.changed or (force | default(false))
   when: ansible_os_family != 'Archlinux'
   tags:
-    - neovim
-    - nvim
+      - neovim
+      - nvim
 
 - name: Install Starship
   shell: curl -sS https://starship.rs/install.sh | sh -s -- --bin-dir $HOME/.local/bin -y
@@ -182,93 +182,93 @@
 
 - name: Install Tmuxp
   shell:
-    cmd: uv tool install tmuxp
+      cmd: uv tool install tmuxp
 
 - name: Install YQ
   get_url:
-    url: https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-    dest: ~/.local/bin/yq
-    mode: "755"
+      url: https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+      dest: ~/.local/bin/yq
+      mode: "755"
 
 - name: Install Zellij
   unarchive:
-    remote_src: true
-    src: https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz
-    dest: ~/.local/bin
+      remote_src: true
+      src: https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz
+      dest: ~/.local/bin
   tags:
-    - zellij
+      - zellij
 
 - name: Create Zellij Plugins Directory
   file:
-    state: directory
-    path: ~/.config/zellij/plugins
+      state: directory
+      path: ~/.config/zellij/plugins
 
 - name: Install Zellij Monocle
   get_url:
-    url: https://github.com/imsnif/monocle/releases/latest/download/monocle.wasm
-    dest: ~/.config/zellij/plugins/monocle.wasm
+      url: https://github.com/imsnif/monocle/releases/latest/download/monocle.wasm
+      dest: ~/.config/zellij/plugins/monocle.wasm
 
 - name: Install Zellij Multitask
   get_url:
-    url: https://github.com/imsnif/multitask/releases/latest/download/multitask.wasm
-    dest: ~/.config/zellij/plugins/multitask.wasm
+      url: https://github.com/imsnif/multitask/releases/latest/download/multitask.wasm
+      dest: ~/.config/zellij/plugins/multitask.wasm
 
 - name: Install Zellij Status
   get_url:
-    url: https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm
-    dest: ~/.config/zellij/plugins/zjstatus.wasm
+      url: https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm
+      dest: ~/.config/zellij/plugins/zjstatus.wasm
 
 - name: Install Zellij Room
   get_url:
-    url: https://github.com/rvcas/room/releases/latest/download/room.wasm
-    dest: ~/.config/zellij/plugins/room.wasm
+      url: https://github.com/rvcas/room/releases/latest/download/room.wasm
+      dest: ~/.config/zellij/plugins/room.wasm
 
 - name: Clone ZSH-Autosuggestions
   git:
-    repo: https://github.com/zsh-users/zsh-autosuggestions
-    dest: ~/.config/zsh/zsh-autosuggestions
+      repo: https://github.com/zsh-users/zsh-autosuggestions
+      dest: ~/.config/zsh/zsh-autosuggestions
 
 - name: Clone ZSH-Completions
   git:
-    repo: https://github.com/zsh-users/zsh-completions
-    dest: ~/.config/zsh/zsh-completions
+      repo: https://github.com/zsh-users/zsh-completions
+      dest: ~/.config/zsh/zsh-completions
 
 - name: Clone ZSH-Syntax-Highlighting
   git:
-    repo: https://github.com/zsh-users/zsh-syntax-highlighting
-    dest: ~/.config/zsh/zsh-syntax-highlighting
+      repo: https://github.com/zsh-users/zsh-syntax-highlighting
+      dest: ~/.config/zsh/zsh-syntax-highlighting
 
 - name: Get ZSH Sudo Plugin
   get_url:
-    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh
-    dest: ~/.config/zsh/sudo.plugin.zsh
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh
+      dest: ~/.config/zsh/sudo.plugin.zsh
 
 - name: Get ZSH FZF Tab Plugin
   git:
-    repo: https://github.com/nickconway/fzf-tab
-    dest: ~/.config/zsh/fzf-tab
-    version: feat/tmux-popup-follow-cursor
+      repo: https://github.com/nickconway/fzf-tab
+      dest: ~/.config/zsh/fzf-tab
+      version: feat/tmux-popup-follow-cursor
   tags:
-    - fzf
-    - fzf-tab
+      - fzf
+      - fzf-tab
 
 - name: Get ZSH Command Not Found Plugin
   get_url:
-    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/command-not-found/command-not-found.plugin.zsh
-    dest: ~/.config/zsh/command-not-found.plugin.zsh
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/command-not-found/command-not-found.plugin.zsh
+      dest: ~/.config/zsh/command-not-found.plugin.zsh
 
 - name: Ensure ZSH is Valid Shell
   lineinfile:
-    path: /etc/shells
-    line: /usr/bin/zsh
+      path: /etc/shells
+      line: /usr/bin/zsh
 
 - name: Change Shell to ZSH
   user:
-    name: "{{ ansible_env.USER }}"
-    shell: /usr/bin/zsh
+      name: "{{ ansible_env.USER }}"
+      shell: /usr/bin/zsh
   tags:
-    - shell
-    - zsh
+      - shell
+      - zsh
 
 - name: Get Environment
   shell: systemd-detect-virt
@@ -278,75 +278,96 @@
 
 - name: Check If PVE Folder Exists
   stat:
-    path: /etc/pve
+      path: /etc/pve
   register: pve
 
 - name: Check If Docker Exists
   stat:
-    path: /usr/bin/docker
+      path: /usr/bin/docker
   register: docker
 
 - block:
-    - name: Download Docker Script
-      get_url:
-        url: https://get.docker.com
-        dest: ~/.local/bin/get-docker
-        mode: "750"
+      - name: Download Docker Script
+        get_url:
+            url: https://get.docker.com
+            dest: ~/.local/bin/get-docker
+            mode: "750"
 
-    - name: Run Docker Script
-      become: true
-      shell:
-        cmd: sh {{ ansible_env.HOME }}/.local/bin/get-docker
-      changed_when: false
-      when: ansible_os_family != 'Archlinux'
+      - name: Run Docker Script
+        become: true
+        shell:
+            cmd: sh {{ ansible_env.HOME }}/.local/bin/get-docker
+        changed_when: false
+        when: ansible_os_family != 'Archlinux'
 
-    - include_tasks: ../utils/install.yml
-      loop:
-        - docker
-        - docker-compose
-      when: ansible_os_family == 'Archlinux'
+      - include_tasks: ../utils/install.yml
+        loop:
+            - docker
+            - docker-compose
+        when: ansible_os_family == 'Archlinux'
   when:
-    - "not docker.stat.exists"
-    - "virt.stdout != 'wsl'"
-    - "not pve.stat.exists"
+      - "not docker.stat.exists"
+      - "virt.stdout != 'wsl'"
+      - "not pve.stat.exists"
 
 - name: Make Docker Group
   become: true
   group:
-    name: docker
-    state: present
+      name: docker
+      state: present
 
 - name: Add User to Docker Group
   become: true
   user:
-    name: "{{ ansible_env.USER }}"
-    groups: docker
-    append: yes
+      name: "{{ ansible_env.USER }}"
+      groups: docker
+      append: yes
 
 - name: Check for Live Restore File
   stat:
-    path: ~/.live-restore
+      path: ~/.live-restore
   register: live_restore
 
 - block:
-  - include_tasks:
-      file: ../utils/add-json-key.yml
-      apply:
-        tags:
-          - test
-    loop:
-      - file: /etc/docker/daemon.json
-        key: live-restore
-        value: true
-        become: true
+      - include_tasks:
+            file: ../utils/add-json-key.yml
+        loop:
+            - file: /etc/docker/daemon.json
+              key: live-restore
+              value: true
+              become: true
 
-  - name: Restart Docker Daemon
-    become: true
-    service:
+      - name: Restart Docker Daemon
+        become: true
+        service:
+            name: docker
+            state: restarted
+        when: file.changed
+  when: live_restore.stat.exists
+  tags:
+      - live-restore
+
+- block:
+      - include_tasks:
+            file: ../utils/add-json-key.yml
+        loop:
+            - file: /etc/docker/daemon.json
+              key: default-address-pools
+              value:
+                  - base: "172.17.0.0/12"
+                    size: 20
+                  - base: "192.168.0.0/16"
+                    size: 24
+              become: true
+  tags:
+      - address-pools
+
+- name: Restart Docker Daemon
+  become: true
+  service:
       name: docker
       state: restarted
-    when: file.changed
-  when: live_restore.stat.exists
+  when: file.changed
 
 - name: Install NVM
   shell: PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash'
@@ -355,267 +376,267 @@
 - name: Install Node With NVM
   shell: "source ~/.config/nvm/nvm.sh && nvm install node"
   args:
-    executable: /bin/bash
+      executable: /bin/bash
   changed_when: false
 
 - name: Download Regctl
   shell:
-    cmd: curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 > {{ ansible_env.HOME}}/.local/bin/regctl && chmod 755 {{ ansible_env.HOME}}/.local/bin/regctl
+      cmd: curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 > {{ ansible_env.HOME}}/.local/bin/regctl && chmod 755 {{ ansible_env.HOME}}/.local/bin/regctl
   tags:
-    - regctl
+      - regctl
 
 - name: Download rClone
   git:
-    repo: https://github.com/rclone/rclone.git
-    dest: ~/.local/source/rclone
+      repo: https://github.com/rclone/rclone.git
+      dest: ~/.local/source/rclone
   register: rclone
   tags:
-    - rclone
+      - rclone
 
 - block:
-    - name: Build rClone
-      shell:
-        cmd: "go build"
-        chdir: "{{ ansible_env.HOME }}/.local/source/rclone"
+      - name: Build rClone
+        shell:
+            cmd: "go build"
+            chdir: "{{ ansible_env.HOME }}/.local/source/rclone"
 
-    - name: Install rClone
-      copy:
-        remote_src: true
-        src: ~/.local/source/rclone/rclone
-        dest: ~/.local/bin/rclone
-        mode: 0750
+      - name: Install rClone
+        copy:
+            remote_src: true
+            src: ~/.local/source/rclone/rclone
+            dest: ~/.local/bin/rclone
+            mode: 0750
 
-    - name: Fix rClone Permissions
-      file:
-        path: ~/.local/bin/rclone
-        state: file
-        mode: 0750
+      - name: Fix rClone Permissions
+        file:
+            path: ~/.local/bin/rclone
+            state: file
+            mode: 0750
 
-    - name: Create rClone Symlinks
-      shell:
-        cmd: ln -sf {{ ansible_env.HOME }}/.local/bin/rclone /usr/bin/rclonefs && ln -sf {{ ansible_env.HOME }}/.local/bin/rclone /sbin/mount.rclone
-      become: true
-      changed_when: false
+      - name: Create rClone Symlinks
+        shell:
+            cmd: ln -sf {{ ansible_env.HOME }}/.local/bin/rclone /usr/bin/rclonefs && ln -sf {{ ansible_env.HOME }}/.local/bin/rclone /sbin/mount.rclone
+        become: true
+        changed_when: false
   when: rclone.changed
   tags:
-    - rclone
+      - rclone
 
 - name: Download Pass
   git:
-    repo: https://git.zx2c4.com/password-store
-    dest: ~/.local/source/password-store
+      repo: https://git.zx2c4.com/password-store
+      dest: ~/.local/source/password-store
   register: pass_store
   ignore_errors: true
 
 - name: Install Pass
   shell:
-    cmd: make install PREFIX=$HOME/.local
-    chdir: ~/.local/source/password-store
+      cmd: make install PREFIX=$HOME/.local
+      chdir: ~/.local/source/password-store
   when: pass_store.changed
 
 - name: Install Virtualenv
   shell:
-    cmd: uv tool install virtualenv
+      cmd: uv tool install virtualenv
 
 - name: Install Keyring-Pass
   pip:
-    name: keyring-pass
-    virtualenv: ~/.venvs/ansible
+      name: keyring-pass
+      virtualenv: ~/.venvs/ansible
 
 - name: Create Hack Font Directory
   file:
-    path: ~/.local/share/fonts/hack-nerd-font
-    state: directory
+      path: ~/.local/share/fonts/hack-nerd-font
+      state: directory
   tags:
-    - fonts
-    - font
-    - hack
+      - fonts
+      - font
+      - hack
 
 - name: Install Hack Nerd Font
   unarchive:
-    remote_src: true
-    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
-    dest: ~/.local/share/fonts/hack-nerd-font
+      remote_src: true
+      src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
+      dest: ~/.local/share/fonts/hack-nerd-font
   tags:
-    - fonts
-    - font
-    - hack
+      - fonts
+      - font
+      - hack
 
 - name: Create Noto Font Directory
   file:
-    path: ~/.local/share/fonts/noto-nerd-font
-    state: directory
+      path: ~/.local/share/fonts/noto-nerd-font
+      state: directory
   tags:
-    - fonts
-    - font
-    - noto
+      - fonts
+      - font
+      - noto
 
 - name: Install Noto Nerd Font
   unarchive:
-    remote_src: true
-    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
-    dest: ~/.local/share/fonts/noto-nerd-font
+      remote_src: true
+      src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
+      dest: ~/.local/share/fonts/noto-nerd-font
   tags:
-    - fonts
-    - font
-    - noto
+      - fonts
+      - font
+      - noto
 
 - name: Create JetBrains Font Directory
   file:
-    path: ~/.local/share/fonts/jetbrains-mono-nerd-font
-    state: directory
+      path: ~/.local/share/fonts/jetbrains-mono-nerd-font
+      state: directory
   tags:
-    - fonts
-    - font
-    - jetbrains
-    - jetbrainsmono
+      - fonts
+      - font
+      - jetbrains
+      - jetbrainsmono
 
 - name: Install JetBrains Mono Nerd Font
   unarchive:
-    remote_src: true
-    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
-    dest: ~/.local/share/fonts/jetbrains-mono-nerd-font
+      remote_src: true
+      src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+      dest: ~/.local/share/fonts/jetbrains-mono-nerd-font
   tags:
-    - fonts
-    - font
-    - jetbrains
-    - jetbrainsmono
+      - fonts
+      - font
+      - jetbrains
+      - jetbrainsmono
 
 - name: Create Nerd Font Symbols Font Directory
   file:
-    path: ~/.local/share/fonts/nerd-font-symbols
-    state: directory
+      path: ~/.local/share/fonts/nerd-font-symbols
+      state: directory
   tags:
-    - fonts
-    - font
+      - fonts
+      - font
 
 - name: Install Nerd Font Symbols
   unarchive:
-    remote_src: true
-    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip
-    dest: ~/.local/share/fonts/nerd-font-symbols
+      remote_src: true
+      src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip
+      dest: ~/.local/share/fonts/nerd-font-symbols
   tags:
-    - fonts
-    - font
+      - fonts
+      - font
 
 - name: Install Atuin
   shell:
-    cmd: |
-      cp ~/.bashrc ~/.bashrc.bkp
-      cp ~/.zshrc ~/.zshrc.bkp
-      cp ~/.bash_profile ~/.bash_profile.bkp
-      curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
-      mv ~/.bashrc.bkp ~/.bashrc
-      mv ~/.zshrc.bkp ~/.zshrc
-      mv ~/.bash_profile.bkp ~/.bash_profile
+      cmd: |
+          cp ~/.bashrc ~/.bashrc.bkp
+          cp ~/.zshrc ~/.zshrc.bkp
+          cp ~/.bash_profile ~/.bash_profile.bkp
+          curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+          mv ~/.bashrc.bkp ~/.bashrc
+          mv ~/.zshrc.bkp ~/.zshrc
+          mv ~/.bash_profile.bkp ~/.bash_profile
   changed_when: false
 
 - name: Install Lazygit
   shell:
-    cmd: go install github.com/jesseduffield/lazygit@latest
+      cmd: go install github.com/jesseduffield/lazygit@latest
   changed_when: false
   tags:
-    - lazygit
+      - lazygit
 
 - name: Install Lazydocker
   shell:
-    cmd: curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+      cmd: curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
   changed_when: false
 
 - name: Download GH-CLI
   git:
-    repo: https://github.com/cli/cli.git
-    dest: ~/.local/source/gh-cli
+      repo: https://github.com/cli/cli.git
+      dest: ~/.local/source/gh-cli
   register: gh
   tags:
-    - gh
+      - gh
 
 - name: Install Envsubst
   shell:
-    cmd: |
-      go install github.com/a8m/envsubst/cmd/envsubst@latest
-      mv $GOPATH/bin/envsubst $GOPATH/bin/envsubst-better
+      cmd: |
+          go install github.com/a8m/envsubst/cmd/envsubst@latest
+          mv $GOPATH/bin/envsubst $GOPATH/bin/envsubst-better
   changed_when: false
   tags:
-    - envsubst
+      - envsubst
 
 - name: Install GH-CLI
   shell:
-    cmd: make install prefix=$HOME/.local
-    chdir: ~/.local/source/gh-cli
+      cmd: make install prefix=$HOME/.local
+      chdir: ~/.local/source/gh-cli
   when: gh.changed
   changed_when: false
   tags:
-    - gh
+      - gh
 
 - name: Install GH-Dash
   shell:
-    cmd: gh extension install dlvhdr/gh-dash
+      cmd: gh extension install dlvhdr/gh-dash
   changed_when: false
   ignore_errors: true
   tags:
-    - gh
-    - dash
+      - gh
+      - dash
 
 - name: Install Mods
   shell:
-    cmd: go install github.com/charmbracelet/mods@latest
+      cmd: go install github.com/charmbracelet/mods@latest
   changed_when: false
   tags:
-    - charm
-    - mods
+      - charm
+      - mods
 
 - name: Install Glow
   shell:
-    cmd: go install github.com/charmbracelet/glow@latest
+      cmd: go install github.com/charmbracelet/glow@latest
   changed_when: false
   tags:
-    - charm
-    - glow
+      - charm
+      - glow
 
 - name: Install Gum
   shell:
-    cmd: go install github.com/charmbracelet/gum@latest
+      cmd: go install github.com/charmbracelet/gum@latest
   changed_when: false
   tags:
-    - charm
-    - gum
+      - charm
+      - gum
 
 - name: Download Tree
   unarchive:
-    remote_src: true
-    src: https://gitlab.com/OldManProgrammer/unix-tree/-/archive/2.1.1/unix-tree-2.1.1.tar.bz2
-    dest: ~/.local/source
+      remote_src: true
+      src: https://gitlab.com/OldManProgrammer/unix-tree/-/archive/2.1.1/unix-tree-2.1.1.tar.bz2
+      dest: ~/.local/source
   register: tree
 
 - name: Install Tree
   shell:
-    cmd: make install PREFIX=$HOME/.local
-    chdir: ~/.local/source/unix-tree-2.1.1
+      cmd: make install PREFIX=$HOME/.local
+      chdir: ~/.local/source/unix-tree-2.1.1
   when: tree.changed
   changed_when: false
 
 - name: Download SSHPass
   unarchive:
-    remote_src: true
-    src: https://sourceforge.net/projects/sshpass/files/latest/download
-    dest: ~/.local/source
+      remote_src: true
+      src: https://sourceforge.net/projects/sshpass/files/latest/download
+      dest: ~/.local/source
 
 - name: Install SSHPass
   shell:
-    cmd: rm -rf sshpass; mv sshpass* sshpass && cd sshpass && ./configure --prefix=$HOME/.local && make install
-    chdir: ~/.local/source
+      cmd: rm -rf sshpass; mv sshpass* sshpass && cd sshpass && ./configure --prefix=$HOME/.local && make install
+      chdir: ~/.local/source
 
 - name: Install Pre-Commit
   shell:
-    cmd: uv tool install pre-commit
+      cmd: uv tool install pre-commit
 
 - name: Install Kubectl
   shell:
-    cmd: |
-      curl --output ~/.local/bin/kubectl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x ~/.local/bin/kubectl
-      go install github.com/derailed/popeye@latest
+      cmd: |
+          curl --output ~/.local/bin/kubectl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x ~/.local/bin/kubectl
+          go install github.com/derailed/popeye@latest
   changed_when: false
   tags:
-    - k8s
-    - kubectl
+      - k8s
+      - kubectl
