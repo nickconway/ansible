@@ -269,6 +269,7 @@
   tags:
       - shell
       - zsh
+  become: true
 
 - name: Get Environment
   shell: systemd-detect-virt
