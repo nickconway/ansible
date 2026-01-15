@@ -121,6 +121,8 @@
       - cargo: tree-sitter-cli
       - cargo: git-delta
 
+      - clang
+
 - name: Install PNPM
   shell:
       cmd: curl -fsSL https://get.pnpm.io/install.sh | sh -
