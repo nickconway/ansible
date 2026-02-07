@@ -173,4 +173,12 @@
           test $? -eq 0
       changed_when: false
       when: "subnet_router.stat.exists"
+
+    - name: Enable System Tray
+      shell:
+        cmd: |
+          tailscale configure systray --enable-startup systemd
+          systemctl --user daemon-reload
+          systemctl --user enable --now tailscale-systray
+
   when: "vpn.stat.exists"
