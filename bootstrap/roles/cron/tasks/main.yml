@@ -18,7 +18,7 @@
       hour: 5
       minute: 0
       state: present
-      job: "bash -lc 'backup-containers' > /tmp/backup-containers.log 2>&1"
+      job: "bash -lc 'BORG_REPO=/mnt/nas/backups/docker/$(uname -n) backup -i backup-containers-$(uname -n) create Docker' > /tmp/backup-containers.log 2>&1"
 
   - name: Backup LXC Cron
     cron:
@@ -26,7 +26,7 @@
       hour: 4
       minute: 0
       state: present
-      job: "bash -lc 'backup-lxcs' > /tmp/backup-lxcs.log 2>&1"
+      job: "bash -lc 'BORG_REPO=/mnt/pve/nas-backups/lxc/$(uname -n) backup -i backup-lxcs-$(uname -n) create /etc/pve/nodes/pve/lxc' > /tmp/backup-lxcs.log 2>&1"
 
   - name: Docker Updates Cron
     cron:
