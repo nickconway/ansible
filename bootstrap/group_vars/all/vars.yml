@@ -1,2 +1,2 @@
 ---
-gitea_user: nick
+gitea_user: "{{ ansible_env.USER }}"
