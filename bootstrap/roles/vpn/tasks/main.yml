@@ -93,8 +93,10 @@
 
     - name: Add Subnet Router Flags
       set_fact:
-        flags: "{{ flags + ['--advertise-routes=10.0.10.2/32,10.0.10.10/32,10.0.0.40/32'] }}"
-      when: "subnet_router.stat.exists"
+        flags: "{{ flags + ['--advertise-routes={{ vpn_subnet_routes }}'] }}"
+      when:
+      - subnet_router.stat.exists
+      - vpn_subnet_routes is defined
 
     - name: Add Exit Node Flags
       set_fact:
