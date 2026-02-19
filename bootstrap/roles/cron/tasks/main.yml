@@ -42,5 +42,5 @@
       hour: "*/2"
       minute: 0
       state: present
-      job: "bash -lc 'sync-homelab' > /tmp/sync-homelab.log 2>&1"
+      job: "bash -lc 'sync-homelab -i sync-homelab-$(uname -n)' > /tmp/sync-homelab.log 2>&1"
   when: cron.stat.exists
