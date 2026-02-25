@@ -1,4 +1,4 @@
-- name: Install {{ package.Archlinux | default(package) }} (Arch)
+- name: Install Packages (Arch)
   shell:
-    cmd: "yay --noconfirm --needed --sync {{ package.Archlinux | default(package) }}"
+    cmd: "yay --noconfirm --needed --sync {{ packages | join(' ') }}"
   changed_when: false

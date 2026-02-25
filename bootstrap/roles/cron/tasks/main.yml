@@ -7,40 +7,40 @@
   register: cron
 
 - block:
-  - name: Set USER Cron Variable
-    cron:
-      env: yes
-      name: USER
-      job: '{{ ansible_env.USER }}'
-  - name: Backup Containers Cron
-    cron:
-      name: backup-containers
-      hour: 5
-      minute: 0
-      state: present
-      job: "bash -lc 'BORG_REPO=/mnt/nas/backups/docker/$(uname -n) backup -i backup-containers-$(uname -n) create Docker' > /tmp/backup-containers.log 2>&1"
+    - name: Set USER Cron Variable
+      cron:
+        env: yes
+        name: USER
+        job: "{{ ansible_env.USER }}"
+    - name: Backup Containers Cron
+      cron:
+        name: backup-containers
+        hour: 5
+        minute: 0
+        state: present
+        job: "bash -lc 'BORG_REPO=/mnt/nas/backups/docker/$(uname -n) backup -i backup-containers-$(uname -n) create Docker' > /tmp/backup-containers.log 2>&1"
 
-  - name: Backup LXC Cron
-    cron:
-      name: backup-lxcs
-      hour: 4
-      minute: 0
-      state: present
-      job: "bash -lc 'BORG_REPO=/mnt/pve/nas-backups/lxc/$(uname -n) backup -i backup-lxcs-$(uname -n) create /etc/pve/nodes/pve/lxc' > /tmp/backup-lxcs.log 2>&1"
+    - name: Backup LXC Cron
+      cron:
+        name: backup-lxcs
+        hour: 4
+        minute: 0
+        state: present
+        job: "bash -lc 'BORG_REPO=/mnt/pve/nas-backups/lxc/$(uname -n) backup -i backup-lxcs-$(uname -n) create /etc/pve/nodes/pve/lxc' > /tmp/backup-lxcs.log 2>&1"
 
-  - name: Docker Updates Cron
-    cron:
-      name: docker-updates
-      hour: "*/6"
-      minute: 0
-      state: present
-      job: "bash -lc 'get-docker-updates' > /tmp/get-docker-updates.log 2>&1"
+    - name: Docker Updates Cron
+      cron:
+        name: docker-updates
+        hour: "*/6"
+        minute: 0
+        state: present
+        job: "bash -lc 'get-docker-updates' > /tmp/get-docker-updates.log 2>&1"
 
-  - name: Homelab Sync Cron
-    cron:
-      name: homelab-sync
-      hour: "*/2"
-      minute: 0
-      state: present
-      job: "bash -lc 'sync-homelab -i sync-homelab-$(uname -n)' > /tmp/sync-homelab.log 2>&1"
+    - name: Homelab Sync Cron
+      cron:
+        name: homelab-sync
+        hour: "*/2"
+        minute: 0
+        state: present
+        job: "bash -lc 'sync-homelab -i sync-homelab-$(uname -n)' > /tmp/sync-homelab.log 2>&1"
   when: cron.stat.exists

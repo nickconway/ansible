@@ -1,0 +1,13 @@
+ansible_become_pass: PASSWORD
+ansible_ssh_pass: PASSWORD
+git_url: git.${SERVICES_BASE_DOMAIN}
+gitea_token: ${GITEA_TOKEN}
+gitea_user: "{{ ansible_env.USER }}"
+gpg_passphrase: PASSWORD
+ntfy_url: https://notifications.${SERVICES_BASE_DOMAIN}
+ntfi_ssh_topic: ssh
+ntfy_ssh_token: TOKEN
+vpn_key: ${VPN_KEY}
+github_token: ${GH_TOKEN}
+services_base_domain: ${SERVICES_BASE_DOMAIN}
+vpn_subnet_routes: 10.0.10.10/32

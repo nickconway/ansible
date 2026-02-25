@@ -7,33 +7,33 @@
   register: dns
 
 - block:
-  - name: Check for VPN File
-    stat:
-      path: .vpn
-    register: vpn
+    - name: Check for VPN File
+      stat:
+        path: .vpn
+      register: vpn
 
-  - name: Disable DNS Stub Listener
-    become: true
-    lineinfile:
-      path: /etc/systemd/resolved.conf
-      regexp: "#?DNSStubListener=yes"
-      line: DNSStubListener=no
-    register: resolvedconf
+    - name: Disable DNS Stub Listener
+      become: true
+      lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: "#?DNSStubListener=yes"
+        line: DNSStubListener=no
+      register: resolvedconf
 
-  - name: Restart Systemd-Resolved
-    become: true
-    service:
-      name: systemd-resolved
-      state: restarted
-    when: resolvedconf.changed
+    - name: Restart Systemd-Resolved
+      become: true
+      service:
+        name: systemd-resolved
+        state: restarted
+      when: resolvedconf.changed
 
-  - name: Enable IP Forwarding
-    become: true
-    ansible.posix.sysctl:
-      value: 1
-      name: "{{ item }}"
-    loop:
-      - net.ipv4.ip_forward
-      - net.ipv6.conf.all.forwarding
-    when: "vpn.stat.exists"
+    - name: Enable IP Forwarding
+      become: true
+      ansible.posix.sysctl:
+        value: 1
+        name: "{{ item }}"
+      loop:
+        - net.ipv4.ip_forward
+        - net.ipv6.conf.all.forwarding
+      when: "vpn.stat.exists"
   when: "dns.stat.exists"

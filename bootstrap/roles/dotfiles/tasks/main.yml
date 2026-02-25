@@ -1,10 +1,6 @@
 ---
 # tasks file for dotfiles
 
-# - include_tasks: ../utils/install.yml
-#   loop:
-#     - yadm
-
 - name: Download YADM Binary
   get_url:
     url: https://raw.githubusercontent.com/nickconway/yadm/refs/heads/master/yadm
@@ -36,7 +32,7 @@
 - name: Decrypt YADM Archive
   shell:
     cmd: gpg --batch --passphrase {{ gpg_passphrase }} -d ~/.local/share/yadm/archive | tar vxf - -C ~
-  when: yadm_archive.stat.exists
+  when: gpg_passphrase is defined and yadm_archive.stat.exists
   changed_when: false
 
 - name: Add Client-Server Class

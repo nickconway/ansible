@@ -3,22 +3,22 @@
 
 - name: Add GitHub Keys to Known Hosts
   lineinfile:
-      path: "{{ ansible_env.HOME }}/.ssh/known_hosts"
-      line: "{{ item }}"
-      create: true
+    path: "{{ ansible_env.HOME }}/.ssh/known_hosts"
+    line: "{{ item }}"
+    create: true
   loop:
-      - "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
-      - "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg="
-      - "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk="
+    - "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
+    - "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg="
+    - "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk="
 
 - name: Add Gitea Keys to Known Hosts
   lineinfile:
-      path: "{{ ansible_env.HOME }}/.ssh/known_hosts"
-      line: "{{ item }}"
-      create: true
+    path: "{{ ansible_env.HOME }}/.ssh/known_hosts"
+    line: "{{ item }}"
+    create: true
   loop:
-      - "git.{{ services_base_domain }} ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ308+nAV0FTUbT+JX4+57gNxqq0Z4H4Yt0xg/nlM+TABirY8URTq2Hj44JgjRbcF/Ar2w5uh4Xnp3PQjVF6XiA="
-      - "git.{{ services_base_domain }} ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO0q6lYtSUsjXT5gyjImOlY4Pd5KX/PplED53zFlPmy5"
+    - "git.{{ services_base_domain }} ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ308+nAV0FTUbT+JX4+57gNxqq0Z4H4Yt0xg/nlM+TABirY8URTq2Hj44JgjRbcF/Ar2w5uh4Xnp3PQjVF6XiA="
+    - "git.{{ services_base_domain }} ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO0q6lYtSUsjXT5gyjImOlY4Pd5KX/PplED53zFlPmy5"
   when: "services_base_domain is defined"
 
 - name: Get Environment
@@ -37,33 +37,36 @@
   when: gaming.stat.exists
 
 - include_tasks: ../utils/install.yml
-  loop:
-    - Debian: python3-cryptography
-      Archlinux: python-cryptography
-    - Debian: python3-bcrypt
-      Archlinux: python-bcrypt
+  vars:
+    packages:
+      - Debian: python3-cryptography
+        Archlinux: python-cryptography
+      - Debian: python3-bcrypt
+        Archlinux: python-bcrypt
 
 - name: Generate SSH Key for GitHub
   community.crypto.openssh_keypair:
     type: ed25519
     comment: "github {{ ansible_env.USER }}@{{ ansible_hostname }}"
     path: ~/.ssh/github_ed25519
-    passphrase: "{{ ansible_become_pass }}"
+    passphrase: "{{ ssh_key_passphrase }}"
     regenerate: full_idempotence
   register: ssh_key
   when:
     - "virt.stdout != 'wsl'"
+    - "ssh_key_passphrase is defined"
 
 - name: Generate SSH Key for GitHub (WSL)
   community.crypto.openssh_keypair:
     type: ed25519
     comment: "github {{ ansible_env.USER }}@{{ ansible_hostname }}-wsl"
     path: ~/.ssh/github_ed25519
-    passphrase: "{{ ansible_become_pass }}"
+    passphrase: "{{ ssh_key_passphrase }}"
     regenerate: full_idempotence
   register: ssh_key_wsl
   when:
     - "virt.stdout == 'wsl'"
+    - "ssh_key_passphrase is defined"
 
 - name: Add SSH Key to GitHub Account
   github_key:
@@ -71,7 +74,8 @@
     token: "{{ github_token }}"
     pubkey: "{{ ssh_key.public_key }}"
   when:
-    - "virt.stdout != 'wsl'"
+    - "github_token is defined"
+    - "ssh_key is not skipped"
 
 - name: Add SSH Key to GitHub Account (WSL)
   github_key:
@@ -79,29 +83,32 @@
     token: "{{ github_token }}"
     pubkey: "{{ ssh_key_wsl.public_key }}"
   when:
-    - "virt.stdout == 'wsl'"
+    - "github_token is defined"
+    - "ssh_key_wsl is not skipped"
 
 - name: Generate SSH Key for Gitea
   community.crypto.openssh_keypair:
     type: ed25519
     comment: "gitea {{ ansible_env.USER }}@{{ ansible_hostname }}"
     path: ~/.ssh/gitea_ed25519
-    passphrase: "{{ ansible_become_pass }}"
+    passphrase: "{{ ssh_key_passphrase }}"
     regenerate: full_idempotence
   register: ssh_key
   when:
     - "virt.stdout != 'wsl'"
+    - "ssh_key_passphrase is defined"
 
 - name: Generate SSH Key for Gitea (WSL)
   community.crypto.openssh_keypair:
     type: ed25519
     comment: "gitea {{ ansible_env.USER }}@{{ ansible_hostname }}-wsl"
     path: ~/.ssh/gitea_ed25519
-    passphrase: "{{ ansible_become_pass }}"
+    passphrase: "{{ ssh_key_passphrase }}"
     regenerate: full_idempotence
   register: ssh_key_wsl
   when:
     - "virt.stdout == 'wsl'"
+    - "ssh_key_passphrase is defined"
 
 - name: Add SSH Key to Gitea Account
   uri:
@@ -117,5 +124,7 @@
       title: "{{ ansible_hostname }}"
       key: "{{ ssh_key_wsl.public_key | default(ssh_key.public_key) }}"
   register: this
-  when: git_url != "" and gitea_token != ""
+  when:
+    - "git_url is defined and gitea_token is defined"
+    - "ssh_key is not skipped"
   failed_when: this is failed and "Key content has been used as non-deploy key" not in this.json.message | default("")

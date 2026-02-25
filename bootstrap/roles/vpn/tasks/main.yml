@@ -95,8 +95,8 @@
       set_fact:
         flags: "{{ flags + ['--advertise-routes={{ vpn_subnet_routes }}'] }}"
       when:
-      - subnet_router.stat.exists
-      - vpn_subnet_routes is defined
+        - subnet_router.stat.exists
+        - vpn_subnet_routes is defined
 
     - name: Add Exit Node Flags
       set_fact:
@@ -140,14 +140,14 @@
       shell:
         cmd: "tailscale up --auth-key='{{ vpn_key }}' {{ settings }}"
       changed_when: false
-      when: tailscale_installed.failed
+      when: vpn_key is defined and tailscale_installed.failed
 
     - name: Connect to VPN
       become: true
       shell:
         cmd: "tailscale up &> /tmp/tsa.log"
       changed_when: false
-      when: not tailscale_installed.failed and not tailscale_connected.failed or (force | default(false))
+      when: (not tailscale_installed.failed and tailscale_connected.failed) or (force | default(false))
 
     - name: Enable Settings
       become: true
@@ -159,8 +159,9 @@
       when: ansible_os_family != (item.skip_os | default(''))
 
     - include_tasks: ../utils/install.yml
-      loop:
-        - networkd-dispatcher
+      vars:
+        packages:
+          - networkd-dispatcher
       when: "subnet_router.stat.exists"
 
     - name: Optimize Subnet Routers

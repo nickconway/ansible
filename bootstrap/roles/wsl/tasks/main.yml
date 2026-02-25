@@ -7,21 +7,21 @@
   register: wsl
 
 - block:
-  - name: Copy wsl.conf
-    become: true
-    copy:
-      src: wsl.conf
-      dest: /etc/wsl.conf
-      owner: root
-      group: root
-      mode: '644'
+    - name: Copy wsl.conf
+      become: true
+      copy:
+        src: wsl.conf
+        dest: /etc/wsl.conf
+        owner: root
+        group: root
+        mode: "644"
 
-  - name: Copy Fonts local.conf
-    become: true
-    copy:
-      src: local.conf
-      dest: /etc/fonts/local.conf
-      owner: root
-      group: root
-      mode: '644'
+    - name: Copy Fonts local.conf
+      become: true
+      copy:
+        src: local.conf
+        dest: /etc/fonts/local.conf
+        owner: root
+        group: root
+        mode: "644"
   when: wsl.stat.exists

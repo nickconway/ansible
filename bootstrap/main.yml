@@ -4,6 +4,8 @@
   environment:
     PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.HOME }}/.local/go/packages/bin:{{ ansible_env.HOME }}/.local/go/go/bin:{{ ansible_env.HOME }}/.cargo/bin:/usr/sbin:{{ ansible_env.PATH }}"
     GOPATH: "{{ ansible_env.HOME }}/.local/go/packages"
+  vars_files:
+    - vars.yml
   tasks:
     - name: Set Timezone
       become: true

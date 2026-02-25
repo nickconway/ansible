@@ -2,13 +2,13 @@
 # tasks file for reboot
 
 - block:
-  - name: Check For Reboot
-    stat:
-      path: /var/run/reboot-required
-    register: reboot
+    - name: Check For Reboot
+      stat:
+        path: /var/run/reboot-required
+      register: reboot
 
-  - name: Reboot
-    reboot:
-    become: true
-    when: reboot.stat.exists == true
+    - name: Reboot
+      reboot:
+      become: true
+      when: reboot.stat.exists == true
   when: "'local' not in group_names"

@@ -1,8 +1,29 @@
-- name: "Install {{ item }}"
-  include_tasks:
-    file: ../utils/install-{{ (item | type_debug == 'str') | ternary(ansible_os_family, item.cargo | default(false) | ternary('cargo', ansible_os_family)) }}.yml
-  loop:
-    - "{{ item }}"
-  loop_control:
-    loop_var: package
-  when: (item | type_debug == 'str') or ((package[ansible_os_family] | default(item.cargo) | default(false)) != false)
+- set_fact:
+    os: "{{ (os | default([])) + [ (item[ansible_os_family] | default(item)) ] }}"
+  when: "(item | type_debug == 'str') or ((item[ansible_os_family] | default(false)) != false)"
+  loop: "{{ packages }}"
+
+- set_fact:
+    cargo: "{{ (cargo | default([])) + [ item.cargo ] }}"
+  when: "(item.cargo | default(false)) != false"
+  loop: "{{ packages }}"
+
+- set_fact:
+    go: "{{ (go | default([])) + [ item.go ] }}"
+  when: "(item.go | default(false)) != false"
+  loop: "{{ packages }}"
+
+- include_tasks: ../utils/install-{{ ansible_os_family }}.yml
+  vars:
+    packages: "{{ os }}"
+  when: os is defined
+
+- name: Install Packages (Cargo)
+  community.general.cargo:
+    name: "{{ cargo }}"
+  when: cargo is defined
+
+- name: Install Packages (Go)
+  shell: go install {{ item }}
+  loop: "{{ go }}"
+  when: go is defined

@@ -6,74 +6,74 @@
 
 - block:
     - include_tasks: ../utils/install.yml
-      loop:
-        - hyprland
-        - cpio
-        - meson
-        - sddm
-        - nwg-look
-        - qt5ct
-        - qt6ct
-        - hyprpaper
-        - hyprpicker
-        - hypridle
-        - hyprlock
-        - hyprcursor
-        - xdg-desktop-portal-hyprland
-        - xdg-desktop-portal-gtk
-        - xdg-desktop-portal
-        - wl-clipboard
-        - rofi-wayland
-        - waybar
-        - wtype
-        - yazi
-        - imagemagick
-        - swaync-git
-        - thunar
-        - nautilus
-        - kdeconnect
-        - network-manager-applet
-        - brightnessctl
-        - pavucontrol
-        - pamixer
-        - papirus-icon-theme
-        - breeze-default-cursor-theme
-        - cliphist
-        - flatpak
-        - grim
-        - slurp
-        - feh
-        - noto-fonts-emoji
-        - kvantum
-        - qt5-quickcontrols
-        - qt5-quickcontrols2
-        - qt5-graphicaleffects
-        - xdg-user-dirs
-        - feh
-        - ungoogled-chromium-bin
-        - leptonica
-        - tesseract
-        - wf-recorder
-        - satty
-        - qrencode
-        - topgrade
-        - gnu-netcat
-        - hyprland-guiutils
-        - bitwarden-bin
-        - neovim-nightly-bin
-        - tmux-git
-        - texlive-bin
-        - texlive-binextra
-        - texlive-latex
-        - zathura
-        - zathura-pdf-mupdf
-        - pandoc
-        - hyprland-preview-share-picker-git
-        - hyprsysteminfo
-        - hyprpolkitagent
-        - wayscriber-bin
-        - kwallet
-        - vk-hdr-layer-kwin6-git
+      vars:
+        packages:
+          - hyprland
+          - cpio
+          - meson
+          - sddm
+          - nwg-look
+          - qt5ct
+          - qt6ct
+          - hyprpaper
+          - hyprpicker
+          - hypridle
+          - hyprlock
+          - hyprcursor
+          - xdg-desktop-portal-hyprland
+          - xdg-desktop-portal-gtk
+          - xdg-desktop-portal
+          - wl-clipboard
+          - rofi-wayland
+          - waybar
+          - wtype
+          - yazi
+          - imagemagick
+          - swaync-git
+          - thunar
+          - nautilus
+          - kdeconnect
+          - network-manager-applet
+          - brightnessctl
+          - pavucontrol
+          - pamixer
+          - papirus-icon-theme
+          - breeze-default-cursor-theme
+          - cliphist
+          - flatpak
+          - grim
+          - slurp
+          - feh
+          - noto-fonts-emoji
+          - kvantum
+          - qt5-quickcontrols
+          - qt5-quickcontrols2
+          - qt5-graphicaleffects
+          - xdg-user-dirs
+          - feh
+          - ungoogled-chromium-bin
+          - leptonica
+          - tesseract
+          - wf-recorder
+          - satty
+          - qrencode
+          - topgrade
+          - openbsd-netcat
+          - hyprland-guiutils
+          - neovim-nightly-bin
+          - tmux-git
+          - texlive-bin
+          - texlive-binextra
+          - texlive-latex
+          - zathura
+          - zathura-pdf-mupdf
+          - pandoc
+          - hyprland-preview-share-picker-git
+          - hyprsysteminfo
+          - hyprpolkitagent
+          - wayscriber-bin
+          - kwallet
+          - vk-hdr-layer-kwin6-git
 
     - name: Download Orchis Theme
       git:
@@ -89,7 +89,6 @@
 
     - name: Purge HyprPM Cache
       shell: hyprpm purge-cache
-      when: (purge_hypr_cache | default(false)) is true
       changed_when: false
       tags:
         - hyprpm

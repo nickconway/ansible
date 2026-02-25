@@ -1,6 +1,5 @@
-- name: Install {{ package.Debian | default(package) }} (Debian)
+- name: Install Packages (Debian)
   become: true
   apt:
     state: present
-    name:
-      - "{{ package.Debian | default(package) }}"
+    name: "{{ packages }}"

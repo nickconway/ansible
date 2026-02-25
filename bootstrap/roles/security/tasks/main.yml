@@ -22,9 +22,10 @@
   community.crypto.openssh_keypair:
     type: ed25519
     path: ~/.ssh/id_ed25519
-    passphrase: "{{ ansible_become_pass }}"
+    passphrase: "{{ ssh_key_passphrase }}"
   delegate_to: localhost
   run_once: true
+  when: ssh_key_passphrase is defined
 
 - name: Add SSH Key to Authorized Keys
   authorized_key:
@@ -34,8 +35,9 @@
   when: inventory_hostname != 'localhost'
 
 - include_tasks: ../utils/install.yml
-  loop:
-    - openssh-server
+  vars:
+    packages:
+      - openssh-server
   when:
     - "'ssh.service' not in services and 'sshd.service' not in services"
     - "'ssh' not in services and 'sshd' not in services"
@@ -51,7 +53,7 @@
     path: "/etc/pam.d/sshd"
     line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
     state: present
-    mode: '644'
+    mode: "644"
   when: "pamsshd.stat.exists"
 
 - name: Copy NTFY-SSH Script
@@ -61,8 +63,8 @@
     dest: /usr/bin/ntfy-ssh
     owner: root
     group: root
-    mode: '755'
-  when: "ntfy_ssh_token is defined"
+    mode: "755"
+  when: "ntfy_url is defined and ntfy_ssh_topic is defined and ntfy_ssh_token is defined"
   tags:
     - ntfy-ssh
 
@@ -92,8 +94,8 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
-    validate: 'sshd -T -f %s'
-    mode: '644'
+    validate: "sshd -T -f %s"
+    mode: "644"
   with_items:
     - regexp: "^PasswordAuthentication"
       line: "PasswordAuthentication no"
