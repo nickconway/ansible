@@ -1,134 +1,133 @@
 ---
 - name: Check for Hyprland File
   stat:
-    path: ~/.hyprland
+      path: ~/.hyprland
   register: hyprland
 
 - block:
-    - include_tasks: ../utils/install.yml
-      vars:
-        packages:
-          - hyprland
-          - cpio
-          - meson
-          - sddm
-          - nwg-look
-          - qt5ct
-          - qt6ct
-          - hyprpaper
-          - hyprpicker
-          - hypridle
-          - hyprlock
-          - hyprcursor
-          - xdg-desktop-portal-hyprland
-          - xdg-desktop-portal-gtk
-          - xdg-desktop-portal
-          - wl-clipboard
-          - rofi-wayland
-          - waybar
-          - wtype
-          - yazi
-          - imagemagick
-          - swaync-git
-          - thunar
-          - nautilus
-          - kdeconnect
-          - network-manager-applet
-          - brightnessctl
-          - pavucontrol
-          - pamixer
-          - papirus-icon-theme
-          - breeze-default-cursor-theme
-          - cliphist
-          - flatpak
-          - grim
-          - slurp
-          - feh
-          - noto-fonts-emoji
-          - kvantum
-          - qt5-quickcontrols
-          - qt5-quickcontrols2
-          - qt5-graphicaleffects
-          - xdg-user-dirs
-          - feh
-          - ungoogled-chromium-bin
-          - leptonica
-          - tesseract
-          - wf-recorder
-          - satty
-          - qrencode
-          - topgrade
-          - openbsd-netcat
-          - hyprland-guiutils
-          - neovim-nightly-bin
-          - tmux-git
-          - texlive-bin
-          - texlive-binextra
-          - texlive-latex
-          - zathura
-          - zathura-pdf-mupdf
-          - pandoc
-          - hyprland-preview-share-picker-git
-          - hyprsysteminfo
-          - hyprpolkitagent
-          - wayscriber-bin
-          - kwallet
-          - vk-hdr-layer-kwin6-git
-          - pyprland
+      - include_tasks: ../utils/install.yml
+        vars:
+            packages:
+                - hyprland
+                - cpio
+                - meson
+                - sddm
+                - nwg-look
+                - qt5ct
+                - qt6ct
+                - hyprpaper
+                - hyprpicker
+                - hypridle
+                - hyprlock
+                - hyprcursor
+                - xdg-desktop-portal-hyprland
+                - xdg-desktop-portal-gtk
+                - xdg-desktop-portal
+                - wl-clipboard
+                - rofi-wayland
+                - waybar
+                - wtype
+                - yazi
+                - imagemagick
+                - swaync-git
+                - thunar
+                - nautilus
+                - kdeconnect
+                - network-manager-applet
+                - brightnessctl
+                - pavucontrol
+                - pamixer
+                - papirus-icon-theme
+                - breeze-default-cursor-theme
+                - cliphist
+                - flatpak
+                - grim
+                - slurp
+                - feh
+                - noto-fonts-emoji
+                - kvantum
+                - qt5-quickcontrols
+                - qt5-quickcontrols2
+                - qt5-graphicaleffects
+                - xdg-user-dirs
+                - feh
+                - ungoogled-chromium-bin
+                - leptonica
+                - tesseract
+                - wf-recorder
+                - satty
+                - qrencode
+                - topgrade
+                - openbsd-netcat
+                - hyprland-guiutils
+                - neovim-nightly-bin
+                - tmux-git
+                - texlive-bin
+                - texlive-binextra
+                - texlive-latex
+                - zathura
+                - zathura-pdf-mupdf
+                - pandoc
+                - hyprland-preview-share-picker-git
+                - hyprsysteminfo
+                - hyprpolkitagent
+                - wayscriber-bin
+                - kwallet
+                - vk-hdr-layer-kwin6-git
+                - pyprland
 
-    - name: Download Orchis Theme
-      git:
-        repo: https://github.com/vinceliuice/Orchis-theme.git
-        dest: ~/.local/source/orchis
-      register: orchis
+      - name: Download Orchis Theme
+        git:
+            repo: https://github.com/vinceliuice/Orchis-theme.git
+            dest: ~/.local/source/orchis
+        register: orchis
 
-    - name: Install Orchis
-      shell:
-        cmd: ./install.sh --tweaks black
-        chdir: ~/.local/source/orchis
-      when: orchis.changed
+      - name: Install Orchis
+        shell:
+            cmd: ./install.sh --tweaks black
+            chdir: ~/.local/source/orchis
+        when: orchis.changed
 
-    - name: Purge HyprPM Cache
-      shell: hyprpm purge-cache
-      changed_when: false
-      tags:
-        - hyprpm
+      - name: Purge HyprPM Cache
+        shell: hyprpm purge-cache
+        changed_when: false
+        tags:
+            - hyprpm
 
-    - name: Update hyprpm
-      shell:
-        cmd: hyprpm update
-      changed_when: false
-      tags:
-        - hyprpm
+      - name: Update hyprpm
+        shell:
+            cmd: hyprpm update
+        changed_when: false
+        tags:
+            - hyprpm
 
-    - name: Install Hypr-DarkWindow
-      shell:
-        cmd: yes | hyprpm add https://github.com/micha4w/Hypr-DarkWindow && hyprpm enable Hypr-DarkWindow
-      changed_when: false
-      tags:
-        - hyprpm
-        - hypr-darkwindow
+      - name: Install Hypr-DarkWindow
+        shell:
+            cmd: yes | hyprpm add https://github.com/micha4w/Hypr-DarkWindow && hyprpm enable Hypr-DarkWindow
+        changed_when: false
+        tags:
+            - hyprpm
+            - hypr-darkwindow
 
-    - name: Install Hyprspace
-      shell:
-        cmd: yes | hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
-      changed_when: false
-      tags:
-        - hyprpm
-        - hyprspace
+      - name: Install Hyprspace
+        shell:
+            cmd: yes | hyprpm add https://github.com/KZDKM/Hyprspace && hyprpm enable Hyprspace
+        changed_when: false
+        tags:
+            - hyprpm
+            - hyprspace
 
-    - name: Create Tessdata Directory
-      file:
-        path: ~/.local/share/tessdata
-        state: directory
-      tags:
-        - tesseract
+      - name: Create Tessdata Directory
+        file:
+            path: ~/.local/share/tessdata
+            state: directory
+        tags:
+            - tesseract
 
-    - name: Download Tesseract Best Data
-      get_url:
-        url: https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata
-        dest: ~/.local/share/tessdata/eng.traineddata
-      tags:
-        - tesseract
-
+      - name: Download Tesseract Best Data
+        get_url:
+            url: https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata
+            dest: ~/.local/share/tessdata/eng.traineddata
+        tags:
+            - tesseract
   when: "hyprland.stat.exists"

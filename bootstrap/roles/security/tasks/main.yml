@@ -13,94 +13,94 @@
 - name: Enable Ping in LXC
   become: true
   community.general.capabilities:
-    path: /usr/bin/ping
-    capability: cap_net_raw+p
-    state: present
+      path: /usr/bin/ping
+      capability: cap_net_raw+p
+      state: present
   when: virt.stdout == 'lxc'
 
 - name: Generate SSH Key
   community.crypto.openssh_keypair:
-    type: ed25519
-    path: ~/.ssh/id_ed25519
-    passphrase: "{{ ssh_key_passphrase }}"
+      type: ed25519
+      path: ~/.ssh/id_ed25519
+      passphrase: "{{ ssh_key_passphrase }}"
   delegate_to: localhost
   run_once: true
   when: ssh_key_passphrase is defined
 
 - name: Add SSH Key to Authorized Keys
   authorized_key:
-    user: "{{ ansible_env.USER }}"
-    state: present
-    key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+      user: "{{ ansible_env.USER }}"
+      state: present
+      key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
   when: inventory_hostname != 'localhost'
 
 - include_tasks: ../utils/install.yml
   vars:
-    packages:
-      - openssh-server
+      packages:
+          - openssh-server
   when:
-    - "'ssh.service' not in services and 'sshd.service' not in services"
-    - "'ssh' not in services and 'sshd' not in services"
+      - "'ssh.service' not in services and 'sshd.service' not in services"
+      - "'ssh' not in services and 'sshd' not in services"
 
 - name: Check for SSHD Pam Module
   stat:
-    path: /etc/pam.d/sshd
+      path: /etc/pam.d/sshd
   register: pamsshd
 
 - name: Add NTFY-SSH to PAM
   become: true
   lineinfile:
-    path: "/etc/pam.d/sshd"
-    line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
-    state: present
-    mode: "644"
+      path: "/etc/pam.d/sshd"
+      line: "session optional pam_exec.so /usr/bin/ntfy-ssh"
+      state: present
+      mode: "644"
   when: "pamsshd.stat.exists"
 
 - name: Copy NTFY-SSH Script
   become: true
   template:
-    src: files/ntfy-ssh
-    dest: /usr/bin/ntfy-ssh
-    owner: root
-    group: root
-    mode: "755"
+      src: files/ntfy-ssh
+      dest: /usr/bin/ntfy-ssh
+      owner: root
+      group: root
+      mode: "755"
   when: "ntfy_url is defined and ntfy_ssh_topic is defined and ntfy_ssh_token is defined"
   tags:
-    - ntfy-ssh
+      - ntfy-ssh
 
 - name: Start SSH Service (Debian)
   become: true
   service:
-    name: "ssh"
-    state: "started"
+      name: "ssh"
+      state: "started"
   when: "ansible_os_family == 'Debian' and 'ssh' in services"
 
 - name: Start SSH Service
   become: true
   service:
-    name: "sshd"
-    state: "started"
+      name: "sshd"
+      state: "started"
   when: "ansible_os_family != 'Debian' and 'sshd' in services"
 
 - name: Check If SSHD Config Exists
   stat:
-    path: "/etc/ssh/sshd_config"
+      path: "/etc/ssh/sshd_config"
   register: sshd_config
 
 - name: Secure SSH Configuration
   become: true
   lineinfile:
-    path: "/etc/ssh/sshd_config"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-    validate: "sshd -T -f %s"
-    mode: "644"
+      path: "/etc/ssh/sshd_config"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+      validate: "sshd -T -f %s"
+      mode: "644"
   with_items:
-    - regexp: "^PasswordAuthentication"
-      line: "PasswordAuthentication no"
-    - regexp: "^PermitRootLogin"
-      line: "PermitRootLogin no"
+      - regexp: "^PasswordAuthentication"
+        line: "PasswordAuthentication no"
+      - regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
   notify: Restart SSH
   when: "sshd_config.stat.exists"
 

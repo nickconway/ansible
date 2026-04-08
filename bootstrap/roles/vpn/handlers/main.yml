@@ -4,5 +4,5 @@
 - name: Restart Tailscale
   become: true
   service:
-    name: "tailscaled"
-    state: "restarted"
+      name: "tailscaled"
+      state: "restarted"

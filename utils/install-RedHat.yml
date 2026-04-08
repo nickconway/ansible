@@ -1,4 +1,4 @@
 - name: Install Packages (RedHat)
   become: true
   yum:
-    name: "{{ packages }}"
+      name: "{{ packages }}"

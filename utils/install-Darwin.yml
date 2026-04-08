@@ -1,3 +1,3 @@
 - name: Install Packages (MacOS)
   community.general.homebrew:
-    name: "{{ packages }}"
+      name: "{{ packages }}"

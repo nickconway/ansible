@@ -4,5 +4,5 @@
 - name: Restart SSH
   become: true
   service:
-    name: "sshd"
-    state: "restarted"
+      name: "sshd"
+      state: "restarted"

@@ -1,5 +1,5 @@
 - name: Install Packages (Debian)
   become: true
   apt:
-    state: present
-    name: "{{ packages }}"
+      state: present
+      name: "{{ packages }}"

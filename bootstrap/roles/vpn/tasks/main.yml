@@ -3,185 +3,185 @@
 
 - name: Check for VPN File
   stat:
-    path: ~/.vpn
+      path: ~/.vpn
   register: vpn
 
 - block:
-    - name: Check if Already Installed
-      shell:
-        cmd: command -v tailscale
-      register: tailscale_installed
-      changed_when: false
-      ignore_errors: true
+      - name: Check if Already Installed
+        shell:
+            cmd: command -v tailscale
+        register: tailscale_installed
+        changed_when: false
+        ignore_errors: true
 
-    - name: Check if Already Connected
-      shell:
-        cmd: tailscale status
-      register: tailscale_connected
-      changed_when: false
-      ignore_errors: true
+      - name: Check if Already Connected
+        shell:
+            cmd: tailscale status
+        register: tailscale_connected
+        changed_when: false
+        ignore_errors: true
 
-    - name: Check for Server File
-      stat:
-        path: ~/.server
-      register: server
+      - name: Check for Server File
+        stat:
+            path: ~/.server
+        register: server
 
-    - name: Check for Client-Server File
-      stat:
-        path: ~/.client-server
-      register: client_server
+      - name: Check for Client-Server File
+        stat:
+            path: ~/.client-server
+        register: client_server
 
-    - name: Check for Mobile File
-      stat:
-        path: ~/.mobile
-      register: mobile
+      - name: Check for Mobile File
+        stat:
+            path: ~/.mobile
+        register: mobile
 
-    - name: Check for DNS File
-      stat:
-        path: ~/.dns
-      register: dns
+      - name: Check for DNS File
+        stat:
+            path: ~/.dns
+        register: dns
 
-    - name: Check for Subnet-Router File
-      stat:
-        path: ~/.subnet-router
-      register: subnet_router
+      - name: Check for Subnet-Router File
+        stat:
+            path: ~/.subnet-router
+        register: subnet_router
 
-    - name: Check for Exit Node File
-      stat:
-        path: ~/.exit-node
-      register: exit_node
+      - name: Check for Exit Node File
+        stat:
+            path: ~/.exit-node
+        register: exit_node
 
-    - name: Check for Work File
-      stat:
-        path: ~/.work
-      register: work
+      - name: Check for Work File
+        stat:
+            path: ~/.work
+        register: work
 
-    - name: Create Default Flags
-      set_fact:
-        flags:
-          - "--ssh"
-          - "--operator={{ ansible_env.USER }}"
-          - flag: --auto-update
-            skip_os: Archlinux
+      - name: Create Default Flags
+        set_fact:
+            flags:
+                - "--ssh"
+                - "--operator={{ ansible_env.USER }}"
+                - flag: --auto-update
+                  skip_os: Archlinux
 
-    - name: Add Client-Server Flags
-      set_fact:
-        settings: "--advertise-tags=tag:server,tag:client"
-      when: "client_server.stat.exists"
+      - name: Add Client-Server Flags
+        set_fact:
+            settings: "--advertise-tags=tag:server,tag:client"
+        when: "client_server.stat.exists"
 
-    - name: Add Server Flags
-      set_fact:
-        settings: "--advertise-tags=tag:server"
-      when: "server.stat.exists"
+      - name: Add Server Flags
+        set_fact:
+            settings: "--advertise-tags=tag:server"
+        when: "server.stat.exists"
 
-    - name: Add Client Flags
-      set_fact:
-        settings: "--advertise-tags=tag:client"
-      when:
-        - "not client_server.stat.exists"
-        - "not server.stat.exists"
+      - name: Add Client Flags
+        set_fact:
+            settings: "--advertise-tags=tag:client"
+        when:
+            - "not client_server.stat.exists"
+            - "not server.stat.exists"
 
-    - name: Add DNS False Flags
-      set_fact:
-        flags: "{{ flags + ['--accept-dns=false'] }}"
-      when: not mobile.stat.exists and dns.stat.exists
+      - name: Add DNS False Flags
+        set_fact:
+            flags: "{{ flags + ['--accept-dns=false'] }}"
+        when: not mobile.stat.exists and dns.stat.exists
 
-    - name: Add DNS Flags
-      set_fact:
-        flags: "{{ flags + ['--accept-dns'] }}"
-      when: mobile.stat.exists or not dns.stat.exists
+      - name: Add DNS Flags
+        set_fact:
+            flags: "{{ flags + ['--accept-dns'] }}"
+        when: mobile.stat.exists or not dns.stat.exists
 
-    - name: Add Subnet Router Flags
-      set_fact:
-        flags: "{{ flags + ['--advertise-routes={{ vpn_subnet_routes }}'] }}"
-      when:
-        - subnet_router.stat.exists
-        - vpn_subnet_routes is defined
+      - name: Add Subnet Router Flags
+        set_fact:
+            flags: "{{ flags + ['--advertise-routes={{ vpn_subnet_routes }}'] }}"
+        when:
+            - subnet_router.stat.exists
+            - vpn_subnet_routes is defined
 
-    - name: Add Exit Node Flags
-      set_fact:
-        flags: "{{ flags + ['--advertise-exit-node'] }}"
-      when: "exit_node.stat.exists"
+      - name: Add Exit Node Flags
+        set_fact:
+            flags: "{{ flags + ['--advertise-exit-node'] }}"
+        when: "exit_node.stat.exists"
 
-    - name: Add Accept Routes Flags
-      set_fact:
-        flags: "{{ flags + ['--accept-routes'] }}"
-      when: mobile.stat.exists
+      - name: Add Accept Routes Flags
+        set_fact:
+            flags: "{{ flags + ['--accept-routes'] }}"
+        when: mobile.stat.exists
 
-    - name: Add Accept Routes False Flags
-      set_fact:
-        flags: "{{ flags + ['--accept-routes=false'] }}"
-      when: not mobile.stat.exists or subnet_router.stat.exists
+      - name: Add Accept Routes False Flags
+        set_fact:
+            flags: "{{ flags + ['--accept-routes=false'] }}"
+        when: not mobile.stat.exists or subnet_router.stat.exists
 
-    - name: Add Work Flags
-      set_fact:
-        settings: "--advertise-tags=tag:work"
-      when: work.stat.exists
+      - name: Add Work Flags
+        set_fact:
+            settings: "--advertise-tags=tag:work"
+        when: work.stat.exists
 
-    - name: Install Tailscale
-      become: true
-      shell:
-        cmd: curl -fsSL https://tailscale.com/install.sh | sh
-      changed_when: false
+      - name: Install Tailscale
+        become: true
+        shell:
+            cmd: curl -fsSL https://tailscale.com/install.sh | sh
+        changed_when: false
 
-    - name: Enable IP Forwarding
-      become: true
-      ansible.posix.sysctl:
-        value: 1
-        name: "{{ item }}"
-        sysctl_file: /etc/sysctl.d/99-tailscale.conf
-      when: "subnet_router.stat.exists"
-      loop:
-        - net.ipv4.ip_forward
-        - net.ipv6.conf.all.forwarding
+      - name: Enable IP Forwarding
+        become: true
+        ansible.posix.sysctl:
+            value: 1
+            name: "{{ item }}"
+            sysctl_file: /etc/sysctl.d/99-tailscale.conf
+        when: "subnet_router.stat.exists"
+        loop:
+            - net.ipv4.ip_forward
+            - net.ipv6.conf.all.forwarding
 
-    - name: Connect to VPN (Initial)
-      become: true
-      shell:
-        cmd: "tailscale up --auth-key='{{ vpn_key }}' {{ settings }}"
-      changed_when: false
-      when: vpn_key is defined and tailscale_installed.failed
+      - name: Connect to VPN (Initial)
+        become: true
+        shell:
+            cmd: "tailscale up --auth-key='{{ vpn_key }}' {{ settings }}"
+        changed_when: false
+        when: vpn_key is defined and tailscale_installed.failed
 
-    - name: Connect to VPN
-      become: true
-      shell:
-        cmd: "tailscale up &> /tmp/tsa.log"
-      changed_when: false
-      when: (not tailscale_installed.failed and tailscale_connected.failed) or (force | default(false))
+      - name: Connect to VPN
+        become: true
+        shell:
+            cmd: "tailscale up &> /tmp/tsa.log"
+        changed_when: false
+        when: (not tailscale_installed.failed and tailscale_connected.failed) or (force | default(false))
 
-    - name: Enable Settings
-      become: true
-      shell:
-        cmd: tailscale set {{ item.flag | default(item) }}
-      changed_when: false
-      ignore_errors: true
-      loop: "{{ flags }}"
-      when: ansible_os_family != (item.skip_os | default(''))
+      - name: Enable Settings
+        become: true
+        shell:
+            cmd: tailscale set {{ item.flag | default(item) }}
+        changed_when: false
+        ignore_errors: true
+        loop: "{{ flags }}"
+        when: ansible_os_family != (item.skip_os | default(''))
 
-    - include_tasks: ../utils/install.yml
-      vars:
-        packages:
-          - networkd-dispatcher
-      when: "subnet_router.stat.exists"
+      - include_tasks: ../utils/install.yml
+        vars:
+            packages:
+                - networkd-dispatcher
+        when: "subnet_router.stat.exists"
 
-    - name: Optimize Subnet Routers
-      become: true
-      shell:
-        cmd: |
-          NETDEV=$(ip route show 0/0 | cut -f5 -d' ')
-          ethtool -K $NETDEV rx-udp-gro-forwarding on rx-gro-list off
-          printf '#!/bin/sh\n\nethtool -K %s rx-udp-gro-forwarding on rx-gro-list off \n' "$(ip route show 0/0 | cut -f5 -d" ")" | tee /etc/networkd-dispatcher/routable.d/50-tailscale
-          chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
-          /etc/networkd-dispatcher/routable.d/50-tailscale
-          test $? -eq 0
-      changed_when: false
-      when: "subnet_router.stat.exists"
+      - name: Optimize Subnet Routers
+        become: true
+        shell:
+            cmd: |
+                NETDEV=$(ip route show 0/0 | cut -f5 -d' ')
+                ethtool -K $NETDEV rx-udp-gro-forwarding on rx-gro-list off
+                printf '#!/bin/sh\n\nethtool -K %s rx-udp-gro-forwarding on rx-gro-list off \n' "$(ip route show 0/0 | cut -f5 -d" ")" | tee /etc/networkd-dispatcher/routable.d/50-tailscale
+                chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
+                /etc/networkd-dispatcher/routable.d/50-tailscale
+                test $? -eq 0
+        changed_when: false
+        when: "subnet_router.stat.exists"
 
-    - name: Enable System Tray
-      shell:
-        cmd: |
-          tailscale configure systray --enable-startup systemd
-          systemctl --user daemon-reload
-          systemctl --user enable --now tailscale-systray
+      - name: Enable System Tray
+        shell:
+            cmd: |
+                tailscale configure systray --enable-startup systemd
+                systemctl --user daemon-reload
+                systemctl --user enable --now tailscale-systray
 
   when: "vpn.stat.exists"

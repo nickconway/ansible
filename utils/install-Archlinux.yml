@@ -1,4 +1,4 @@
 - name: Install Packages (Arch)
   shell:
-    cmd: "yay --noconfirm --needed --sync {{ packages | join(' ') }}"
+      cmd: "yay --noconfirm --needed --sync {{ packages | join(' ') }}"
   changed_when: false

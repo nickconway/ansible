@@ -1,26 +1,26 @@
 - set_fact:
-    os: "{{ (os | default([])) + [ (item[ansible_os_family] | default(item)) ] }}"
+      os: "{{ (os | default([])) + [ (item[ansible_os_family] | default(item)) ] }}"
   when: "(item | type_debug == 'str') or ((item[ansible_os_family] | default(false)) != false)"
   loop: "{{ packages }}"
 
 - set_fact:
-    cargo: "{{ (cargo | default([])) + [ item.cargo ] }}"
+      cargo: "{{ (cargo | default([])) + [ item.cargo ] }}"
   when: "(item.cargo | default(false)) != false"
   loop: "{{ packages }}"
 
 - set_fact:
-    go: "{{ (go | default([])) + [ item.go ] }}"
+      go: "{{ (go | default([])) + [ item.go ] }}"
   when: "(item.go | default(false)) != false"
   loop: "{{ packages }}"
 
 - include_tasks: ../utils/install-{{ ansible_os_family }}.yml
   vars:
-    packages: "{{ os }}"
+      packages: "{{ os }}"
   when: os is defined
 
 - name: Install Packages (Cargo)
   community.general.cargo:
-    name: "{{ cargo }}"
+      name: "{{ cargo }}"
   when: cargo is defined
 
 - name: Install Packages (Go)
