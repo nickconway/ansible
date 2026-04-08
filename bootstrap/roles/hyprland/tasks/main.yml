@@ -74,6 +74,7 @@
           - wayscriber-bin
           - kwallet
           - vk-hdr-layer-kwin6-git
+          - pyprland
 
     - name: Download Orchis Theme
       git:
@@ -130,8 +131,4 @@
       tags:
         - tesseract
 
-    - name: Install Pyprland
-      shell:
-        cmd: yes | sh <(curl -s https://raw.githubusercontent.com/hyprland-community/pyprland/main/scripts/get-pypr)
-      changed_when: false
   when: "hyprland.stat.exists"
