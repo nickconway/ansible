@@ -75,6 +75,7 @@
                 - kwallet
                 - vk-hdr-layer-kwin6-git
                 - pyprland
+                - hyprshutdown
 
       - name: Download Orchis Theme
         git:
