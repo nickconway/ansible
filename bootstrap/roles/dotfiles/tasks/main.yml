@@ -83,6 +83,12 @@
   when: "'work' in group_names"
   changed_when: false
 
+- name: Add Cron Class
+  shell:
+      cmd: grep "class = cron" ~/.local/share/yadm/nickconway.git/config || yadm config --add local.class cron
+  when: "'cron' in group_names"
+  changed_when: false
+
 - name: Create YADM Alt Files
   shell:
       cmd: yadm alt

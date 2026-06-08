@@ -4,6 +4,11 @@
 - name: Check For Cron
   stat:
       path: /usr/bin/crontab
+  register: crontab
+
+- name: Check for VPN File
+  stat:
+      path: ~/.cron
   register: cron
 
 - block:
@@ -43,4 +48,4 @@
             minute: 0
             state: present
             job: "bash -lc 'sync-homelab -i sync-homelab-$(uname -n)' > /tmp/sync-homelab.log 2>&1"
-  when: cron.stat.exists
+  when: crontab.stat.exists and cron.stat.exists
