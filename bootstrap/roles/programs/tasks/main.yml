@@ -321,6 +321,12 @@
       groups: docker
       append: yes
 
+- name: Ensure docker directory exists
+  become: true
+  file:
+      state: directory
+      path: /etc/docker
+
 - name: Check for Live Restore File
   stat:
       path: ~/.live-restore
@@ -365,7 +371,7 @@
   service:
       name: docker
       state: restarted
-  when: file.changed
+  when: file is defined and file.changed
 
 - name: Install NVM
   shell: PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash'

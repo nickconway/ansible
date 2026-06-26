@@ -12,20 +12,26 @@
             path: .vpn
         register: vpn
 
+      - name: Check for VPN File
+        stat:
+            path: /etc/systemd/resolved.conf
+        register: resolvedconf
+
       - name: Disable DNS Stub Listener
         become: true
         lineinfile:
             path: /etc/systemd/resolved.conf
             regexp: "#?DNSStubListener=yes"
             line: DNSStubListener=no
-        register: resolvedconf
+        when: resolvedconf.stat.exists
+        register: resolvedconfchanged
 
       - name: Restart Systemd-Resolved
         become: true
         service:
             name: systemd-resolved
             state: restarted
-        when: resolvedconf.changed
+        when: resolvedconf.stat.exists and resolvedconfchanged.changed
 
       - name: Enable IP Forwarding
         become: true

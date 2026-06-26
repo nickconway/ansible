@@ -183,5 +183,6 @@
                 tailscale configure systray --enable-startup systemd
                 systemctl --user daemon-reload
                 systemctl --user enable --now tailscale-systray
+        ignore_errors: true
 
   when: "vpn.stat.exists"

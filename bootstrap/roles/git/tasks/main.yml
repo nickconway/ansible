@@ -32,10 +32,6 @@
       path: ~/.gaming
   register: gaming
 
-- name: Include Gaming Variables
-  include_vars: group_vars/gaming/vault.yml
-  when: gaming.stat.exists
-
 - include_tasks: ../utils/install.yml
   vars:
       packages:
