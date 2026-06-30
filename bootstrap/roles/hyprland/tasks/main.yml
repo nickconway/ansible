@@ -118,6 +118,14 @@
             - hyprpm
             - hyprspace
 
+      - name: Install Hyprland Scroll Overview
+        shell:
+            cmd: yes | hyprpm add https://github.com/yayuuu/hyprland-scroll-overview.git && hyprpm enable scrolloverview
+        changed_when: false
+        tags:
+            - hyprpm
+            - hyprscroll
+
       - name: Create Tessdata Directory
         file:
             path: ~/.local/share/tessdata
