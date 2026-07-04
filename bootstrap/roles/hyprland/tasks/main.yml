@@ -79,13 +79,13 @@
       - name: Download Orchis Theme
         git:
             repo: https://github.com/vinceliuice/Orchis-theme.git
-            dest: ~/.local/source/orchis
+            dest: ~/Projects/orchis-theme
         register: orchis
 
       - name: Install Orchis
         shell:
             cmd: ./install.sh --tweaks black
-            chdir: ~/.local/source/orchis
+            chdir: ~/Projects/orchis-theme
         when: orchis.changed
 
       - name: Purge HyprPM Cache

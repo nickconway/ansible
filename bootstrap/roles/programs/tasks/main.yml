@@ -145,7 +145,7 @@
       - name: Clone Neovim
         git:
             repo: https://github.com/neovim/neovim
-            dest: ~/.local/source/neovim
+            dest: ~/Projects/neovim
             force: true
         register: neovim
         tags:
@@ -155,12 +155,12 @@
       - block:
             - name: Build Neovim
               shell:
-                  chdir: ~/.local/source/neovim
+                  chdir: ~/Projects/neovim
                   cmd: make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local
 
             - name: Install Neovim
               shell:
-                  chdir: ~/.local/source/neovim
+                  chdir: ~/Projects/neovim
                   cmd: make install
         when: neovim.changed or (force | default(false))
   when: ansible_os_family != 'Archlinux'
@@ -392,7 +392,7 @@
 - name: Download rClone
   git:
       repo: https://github.com/rclone/rclone.git
-      dest: ~/.local/source/rclone
+      dest: ~/Projects/rclone
   register: rclone
   tags:
       - rclone
@@ -401,12 +401,12 @@
       - name: Build rClone
         shell:
             cmd: "go build"
-            chdir: "{{ ansible_env.HOME }}/.local/source/rclone"
+            chdir: "{{ ansible_env.HOME }}/Projects/rclone"
 
       - name: Install rClone
         copy:
             remote_src: true
-            src: ~/.local/source/rclone/rclone
+            src: ~/Projects/rclone/rclone
             dest: ~/.local/bin/rclone
             mode: 0750
 
@@ -428,14 +428,14 @@
 - name: Download Pass
   git:
       repo: https://git.zx2c4.com/password-store
-      dest: ~/.local/source/password-store
+      dest: ~/Projects/password-store
   register: pass_store
   ignore_errors: true
 
 - name: Install Pass
   shell:
       cmd: make install PREFIX=$HOME/.local
-      chdir: ~/.local/source/password-store
+      chdir: ~/Projects/password-store
   when: pass_store.changed
 
 - name: Install Virtualenv
@@ -547,7 +547,7 @@
 - name: Download GH-CLI
   git:
       repo: https://github.com/cli/cli.git
-      dest: ~/.local/source/gh-cli
+      dest: ~/Projects/gh-cli
   register: gh
   tags:
       - gh
@@ -555,7 +555,7 @@
 - name: Install GH-CLI
   shell:
       cmd: make install prefix=$HOME/.local
-      chdir: ~/.local/source/gh-cli
+      chdir: ~/Projects/gh-cli
   when: gh.changed
   changed_when: false
   tags:
@@ -574,13 +574,13 @@
   unarchive:
       remote_src: true
       src: https://gitlab.com/OldManProgrammer/unix-tree/-/archive/2.1.1/unix-tree-2.1.1.tar.bz2
-      dest: ~/.local/source
+      dest: ~/Projects
   register: tree
 
 - name: Install Tree
   shell:
       cmd: make install PREFIX=$HOME/.local
-      chdir: ~/.local/source/unix-tree-2.1.1
+      chdir: ~/Projects/unix-tree-2.1.1
   when: tree.changed
   changed_when: false
 
@@ -588,12 +588,12 @@
   unarchive:
       remote_src: true
       src: https://sourceforge.net/projects/sshpass/files/latest/download
-      dest: ~/.local/source
+      dest: ~/Projects
 
 - name: Install SSHPass
   shell:
       cmd: rm -rf sshpass; mv sshpass* sshpass && cd sshpass && ./configure --prefix=$HOME/.local && make install
-      chdir: ~/.local/source
+      chdir: ~/Projects
 
 - name: Install Pre-Commit
   shell:
