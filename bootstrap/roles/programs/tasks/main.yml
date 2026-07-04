@@ -524,7 +524,7 @@
           cp ~/.bashrc ~/.bashrc.bkp
           cp ~/.zshrc ~/.zshrc.bkp
           cp ~/.bash_profile ~/.bash_profile.bkp
-          curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+          curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh -s -- --non-interactive
           mv ~/.bashrc.bkp ~/.bashrc
           mv ~/.zshrc.bkp ~/.zshrc
           mv ~/.bash_profile.bkp ~/.bash_profile
