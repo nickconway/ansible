@@ -9,6 +9,7 @@
         vars:
             packages:
                 - hyprland
+                - hyprpm
                 - cpio
                 - meson
                 - sddm
