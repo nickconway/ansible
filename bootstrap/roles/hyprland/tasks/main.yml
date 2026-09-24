@@ -76,6 +76,7 @@
                 - kwallet
                 - vk-hdr-layer-kwin6-git
                 - hyprshutdown
+                - vicinae-bin
 
       - name: Download Orchis Theme
         git:
