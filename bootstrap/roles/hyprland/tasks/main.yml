@@ -59,7 +59,7 @@
                 - satty
                 - qrencode
                 - topgrade
-                - openbsd-netcat
+                - netcat
                 - hyprland-guiutils
                 - neovim-nightly-bin
                 - tmux-git
