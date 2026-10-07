@@ -24,7 +24,7 @@
             hour: 5
             minute: 0
             state: present
-            job: "bash -lc 'containers stop; BORG_REPO=/mnt/nas/backups/docker/$(uname -n) backup -i backup-containers-$(uname -n) create Docker; containers start' > /tmp/backup-containers.log 2>&1"
+            job: "bash -lc 'BORG_REPO=/mnt/nas/backups/docker/$(uname -n) backup -i backup-containers-$(uname -n) create Docker' > /tmp/backup-containers.log 2>&1"
 
       - name: Backup LXC Cron
         cron:
